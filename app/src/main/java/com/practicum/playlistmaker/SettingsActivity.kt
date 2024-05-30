@@ -1,10 +1,12 @@
 package com.practicum.playlistmaker
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
@@ -12,7 +14,10 @@ import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
+
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
+        val sharedPrefs = getSharedPreferences(PLAYLISTMAKER_PREFERENCES, MODE_PRIVATE)
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -22,9 +27,16 @@ class SettingsActivity : AppCompatActivity() {
         }
 
 
-        val rowDarkTheme = binding.swDarkTheme
-        rowDarkTheme.setOnClickListener {
-            // тут будет обработка клика по строке "Тёмная тема"
+        val themeSwitcher = binding.swDarkTheme
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+            sharedPrefs.edit().putString(THEME_KEY, checked.toString()).apply()
+
+        }
+
+        if (sharedPrefs.getString(THEME_KEY, "") == "true") {
+            themeSwitcher.isChecked = true
+
         }
 
         val rowShare = binding.tvShare
@@ -66,4 +78,3 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 }
-

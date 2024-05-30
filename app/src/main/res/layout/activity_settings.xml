@@ -23,9 +23,12 @@
         style="@style/SettingsTextStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_row_size_64"
+        android:layout_gravity="start"
         android:layout_marginEnd="0dp"
         android:text="@string/dark_theme"
         android:textAlignment="viewStart"
+        app:thumbTint="@color/grey"
+        app:trackDecorationTint="@android:color/transparent"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
 
