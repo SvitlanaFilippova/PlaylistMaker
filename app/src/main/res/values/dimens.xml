@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_text_size_26">26sp</dimen>
+    <dimen name="regular_text_size_16">16sp</dimen>
+    <dimen name="standart_icon_size_24">24sp</dimen>
+    <dimen name="settings_row_size_61">61sp</dimen>
+    <dimen name="standart_padding_16">16sp</dimen>
+
+</resources>
