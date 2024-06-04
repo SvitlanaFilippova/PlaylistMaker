@@ -17,8 +17,7 @@ class MainActivity : AppCompatActivity() {
         val buttonSearchClickListener: View.OnClickListener = object : View.OnClickListener {
 
             override fun onClick(v: View?) {
-            //тут будет обработка клика по кнопке Поиск
-                        val searchIntent = Intent(this@MainActivity, SearchActivity::class.java)
+                               val searchIntent = Intent(this@MainActivity, SearchActivity::class.java)
                 startActivity(searchIntent)
         }
         }
