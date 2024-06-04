@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -13,17 +14,25 @@ class MainActivity : AppCompatActivity() {
         val buttonLibrary = findViewById<com.google.android.material.button.MaterialButton>(R.id.bt_library)
         val buttonSettings = findViewById<com.google.android.material.button.MaterialButton>(R.id.bt_settings)
 
-        val buttonSearchClickListener: View.OnClickListener = object : View.OnClickListener { override fun onClick(v: View?) {
-            Toast.makeText(this@MainActivity, "Нажали на кнопку \"Поиск\"", Toast.LENGTH_SHORT).show()
+        val buttonSearchClickListener: View.OnClickListener = object : View.OnClickListener {
 
-        } }
+            override fun onClick(v: View?) {
+            //тут будет обработка клика по кнопке Поиск
+                        val searchIntent = Intent(this@MainActivity, SearchActivity::class.java)
+                startActivity(searchIntent)
+        }
+        }
+
         buttonSearch.setOnClickListener(buttonSearchClickListener)
 
         buttonLibrary.setOnClickListener {
-            Toast.makeText(this@MainActivity, "Нажали на кнопку \"Медиатека\"", Toast.LENGTH_SHORT).show()
+            val libraryIntent = Intent(this, LibraryActivity::class.java)
+            startActivity(libraryIntent)
         }
         buttonSettings.setOnClickListener {
-            Toast.makeText(this@MainActivity, "Нажали на кнопку \"Настройки\"", Toast.LENGTH_SHORT).show()
+            val settingsIntent = Intent(this, SettingsActivity::class.java)
+            startActivity(settingsIntent)
         }
     }
 }
+
