@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:textColor="@color/blue"
         android:text="Тут будет поиск"
-        android:textSize="@dimen/button_text_size_26"
+        android:textSize="@dimen/button_text_size_24"
         android:gravity="center"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
