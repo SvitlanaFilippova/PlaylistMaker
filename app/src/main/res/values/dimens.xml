@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_text_size_24">24sp</dimen>
+    <dimen name="regular_text_size_16">16sp</dimen>
+    <dimen name="standart_icon_size_24">24dp</dimen>
+    <dimen name="settings_row_size_64">64dp</dimen>
+    <dimen name="standart_padding_16">16dp</dimen>
+    <dimen name="standart_button_radius_16">16dp</dimen>
+
+</resources>
