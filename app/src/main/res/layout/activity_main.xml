@@ -35,6 +35,7 @@
             style="@style/MainActivityButtonStyle"
             android:text="@string/search"
             app:icon="@drawable/ic_search_light_mode"
+
         />
 
         <com.google.android.material.button.MaterialButton
