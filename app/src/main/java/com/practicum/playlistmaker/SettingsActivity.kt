@@ -19,7 +19,7 @@ class SettingsActivity : AppCompatActivity() {
         val iconBack = findViewById<ImageView>(R.id.iv_arrow_back)
         iconBack.setOnClickListener {
             val backIntent = Intent(this, MainActivity::class.java)
-            startActivity(backIntent)
+            startActivity(backIntent) //переделать, через "финиш" активити должно быть реализована, иначе может быть глюк
         }
         val rowDarkTheme = findViewById<LinearLayout>(R.id.ll_dark_theme)
         rowDarkTheme.setOnClickListener {

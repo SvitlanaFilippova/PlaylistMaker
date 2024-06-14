@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MainActivityButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/button_text_size_24</item>
+        <item name="cornerRadius">@dimen/standart_button_radius_16</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconSize">@dimen/standart_icon_size_24</item>
+        <item name="iconTint">@color/black</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+    <style name="SettingsTextStyle">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/regular_text_size_16</item>
+        <item name="android:layout_marginStart">@dimen/standart_padding_16</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+</resources>

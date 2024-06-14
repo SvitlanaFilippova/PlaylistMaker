@@ -40,9 +40,10 @@
                 android:layout_marginStart="12dp"
                 android:text="@string/settings"
                 android:textColor="@color/black"
+                android:fontFamily="@font/ys_display_medium"
+                android:textFontWeight="500"
                 android:textSize="@dimen/button_text_size_24"
-
-                android:textStyle="bold" />
+                 />
         </LinearLayout>
 
     <!--попробовать реализовать через androidx.appcompat.widget.Toolbar -->
@@ -59,11 +60,10 @@
                     android:id="@+id/tv_dark_theme"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/standart_padding_16"
                     android:layout_weight="1"
                     android:text="@string/dark_theme"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/regular_text_size_16" />
+                    style="@style/SettingsTextStyle"
+/>
 
                 <Switch
                     android:id="@+id/sw_dark_theme"
@@ -89,11 +89,10 @@
                     android:id="@+id/tv_share"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/standart_padding_16"
                     android:layout_weight="1"
                     android:text="@string/share"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/regular_text_size_16" />
+                    style="@style/SettingsTextStyle"
+                    />
 
                 <ImageView
                     android:id="@+id/iv_share"
@@ -116,11 +115,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/standart_padding_16"
                     android:layout_weight="1"
                     android:text="@string/support"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/regular_text_size_16" />
+                      style="@style/SettingsTextStyle"
+                    />
 
                 <ImageView
                     android:id="@+id/iv_support"
@@ -140,14 +138,14 @@
 
                 <TextView
                     android:id="@+id/tv_agreement"
+                    style="@style/SettingsTextStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/standart_padding_16"
                     android:layout_weight="1"
                     android:text="@string/agreement"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/regular_text_size_16" />
+
+                    />
 
                 <ImageView
                     android:id="@+id/iv_agreement"

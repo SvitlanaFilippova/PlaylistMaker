@@ -16,7 +16,10 @@
         android:padding="12dp"
         android:text="@string/app_name"
         android:textColor="@color/white"
-        android:textSize="@dimen/button_text_size_24" />
+        android:textSize="@dimen/button_text_size_24"
+        android:fontFamily="@font/ys_display_medium"
+        android:textFontWeight="500"
+        />
 
     <LinearLayout
         android:id="@+id/ll_menu_buttons"
@@ -29,52 +32,25 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/bt_search"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
+            style="@style/MainActivityButtonStyle"
             android:text="@string/search"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="@dimen/button_text_size_24"
-            app:cornerRadius="@dimen/standart_button_radius_16"
             app:icon="@drawable/ic_search_light_mode"
-            app:iconGravity="textStart"
-            app:iconSize="@dimen/standart_icon_size_24"
-            app:iconTint="@color/black" />
+        />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/bt_library"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
-            android:text="@string/library"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="@dimen/button_text_size_24"
-            app:cornerRadius="@dimen/standart_button_radius_16"
+            style="@style/MainActivityButtonStyle"
+                 android:text="@string/library"
             app:icon="@drawable/ic_library_light_mode"
-            app:iconGravity="textStart"
-            app:iconSize="@dimen/standart_icon_size_24"
-            app:iconTint="@color/black" />
+  />
 
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/bt_settings"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
+            style="@style/MainActivityButtonStyle"
             android:text="@string/settings"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="@dimen/button_text_size_24"
-            app:cornerRadius="@dimen/standart_button_radius_16"
             app:icon="@drawable/ic_settings_light_mode"
-            app:iconGravity="textStart"
-            app:iconSize="@dimen/standart_icon_size_24"
-            app:iconTint="@color/black" />
+      />
 
 
     </LinearLayout>
