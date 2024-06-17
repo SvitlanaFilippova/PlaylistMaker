@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="0dp"
     style="@style/MainActivityLayoutStyle"
-
     >
 
     <TextView
         android:id="@+id/tv_app_name"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_margin="4dp"
+        android:layout_height="@dimen/head_toolbar_layout_height_56"
+        android:layout_margin="@dimen/small_margin_8"
         android:gravity="start"
-        android:padding="12dp"
+        android:padding="@dimen/small_margin_8"
         android:text="@string/app_name"
         android:textColor="@color/white"
         android:textSize="@dimen/button_text_size_24"
@@ -26,32 +22,24 @@
 
     <LinearLayout
         android:id="@+id/ll_menu_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
+        style="@style/ParentVerticalLayoutStyle"
+        android:layout_marginTop="@dimen/small_margin_8"
         android:padding="@dimen/standart_padding_16">
-
-
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/bt_search"
             style="@style/MainActivityButtonStyle"
             android:text="@string/search"
             app:icon="@drawable/ic_search_light_mode"
-
-
-
             />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/bt_library"
-                    style="@style/MainActivityButtonStyle"
-                 android:text="@string/library"
+            style="@style/MainActivityButtonStyle"
+            android:text="@string/library"
             app:icon="@drawable/ic_library_light_mode"
 
   />
-
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/bt_settings"

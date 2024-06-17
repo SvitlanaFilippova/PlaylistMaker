@@ -13,7 +13,7 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-         val iconBack = findViewById<ImageView>(R.id.iv_arrow_back)
+         val iconBack = findViewById<ImageView>(R.id.settings_iv_arrow_back)
         iconBack.setOnClickListener {
             val backIntent = Intent(this, MainActivity::class.java)
             startActivity(backIntent) //тут надо будет переделать, через финиш активити должно быть реализована, иначе может быть глюк. Как???
@@ -26,7 +26,7 @@ class SettingsActivity : AppCompatActivity() {
             val rowShare = findViewById<LinearLayout>(R.id.ll_share)
         rowShare.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
-            shareIntent.setType("text/plain");
+            shareIntent.setType("text/plain")
              shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.settings_share_message))
             startActivity(Intent.createChooser(shareIntent, getString(R.string.settings_share_title)))
         }
