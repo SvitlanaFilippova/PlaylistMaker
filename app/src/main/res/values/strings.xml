@@ -14,4 +14,5 @@
     <string name="settings_support_subject" translatable="true">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="settings_support_message" translatable="true">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="settings_agreement_url" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
+
 </resources>
