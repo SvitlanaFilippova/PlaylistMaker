@@ -1,12 +1,17 @@
 <resources>
     <string name="app_name" translatable="false">Playlist maker</string>
-    <string name="search" translatable="false">Поиск</string>
-    <string name="library" translatable="false">Медиатека</string>
-    <string name="settings" translatable="false">Настройки</string>
-    <string name="dark_theme" translatable="false">Темная тема</string>
-    <string name="share" translatable="false">Поделиться приложением</string>
-    <string name="support" translatable="false">Написать в поддержку</string>
-    <string name="agreement" translatable="false">Пользовательское соглашение</string>
-
-
+    <string name="search" translatable="true">Поиск</string>
+    <string name="library" translatable="true">Медиатека</string>
+    <string name="settings" translatable="true">Настройки</string>
+    <string name="dark_theme" translatable="true">Темная тема</string>
+    <string name="share" translatable="true">Поделиться приложением</string>
+    <string name="support" translatable="true">Написать в поддержку</string>
+    <string name="agreement" translatable="true">Пользовательское соглашение</string>
+    <string name="settings_share_title" translatable="false">Выберите мессенджер</string>
+    <string name="settings_share_message" translatable="false">https://practicum.yandex.ru/android-developer/</string>
+    <string name="settings_support_mailto" translatable="false">mailto:</string>
+    <string name="settings_support_email" translatable="false">s.rubinets@gmail.com</string>
+    <string name="settings_support_subject" translatable="true">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="settings_support_message" translatable="true">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="settings_agreement_url" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
 </resources>
