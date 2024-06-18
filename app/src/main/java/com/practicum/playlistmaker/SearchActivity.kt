@@ -23,8 +23,7 @@ class SearchActivity : AppCompatActivity() {
 
         val iconBack = findViewById<ImageView>(R.id.search_iv_arrow_back)
         iconBack.setOnClickListener {
-            val backIntent = Intent(this, MainActivity::class.java)
-            startActivity(backIntent) //тут надо будет переделать, через финиш активити должно быть реализована, иначе может быть глюк. Как???
+            finish()
         }
 
         val searchTextWatcher = object : TextWatcher {
