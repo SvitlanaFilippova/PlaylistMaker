@@ -26,7 +26,7 @@
 
         </LinearLayout>
 
-    <!--попробовать реализовать через androidx.appcompat.widget.Toolbar -->
+
             <LinearLayout
                 android:id="@+id/ll_dark_theme"
                 android:layout_width="match_parent"
@@ -51,7 +51,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
                     android:layout_marginEnd="@dimen/standart_padding_16"
-                    android:paddingRight="-3dp"
+                    android:paddingEnd="-3dp"
                                         />
 
             </LinearLayout>
@@ -74,11 +74,8 @@
 
                 <ImageView
                     android:id="@+id/iv_share"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/standart_icon_size_24"
-                    android:layout_marginEnd="@dimen/standart_padding_16"
+                    style="@style/SettingsIconStyle"
                     android:src="@drawable/ic_share_light_mode"
-                    app:tint="?attr/colorSecondaryVariant"
                     />
 
             </LinearLayout>
@@ -103,10 +100,7 @@
                 <ImageView
                     android:id="@+id/iv_support"
                     android:src="@drawable/ic_support_light_mode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/standart_icon_size_24"
-                    android:layout_marginEnd="@dimen/standart_padding_16"
-                    app:tint="?attr/colorSecondaryVariant" />
+                    style="@style/SettingsIconStyle" />
 
             </LinearLayout>
 
@@ -130,11 +124,8 @@
 
                 <ImageView
                     android:id="@+id/iv_agreement"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/standart_icon_size_24"
-                    android:layout_marginEnd="@dimen/standart_padding_16"
-                    android:src="@drawable/ic_arrow_forward_light_mode"
-                    app:tint="?attr/colorSecondaryVariant" />
+                    style="@style/SettingsIconStyle"
+                    android:src="@drawable/ic_arrow_forward_light_mode" />
 
             </LinearLayout>
         </LinearLayout>
