@@ -18,10 +18,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        savedInstanceState?.let {
-            val str = it.getString(SEARCH_INPUT, searchInput)
-            Log.i("Проверка сохранения поискового запроса", "string $str")
-        }
 
         setContentView(R.layout.activity_search)
         val inputEditText = findViewById<EditText>(R.id.search_et_inputSeacrh)
@@ -29,14 +25,16 @@ class SearchActivity : AppCompatActivity() {
 
         searchClearButton.setOnClickListener {
             inputEditText.setText("")
-            hideKeyboard() // спрятать клавиатуру!
+            hideKeyboard()
         }
 
         val iconBack = findViewById<ImageView>(R.id.search_iv_arrow_back)
         iconBack.setOnClickListener {
             finish()
         }
-             if (searchInput.isNotEmpty()) { inputEditText.setText(searchInput) }
+        if (searchInput.isNotEmpty()) {
+            inputEditText.setText(searchInput)
+        }
 
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -63,10 +61,10 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-         searchInput = savedInstanceState.getString(SEARCH_INPUT, searchInput)
+        searchInput = savedInstanceState.getString(SEARCH_INPUT, searchInput)
     }
 
-        private companion object {
+    private companion object {
         const val SEARCH_INPUT = "SEARCH_INPUT"
         const val INPUT_DEF = ""
     }

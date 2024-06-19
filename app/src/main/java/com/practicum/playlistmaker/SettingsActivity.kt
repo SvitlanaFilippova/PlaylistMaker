@@ -13,7 +13,7 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-         val iconBack = findViewById<ImageView>(R.id.settings_iv_arrow_back)
+        val iconBack = findViewById<ImageView>(R.id.settings_iv_arrow_back)
         iconBack.setOnClickListener {
             finish()
         }
@@ -22,12 +22,13 @@ class SettingsActivity : AppCompatActivity() {
             // тут будет обработка клика по строке "Тёмная тема"
         }
 
-            val rowShare = findViewById<LinearLayout>(R.id.ll_share)
+        val rowShare = findViewById<LinearLayout>(R.id.ll_share)
         rowShare.setOnClickListener {
-            val shareIntent = Intent(Intent.ACTION_SEND)
-            shareIntent.setType("text/plain")
-             shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.settings_share_message))
-            startActivity(Intent.createChooser(shareIntent, getString(R.string.settings_share_title)))
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                setType("text/plain")
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.settings_share_message))
+
+            }.also(::startActivity)
         }
 
         val rowSupport = findViewById<LinearLayout>(R.id.ll_support)
@@ -35,21 +36,25 @@ class SettingsActivity : AppCompatActivity() {
 
             Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse(getString(R.string.settings_support_mailto))
-                putExtra(Intent.EXTRA_EMAIL,arrayOf(getString(R.string.settings_support_email))
+                putExtra(
+                    Intent.EXTRA_EMAIL, arrayOf(getString(R.string.settings_support_email))
                 )
-                putExtra(Intent.EXTRA_SUBJECT,getString(R.string.settings_support_subject)
+                putExtra(
+                    Intent.EXTRA_SUBJECT, getString(R.string.settings_support_subject)
                 )
-                putExtra(Intent.EXTRA_TEXT,getString(R.string.settings_support_message)
+                putExtra(
+                    Intent.EXTRA_TEXT, getString(R.string.settings_support_message)
                 )
 
             }.also(::startActivity)
         }
         val rowAgreement = findViewById<LinearLayout>(R.id.ll_agreement)
         rowAgreement.setOnClickListener {
-            val agreementIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.settings_agreement_url)))
+            val agreementIntent =
+                Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.settings_agreement_url)))
             startActivity(agreementIntent)
 
         }
     }
-    }
+}
 
