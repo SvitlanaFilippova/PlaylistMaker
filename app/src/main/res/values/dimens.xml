@@ -6,5 +6,11 @@
     <dimen name="settings_row_size_64">64dp</dimen>
     <dimen name="standart_padding_16">16dp</dimen>
     <dimen name="standart_button_radius_16">16dp</dimen>
+    <dimen name="small_margin_8">8dp</dimen>
+    <dimen name="search_input_size_36">36dp</dimen>
+    <dimen name="search_field_radius_8">8dp</dimen>
+    <dimen name="head_toolbar_layout_height_56">56dp</dimen>
+
+
 
 </resources>

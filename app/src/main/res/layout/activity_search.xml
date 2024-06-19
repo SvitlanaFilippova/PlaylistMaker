@@ -1,16 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:id="@+id/ll_settings_screen"
+    style="@style/ParentVerticalLayoutStyle"
+    tools:ignore="MissingConstraints"
     tools:context=".SearchActivity">
-    <TextView
+
+    <LinearLayout
+        android:id="@+id/ll_search_head_toolbar"
+        style="@style/HeadToolbarLLStyle"
+        tools:ignore="MissingConstraints,UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/search_iv_arrow_back"
+             style="@style/HeadToolbarArrowIconStyle" />
+
+        <TextView
+            android:id="@+id/tv_search"
+            style="@style/HeadToolbarTextStyle"
+            android:text="@string/search" />
+    </LinearLayout>
+
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/search_input_size_36"
+    android:layout_marginHorizontal="@dimen/standart_padding_16"
+    android:layout_marginVertical="@dimen/small_margin_8" >
+
+    <com.google.android.material.button.MaterialButton
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textColor="@color/blue"
-        android:text="Тут будет поиск"
-        android:textSize="@dimen/button_text_size_24"
-        android:gravity="center"
-        />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="@dimen/search_input_size_36"
+        android:backgroundTint="@color/search_field_background"
+        app:cornerRadius="@dimen/search_field_radius_8">
+
+    </com.google.android.material.button.MaterialButton>
+
+    <LinearLayout
+        android:id="@+id/search_ll_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/search_input_size_36"
+        android:orientation="horizontal"
+        android:backgroundTint="@android:color/transparent" >
+
+        <ImageView
+            android:id="@+id/search_iv_searchIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_search"
+            app:tint="@color/search_field_hint"
+            android:layout_margin="@dimen/small_margin_8" />
+
+        <EditText
+            android:id="@+id/search_et_inputSeacrh"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:hint="@string/search"
+            android:maxLines="1"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:textColorHint="@color/search_field_hint"
+            android:textSize="@dimen/regular_text_size_16"
+            android:background="@null"
+            android:shadowColor="@android:color/transparent" />
+
+        <ImageView
+            android:id="@+id/search_iv_clearIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_cross_clear_search"
+            android:visibility="gone"
+            android:layout_margin="@dimen/small_margin_8"
+            app:tint="@color/search_field_hint" />
+    </LinearLayout>
+
+</FrameLayout>
+</LinearLayout>
