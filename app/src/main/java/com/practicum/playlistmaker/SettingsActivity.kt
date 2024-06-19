@@ -32,12 +32,17 @@ class SettingsActivity : AppCompatActivity() {
 
         val rowSupport = findViewById<LinearLayout>(R.id.ll_support)
         rowSupport.setOnClickListener {
-            val supportIntent = Intent(Intent.ACTION_SENDTO)
-            supportIntent.data = Uri.parse(getString(R.string.settings_support_mailto))
-            supportIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.settings_support_email)))
-            supportIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.settings_support_subject))
-            supportIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.settings_support_message))
-            startActivity(supportIntent)
+
+            Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse(getString(R.string.settings_support_mailto))
+                putExtra(Intent.EXTRA_EMAIL,arrayOf(getString(R.string.settings_support_email))
+                )
+                putExtra(Intent.EXTRA_SUBJECT,getString(R.string.settings_support_subject)
+                )
+                putExtra(Intent.EXTRA_TEXT,getString(R.string.settings_support_message)
+                )
+
+            }.also(::startActivity)
         }
         val rowAgreement = findViewById<LinearLayout>(R.id.ll_agreement)
         rowAgreement.setOnClickListener {

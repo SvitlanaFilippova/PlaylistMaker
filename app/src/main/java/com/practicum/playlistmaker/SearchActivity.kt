@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 
 
 class SearchActivity : AppCompatActivity() {
@@ -24,9 +25,9 @@ class SearchActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_search)
         val inputEditText = findViewById<EditText>(R.id.search_et_inputSeacrh)
-        val clearButton = findViewById<ImageView>(R.id.search_iv_clearIcon)
+        val searchClearButton = findViewById<ImageView>(R.id.search_iv_clearIcon)
 
-        clearButton.setOnClickListener {
+        searchClearButton.setOnClickListener {
             inputEditText.setText("")
             hideSoftKeyboard(this) //   спрятать клавиатуру!
         }
@@ -35,7 +36,7 @@ class SearchActivity : AppCompatActivity() {
         iconBack.setOnClickListener {
             finish()
         }
-             if (searchInput != "") { inputEditText.setText(searchInput) }
+             if (searchInput.isNotEmpty()) { inputEditText.setText(searchInput) }
 
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -44,7 +45,7 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
-                clearButton.visibility = clearButtonVisibility(s)
+                searchClearButton.isVisible = !s.isNullOrEmpty()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -65,14 +66,7 @@ class SearchActivity : AppCompatActivity() {
          searchInput = savedInstanceState.getString(SEARCH_INPUT, searchInput)
     }
 
-    private fun clearButtonVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
-    }
-    companion object {
+        private companion object {
         const val SEARCH_INPUT = "SEARCH_INPUT"
         const val INPUT_DEF = ""
     }
@@ -83,7 +77,8 @@ class SearchActivity : AppCompatActivity() {
         ) as InputMethodManager
         if (inputMethodManager.isAcceptingText) {
             inputMethodManager.hideSoftInputFromWindow(
-                activity.currentFocus!!.windowToken,
+                                activity.currentFocus!!.windowToken, //Подумать, как допилить. От ревьювера: currentFocus!! опасный вызов,
+                // лучше обработать ситуацию с null, чем сломать приложение в этом месте.
                 0
             )
         }

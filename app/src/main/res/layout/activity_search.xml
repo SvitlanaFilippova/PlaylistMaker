@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:src="@drawable/ic_cross_clear_search"
-
+            android:visibility="gone"
             android:layout_margin="@dimen/small_margin_8"
             app:tint="@color/search_field_hint" />
     </LinearLayout>
