@@ -29,7 +29,7 @@ class SearchActivity : AppCompatActivity() {
 
         searchClearButton.setOnClickListener {
             inputEditText.setText("")
-            hideSoftKeyboard(this) //   спрятать клавиатуру!
+            hideKeyboard() // спрятать клавиатуру!
         }
 
         val iconBack = findViewById<ImageView>(R.id.search_iv_arrow_back)
@@ -71,16 +71,5 @@ class SearchActivity : AppCompatActivity() {
         const val INPUT_DEF = ""
     }
 
-    fun hideSoftKeyboard(activity: Activity) {
-        val inputMethodManager = activity.getSystemService(
-            INPUT_METHOD_SERVICE
-        ) as InputMethodManager
-        if (inputMethodManager.isAcceptingText) {
-            inputMethodManager.hideSoftInputFromWindow(
-                                activity.currentFocus!!.windowToken, //Подумать, как допилить. От ревьювера: currentFocus!! опасный вызов,
-                // лучше обработать ситуацию с null, чем сломать приложение в этом месте.
-                0
-            )
-        }
-    }
+
 }
