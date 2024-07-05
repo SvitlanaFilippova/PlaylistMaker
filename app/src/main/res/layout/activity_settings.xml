@@ -5,47 +5,28 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/ll_settings_screen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="24dp"
-        android:gravity="start|top"
-        android:orientation="vertical"
+        style="@style/ParentVerticalLayoutStyle"
         tools:ignore="MissingConstraints"
         tools:context=".SettingsActivity">
 
         <LinearLayout
-            android:id="@+id/ll_settings_title"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="24dp"
-            android:gravity="start|center"
-            android:orientation="horizontal"
-            tools:ignore="MissingConstraints,UseCompoundDrawables">
+            android:id="@+id/ll_settings_head_toolbar"
+            style="@style/HeadToolbarLLStyle"
+            tools:ignore="MissingConstraints,UseCompoundDrawables" >
 
             <ImageView
-                android:id="@+id/iv_arrow_back"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/standart_icon_size_24"
-                android:layout_gravity="center"
-                android:layout_marginStart="12dp"
-                android:src="@drawable/ic_arrow_back_light_mode" />
+                android:id="@+id/settings_iv_arrow_back"
+                style="@style/HeadToolbarArrowIconStyle"/>
 
             <TextView
                 android:id="@+id/tv_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
                 android:text="@string/settings"
-                android:textColor="@color/black"
-                android:textSize="@dimen/button_text_size_24"
+                style="@style/HeadToolbarTextStyle"
+                 />
 
-                android:textStyle="bold" />
         </LinearLayout>
 
-    <!--попробовать реализовать через androidx.appcompat.widget.Toolbar -->
+
             <LinearLayout
                 android:id="@+id/ll_dark_theme"
                 android:layout_width="match_parent"
@@ -59,11 +40,10 @@
                     android:id="@+id/tv_dark_theme"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/standart_padding_16"
                     android:layout_weight="1"
                     android:text="@string/dark_theme"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/regular_text_size_16" />
+                    style="@style/SettingsTextStyle"
+/>
 
                 <Switch
                     android:id="@+id/sw_dark_theme"
@@ -71,10 +51,8 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
                     android:layout_marginEnd="@dimen/standart_padding_16"
-                    android:paddingRight="-3dp"
-
-
-                    />
+                    android:paddingEnd="-3dp"
+                                        />
 
             </LinearLayout>
 
@@ -89,18 +67,16 @@
                     android:id="@+id/tv_share"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/standart_padding_16"
                     android:layout_weight="1"
                     android:text="@string/share"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/regular_text_size_16" />
+                    style="@style/SettingsTextStyle"
+                    />
 
                 <ImageView
                     android:id="@+id/iv_share"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/standart_icon_size_24"
-                    android:layout_marginEnd="@dimen/standart_padding_16"
-                    android:src="@drawable/ic_share_light_mode" />
+                    style="@style/SettingsIconStyle"
+                    android:src="@drawable/ic_share_light_mode"
+                    />
 
             </LinearLayout>
 
@@ -116,18 +92,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/standart_padding_16"
                     android:layout_weight="1"
                     android:text="@string/support"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/regular_text_size_16" />
+                      style="@style/SettingsTextStyle"
+                    />
 
                 <ImageView
                     android:id="@+id/iv_support"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/standart_icon_size_24"
-                    android:layout_marginEnd="@dimen/standart_padding_16"
-                    android:src="@drawable/ic_support_light_mode" />
+                    android:src="@drawable/ic_support_light_mode"
+                    style="@style/SettingsIconStyle" />
 
             </LinearLayout>
 
@@ -140,20 +113,18 @@
 
                 <TextView
                     android:id="@+id/tv_agreement"
+                    style="@style/SettingsTextStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/standart_padding_16"
                     android:layout_weight="1"
                     android:text="@string/agreement"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/regular_text_size_16" />
+
+                    />
 
                 <ImageView
                     android:id="@+id/iv_agreement"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/standart_icon_size_24"
-                    android:layout_marginEnd="@dimen/standart_padding_16"
+                    style="@style/SettingsIconStyle"
                     android:src="@drawable/ic_arrow_forward_light_mode" />
 
             </LinearLayout>
