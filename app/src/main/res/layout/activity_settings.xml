@@ -9,22 +9,15 @@
         tools:ignore="MissingConstraints"
         tools:context=".SettingsActivity">
 
-        <LinearLayout
-            android:id="@+id/ll_settings_head_toolbar"
-            style="@style/HeadToolbarLLStyle"
-            tools:ignore="MissingConstraints,UseCompoundDrawables" >
-
-            <ImageView
-                android:id="@+id/settings_iv_arrow_back"
-                style="@style/HeadToolbarArrowIconStyle"/>
-
-            <TextView
-                android:id="@+id/tv_settings"
-                android:text="@string/settings"
-                style="@style/HeadToolbarTextStyle"
-                 />
-
-        </LinearLayout>
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/settings_toolbar"
+        app:title="@string/settings"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/head_toolbar_layout_height_56"
+        app:navigationIcon="@drawable/ic_arrow_back_light_mode"
+        app:navigationIconTint= "?attr/colorOnPrimary"
+        app:titleTextAppearance="@style/HeadToolbarTextStyle"
+                      />
 
 
             <LinearLayout

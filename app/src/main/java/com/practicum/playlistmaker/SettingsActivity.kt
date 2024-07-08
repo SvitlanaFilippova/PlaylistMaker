@@ -6,17 +6,23 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.practicum.playlistmaker.databinding.ActivitySearchBinding
+import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
 
 
 class SettingsActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySettingsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-         val iconBack = findViewById<ImageView>(R.id.settings_iv_arrow_back)
-        iconBack.setOnClickListener {
+        binding.settingsToolbar.setNavigationOnClickListener() {
             finish()
         }
+
+
+
         val rowDarkTheme = findViewById<LinearLayout>(R.id.ll_dark_theme)
         rowDarkTheme.setOnClickListener {
             // тут будет обработка клика по строке "Тёмная тема"
