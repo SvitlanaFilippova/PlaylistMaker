@@ -17,19 +17,16 @@ import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 
 
 class SearchActivity : AppCompatActivity() {
-    private var searchInput: String = INPUT_DEF
     private lateinit var binding: ActivitySearchBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private var searchInput: String = INPUT_DEF
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
-        savedInstanceState?.let {
-            val str = it.getString(SEARCH_INPUT, searchInput)
-            Log.i("Проверка сохранения поискового запроса", "string $str")
-        }
+        setContentView(binding.root)
 
-        setContentView(R.layout.activity_search)
         val inputEditText = binding.searchEtInputSeacrh
         val searchClearButton = binding.searchIvClearIcon
 
@@ -38,8 +35,7 @@ class SearchActivity : AppCompatActivity() {
             hideKeyboard()
         }
 
-        val iconBack = binding.searchIvArrowBack
-        iconBack.setOnClickListener {
+        binding.searchToolbar.setNavigationOnClickListener() {
             finish()
         }
         if (searchInput.isNotEmpty()) {
@@ -50,7 +46,6 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // empty
             }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
                 searchClearButton.isVisible = !s.isNullOrEmpty()
@@ -63,12 +58,13 @@ class SearchActivity : AppCompatActivity() {
 
         inputEditText.addTextChangedListener(searchTextWatcher)
 
+
+
         val recyclerView = binding.searchRcSearchResults
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = SearchResultsAdapter()
 
-
-    }
+        }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
