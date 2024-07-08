@@ -49,6 +49,7 @@
                     tools:text="Smells Like Teen Spirit Smells Like Teen Spirit Smells Like Teen Spirit" />
 
                 <LinearLayout
+                    android:id="@+id/search_ll_artist_and_time"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/search_artistname_height_13"
                     android:divider="@drawable/ic_search_textdivider"

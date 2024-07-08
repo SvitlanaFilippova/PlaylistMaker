@@ -17,6 +17,7 @@ class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchRes
     class SearchResultsHolder(private val parentView: View) : RecyclerView.ViewHolder(parentView) {
         val binding = ActivitySearchTrackCardBinding.bind(parentView)
 
+
         fun bind(track: Track) =with(binding){
             val cornerRadius = this@SearchResultsHolder.parentView.resources.getDimensionPixelSize(R.dimen.search_image_corner_radius_2)
 
@@ -33,7 +34,9 @@ class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchRes
                 )
                 .placeholder(R.drawable.ic_cover_placeholder)
                 .into(searchIvCover)
+
         }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultsHolder {
@@ -42,11 +45,12 @@ class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchRes
         return SearchResultsHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return trackList.size
+     override fun onBindViewHolder(holder: SearchResultsHolder, position: Int) {
+        holder.bind(trackList[position])
+
     }
 
-    override fun onBindViewHolder(holder: SearchResultsHolder, position: Int) {
-        holder.bind(trackList[position])
+    override fun getItemCount(): Int {
+        return trackList.size
     }
 }
