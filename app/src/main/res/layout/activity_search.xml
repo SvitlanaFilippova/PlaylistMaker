@@ -29,20 +29,15 @@
     android:layout_marginHorizontal="@dimen/standart_padding_16"
     android:layout_marginVertical="@dimen/small_margin_8" >
 
-    <com.google.android.material.button.MaterialButton
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/search_input_size_36"
-        android:backgroundTint="@color/search_field_background"
-        app:cornerRadius="@dimen/search_field_radius_8">
 
-    </com.google.android.material.button.MaterialButton>
 
     <LinearLayout
         android:id="@+id/search_ll_container"
         android:layout_width="match_parent"
         android:layout_height="@dimen/search_input_size_36"
         android:orientation="horizontal"
-        android:backgroundTint="@android:color/transparent" >
+        android:background="@drawable/et_background"
+         >
 
         <ImageView
             android:id="@+id/search_iv_searchIcon"
@@ -56,7 +51,7 @@
         <EditText
             android:id="@+id/search_et_inputSeacrh"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:hint="@string/search"
@@ -86,6 +81,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standart_padding_16"
-        tools:itemCount="5"
         tools:listitem="@layout/activity_search_track_card" />
 </LinearLayout>
