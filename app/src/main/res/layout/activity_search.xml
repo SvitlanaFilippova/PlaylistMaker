@@ -82,8 +82,10 @@
 </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/search_rcv_search_results"
+        android:id="@+id/search_rc_search_results"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/standart_padding_16" />
+        android:layout_marginTop="@dimen/standart_padding_16"
+        tools:itemCount="5"
+        tools:listitem="@layout/activity_search_track_card" />
 </LinearLayout>

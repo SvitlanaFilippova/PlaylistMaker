@@ -1,16 +1,17 @@
 package com.practicum.playlistmaker
 
-import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 
 class SearchActivity : AppCompatActivity() {
@@ -29,7 +30,7 @@ class SearchActivity : AppCompatActivity() {
 
         searchClearButton.setOnClickListener {
             inputEditText.setText("")
-            hideKeyboard() // спрятать клавиатуру!
+            hideKeyboard()
         }
 
         val iconBack = findViewById<ImageView>(R.id.search_iv_arrow_back)
@@ -54,6 +55,11 @@ class SearchActivity : AppCompatActivity() {
         }
 
         inputEditText.addTextChangedListener(searchTextWatcher)
+
+        val recyclerView = findViewById<RecyclerView>(R.id.search_rc_search_results)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter= SearchResultsAdapter()
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -70,6 +76,9 @@ class SearchActivity : AppCompatActivity() {
         const val SEARCH_INPUT = "SEARCH_INPUT"
         const val INPUT_DEF = ""
     }
+
+
+
 
 
 }
