@@ -7,37 +7,44 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 
 
 class SearchActivity : AppCompatActivity() {
     private var searchInput: String = INPUT_DEF
+    private lateinit var binding: ActivitySearchBinding
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
+
+        super.onCreate(savedInstanceState)
+        binding = ActivitySearchBinding.inflate(layoutInflater)
         savedInstanceState?.let {
             val str = it.getString(SEARCH_INPUT, searchInput)
             Log.i("Проверка сохранения поискового запроса", "string $str")
         }
 
         setContentView(R.layout.activity_search)
-        val inputEditText = findViewById<EditText>(R.id.search_et_inputSeacrh)
-        val searchClearButton = findViewById<ImageView>(R.id.search_iv_clearIcon)
+        val inputEditText = binding.searchEtInputSeacrh
+        val searchClearButton = binding.searchIvClearIcon
 
         searchClearButton.setOnClickListener {
             inputEditText.setText("")
             hideKeyboard()
         }
 
-        val iconBack = findViewById<ImageView>(R.id.search_iv_arrow_back)
+        val iconBack = binding.searchIvArrowBack
         iconBack.setOnClickListener {
             finish()
         }
-             if (searchInput.isNotEmpty()) { inputEditText.setText(searchInput) }
+        if (searchInput.isNotEmpty()) {
+            inputEditText.setText(searchInput)
+        }
 
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -56,9 +63,10 @@ class SearchActivity : AppCompatActivity() {
 
         inputEditText.addTextChangedListener(searchTextWatcher)
 
-        val recyclerView = findViewById<RecyclerView>(R.id.search_rc_search_results)
+        val recyclerView = binding.searchRcSearchResults
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter= SearchResultsAdapter()
+        recyclerView.adapter = SearchResultsAdapter()
+
 
     }
 
@@ -69,16 +77,13 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-         searchInput = savedInstanceState.getString(SEARCH_INPUT, searchInput)
+        searchInput = savedInstanceState.getString(SEARCH_INPUT, searchInput)
     }
 
-        private companion object {
+    private companion object {
         const val SEARCH_INPUT = "SEARCH_INPUT"
         const val INPUT_DEF = ""
     }
-
-
-
 
 
 }
