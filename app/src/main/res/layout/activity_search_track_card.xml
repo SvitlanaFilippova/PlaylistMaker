@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
     <com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/cardView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
         android:outlineSpotShadowColor="@android:color/transparent"
@@ -46,7 +44,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:textSize="@dimen/regular_text_size_16"
-                    tools:text="Smells Like Teen Spirit Smells Like Teen Spirit Smells Like Teen Spirit" />
+                    tools:text="Smells Like Teen Spirit" />
 
                 <LinearLayout
                     android:id="@+id/search_ll_artist_and_time"
@@ -89,4 +87,3 @@
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
-</androidx.constraintlayout.widget.ConstraintLayout>
