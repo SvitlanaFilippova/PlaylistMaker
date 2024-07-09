@@ -38,7 +38,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:divider="@drawable/ic_search_textdivider"
+            android:orientation="horizontal"
+            android:showDividers="middle">
 
             <TextView
                 android:id="@+id/search_tv_artist_name"
@@ -49,12 +51,6 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 tools:text="Nirvana" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                app:srcCompat="@drawable/ic_search_textdivider" />
 
             <TextView
                 android:id="@+id/search_tv_track_time"
