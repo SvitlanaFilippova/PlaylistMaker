@@ -118,7 +118,8 @@
                 <ImageView
                     android:id="@+id/iv_agreement"
                     style="@style/SettingsIconStyle"
-                    android:src="@drawable/ic_arrow_forward_light_mode" />
+                    android:src="@drawable/ic_arrow_forward_light_mode"
+                    />
 
             </LinearLayout>
         </LinearLayout>

@@ -2,9 +2,6 @@
 <resources>
     <style name="MainActivityLayoutStyle">
      <item name="android:background">@color/blue</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="ParentVerticalLayoutStyle">
@@ -49,6 +46,7 @@
         <item name="android:layout_height">@dimen/standart_icon_size_24</item>
         <item name="android:layout_marginEnd">@dimen/standart_padding_16</item>
         <item name="tint">?attr/colorSecondaryVariant</item>
+        <item name="android:contentDescription">@null</item>
     </style>
 
 
