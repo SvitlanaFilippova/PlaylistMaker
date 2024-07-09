@@ -11,14 +11,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val buttonSearch = findViewById<com.google.android.material.button.MaterialButton>(R.id.bt_search)
-        val buttonLibrary = findViewById<com.google.android.material.button.MaterialButton>(R.id.bt_library)
-        val buttonSettings = findViewById<com.google.android.material.button.MaterialButton>(R.id.bt_settings)
+        val buttonSearch =
+            findViewById<com.google.android.material.button.MaterialButton>(R.id.bt_search)
+        val buttonLibrary =
+            findViewById<com.google.android.material.button.MaterialButton>(R.id.bt_library)
+        val buttonSettings =
+            findViewById<com.google.android.material.button.MaterialButton>(R.id.bt_settings)
 
 
-        buttonSearch.setOnClickListener{
+        buttonSearch.setOnClickListener {
             val searchIntent = Intent(this, SearchActivity::class.java)
-        startActivity(searchIntent)
+            startActivity(searchIntent)
         }
         buttonLibrary.setOnClickListener {
             val libraryIntent = Intent(this, LibraryActivity::class.java)
@@ -29,7 +32,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(settingsIntent)
         }
     }
-
 
 
 }

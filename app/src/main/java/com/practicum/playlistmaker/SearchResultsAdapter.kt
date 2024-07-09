@@ -18,8 +18,9 @@ class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchRes
         val binding = ActivitySearchTrackCardBinding.bind(parentView)
 
 
-        fun bind(track: Track) =with(binding){
-            val cornerRadius = this@SearchResultsHolder.parentView.resources.getDimensionPixelSize(R.dimen.search_image_corner_radius_2)
+        fun bind(track: Track) = with(binding) {
+            val cornerRadius =
+                this@SearchResultsHolder.parentView.resources.getDimensionPixelSize(R.dimen.search_image_corner_radius_2)
 
             searchTvTrackName.text = track.trackName
             searchTvArtistName.text = track.artistName
@@ -45,7 +46,7 @@ class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchRes
         return SearchResultsHolder(view)
     }
 
-     override fun onBindViewHolder(holder: SearchResultsHolder, position: Int) {
+    override fun onBindViewHolder(holder: SearchResultsHolder, position: Int) {
         holder.bind(trackList[position])
 
     }

@@ -1,125 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/ll_settings_screen"
-        style="@style/ParentVerticalLayoutStyle"
-        tools:ignore="MissingConstraints"
-        tools:context=".SettingsActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_settings_screen"
+    style="@style/ParentVerticalLayoutStyle"
+    tools:context=".SettingsActivity"
+    tools:ignore="MissingConstraints">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/settings_toolbar"
-        app:title="@string/settings"
         android:layout_width="match_parent"
         android:layout_height="@dimen/head_toolbar_layout_height_56"
         app:navigationIcon="@drawable/ic_arrow_back_light_mode"
-        app:navigationIconTint= "?attr/colorOnPrimary"
-        app:titleTextAppearance="@style/HeadToolbarTextStyle"
-                      />
+        app:navigationIconTint="?attr/colorOnPrimary"
+        app:title="@string/settings"
+        app:titleTextAppearance="@style/HeadToolbarTextStyle" />
 
 
-            <LinearLayout
-                android:id="@+id/ll_dark_theme"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/settings_row_size_64"
-                android:gravity="center"
-                android:orientation="horizontal"
-                tools:ignore="UseSwitchCompatOrMaterialXml">
+    <LinearLayout
+        android:id="@+id/ll_dark_theme"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_row_size_64"
+        android:gravity="center"
+        android:orientation="horizontal"
+        tools:ignore="UseSwitchCompatOrMaterialXml">
 
 
-                <TextView
-                    android:id="@+id/tv_dark_theme"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/dark_theme"
-                    style="@style/SettingsTextStyle"
-/>
+        <TextView
+            android:id="@+id/tv_dark_theme"
+            style="@style/SettingsTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/dark_theme" />
 
-                <Switch
-                    android:id="@+id/sw_dark_theme"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="@dimen/standart_padding_16"
-                    android:paddingEnd="-3dp"
-                                        />
+        <Switch
+            android:id="@+id/sw_dark_theme"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/standart_padding_16"
+            android:paddingEnd="-3dp" />
 
-            </LinearLayout>
+    </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/ll_share"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/settings_row_size_64"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+    <LinearLayout
+        android:id="@+id/ll_share"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_row_size_64"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tv_share"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/share"
-                    style="@style/SettingsTextStyle"
-                    />
+        <TextView
+            android:id="@+id/tv_share"
+            style="@style/SettingsTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/share" />
 
-                <ImageView
-                    android:id="@+id/iv_share"
-                    style="@style/SettingsIconStyle"
-                    android:src="@drawable/ic_share_light_mode"
-                    />
+        <ImageView
+            android:id="@+id/iv_share"
+            style="@style/SettingsIconStyle"
+            android:src="@drawable/ic_share_light_mode" />
 
-            </LinearLayout>
+    </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/ll_support"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/settings_row_size_64"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+    <LinearLayout
+        android:id="@+id/ll_support"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_row_size_64"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tv_support"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:text="@string/support"
-                      style="@style/SettingsTextStyle"
-                    />
+        <TextView
+            android:id="@+id/tv_support"
+            style="@style/SettingsTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="@string/support" />
 
-                <ImageView
-                    android:id="@+id/iv_support"
-                    android:src="@drawable/ic_support_light_mode"
-                    style="@style/SettingsIconStyle" />
+        <ImageView
+            android:id="@+id/iv_support"
+            style="@style/SettingsIconStyle"
+            android:src="@drawable/ic_support_light_mode" />
 
-            </LinearLayout>
+    </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/ll_agreement"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/settings_row_size_64"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+    <LinearLayout
+        android:id="@+id/ll_agreement"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_row_size_64"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tv_agreement"
-                    style="@style/SettingsTextStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:text="@string/agreement"
+        <TextView
+            android:id="@+id/tv_agreement"
+            style="@style/SettingsTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="@string/agreement"
 
-                    />
+            />
 
-                <ImageView
-                    android:id="@+id/iv_agreement"
-                    style="@style/SettingsIconStyle"
-                    android:src="@drawable/ic_arrow_forward_light_mode"
-                    />
+        <ImageView
+            android:id="@+id/iv_agreement"
+            style="@style/SettingsIconStyle"
+            android:src="@drawable/ic_arrow_forward_light_mode" />
 
-            </LinearLayout>
-        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

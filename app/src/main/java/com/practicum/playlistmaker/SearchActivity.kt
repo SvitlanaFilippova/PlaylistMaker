@@ -46,6 +46,7 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // empty
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
                 searchClearButton.isVisible = !s.isNullOrEmpty()
@@ -59,12 +60,11 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.addTextChangedListener(searchTextWatcher)
 
 
-
         val recyclerView = binding.searchRcSearchResults
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = SearchResultsAdapter()
 
-        }
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
