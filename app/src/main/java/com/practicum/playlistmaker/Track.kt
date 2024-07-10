@@ -1,15 +1,15 @@
 package com.practicum.playlistmaker
 
-class Track
+data class Track
     (
     val trackName: String,
     val artistName: String,
     val trackTime: String,
     val artworkUrl100: String
-) {
-}
+)
 
-var trackList = arrayListOf<Track>(
+
+val trackList = arrayListOf<Track>(
     Track(
         "Smells Like Teen Spirit",
         "Nirvana",

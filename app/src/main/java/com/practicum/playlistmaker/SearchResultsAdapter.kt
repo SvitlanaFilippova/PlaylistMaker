@@ -15,7 +15,7 @@ import com.practicum.playlistmaker.databinding.ActivitySearchTrackCardBinding
 class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchResultsHolder>() {
 
     class SearchResultsHolder(private val parentView: View) : RecyclerView.ViewHolder(parentView) {
-        val binding = ActivitySearchTrackCardBinding.bind(parentView)
+        private val binding = ActivitySearchTrackCardBinding.bind(parentView)
 
 
         fun bind(track: Track) = with(binding) {
