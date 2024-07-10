@@ -1,42 +1,46 @@
 package com.practicum.playlistmaker
 
-import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 
 
 class SearchActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySearchBinding
     private var searchInput: String = INPUT_DEF
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+        binding = ActivitySearchBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        savedInstanceState?.let {
-            val str = it.getString(SEARCH_INPUT, searchInput)
-            Log.i("Проверка сохранения поискового запроса", "string $str")
-        }
-
-        setContentView(R.layout.activity_search)
-        val inputEditText = findViewById<EditText>(R.id.search_et_inputSeacrh)
-        val searchClearButton = findViewById<ImageView>(R.id.search_iv_clearIcon)
+        val inputEditText = binding.searchEtInputSeacrh
+        val searchClearButton = binding.searchIvClearIcon
 
         searchClearButton.setOnClickListener {
             inputEditText.setText("")
-            hideKeyboard() // спрятать клавиатуру!
+            hideKeyboard()
         }
 
-        val iconBack = findViewById<ImageView>(R.id.search_iv_arrow_back)
-        iconBack.setOnClickListener {
+        binding.searchToolbar.setNavigationOnClickListener() {
             finish()
         }
-             if (searchInput.isNotEmpty()) { inputEditText.setText(searchInput) }
+        if (searchInput.isNotEmpty()) {
+            inputEditText.setText(searchInput)
+        }
 
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -54,6 +58,12 @@ class SearchActivity : AppCompatActivity() {
         }
 
         inputEditText.addTextChangedListener(searchTextWatcher)
+
+
+        val recyclerView = binding.searchRcSearchResults
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = SearchResultsAdapter()
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -63,10 +73,10 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-         searchInput = savedInstanceState.getString(SEARCH_INPUT, searchInput)
+        searchInput = savedInstanceState.getString(SEARCH_INPUT, searchInput)
     }
 
-        private companion object {
+    private companion object {
         const val SEARCH_INPUT = "SEARCH_INPUT"
         const val INPUT_DEF = ""
     }

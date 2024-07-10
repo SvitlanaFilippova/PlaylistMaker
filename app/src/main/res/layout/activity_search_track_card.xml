@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/search_supersmall_margin_size_4">
+
+    <ImageView
+        android:id="@+id/search_iv_cover"
+        android:layout_width="@dimen/search_image_size_45"
+        android:layout_height="@dimen/search_image_size_45"
+        android:layout_margin="@dimen/small_margin_8"
+        android:contentDescription="@null"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <LinearLayout
+        android:id="@+id/search_ll_track_info"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/search_tv_track_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/regular_text_size_16"
+            tools:text="Smells Like Teen Spirit" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/ic_search_textdivider"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <TextView
+                android:id="@+id/search_tv_artist_name"
+                style="@style/SearchSmallTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                tools:text="Nirvana" />
+
+            <TextView
+                android:id="@+id/search_tv_track_time"
+                style="@style/SearchSmallTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="5:01" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/search_iv_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/standart_icon_size_24"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/search_margin_size_12"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/ic_arrow_forward_light_mode"
+        app:tint="?attr/colorSecondaryVariant" />
+
+</LinearLayout>

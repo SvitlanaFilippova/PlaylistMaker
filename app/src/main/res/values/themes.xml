@@ -1,4 +1,5 @@
 <resources>
+
     <style name="Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:statusBarColor">@color/blue</item>
         <item name="colorOnPrimary">@color/black</item>
