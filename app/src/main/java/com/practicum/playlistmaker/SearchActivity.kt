@@ -109,7 +109,10 @@ class SearchActivity : AppCompatActivity() {
 
 
                             override fun onFailure(p0: Call<SongsResponse>, p1: Throwable) {
-                                // TODO(  showMessage(getString(R.string.something_went_wrong), t.message.toString()))
+                                showMessage(
+                                    getString(R.string.search_error_netwwork),
+                                    getString(R.string.search_error_netwwork_extra)
+                                )
                             }
 
                         })
@@ -124,20 +127,32 @@ class SearchActivity : AppCompatActivity() {
 
     fun showMessage(text: String, additionalMessage: String) = with(binding) {
         if (text.isNotEmpty()) {
-            searchIvPlaceholderImage.isVisible = true
-            searchTvPlaceholderMessage.isVisible = true
+            searchIvPlaceholderImage.setImageResource(R.drawable.ic_nothing_found)
+            searchTvPlaceholderMessage.text = text
+            placeholderVisibility(true, true, false, false)
             trackList.clear()
             adapter.notifyDataSetChanged()
-            searchTvPlaceholderMessage.text = text
+
             if (additionalMessage.isNotEmpty()) {
-                binding.searchTvPlaceholderMessage.isVisible = true
-                binding.searchTvPlaceholderExtraMessage.text = additionalMessage
+                searchIvPlaceholderImage.setImageResource(R.drawable.ic_no_internet)
+                searchTvPlaceholderExtraMessage.text = additionalMessage
+                placeholderVisibility(true, true, true, true)
             }
         } else {
-            searchIvPlaceholderImage.isVisible = false
-            searchTvPlaceholderMessage.isVisible = false
-            binding.searchTvPlaceholderExtraMessage.isVisible = false
+            placeholderVisibility(false, false, false, false)
         }
+    }
+
+    fun placeholderVisibility(
+        imageVisibility: Boolean,
+        messageVisibility: Boolean,
+        extraMessageVisibility: Boolean,
+        buttonVisibility: Boolean,
+    ) = with(binding) {
+        searchIvPlaceholderImage.isVisible = imageVisibility
+        searchTvPlaceholderMessage.isVisible = messageVisibility
+        searchTvPlaceholderExtraMessage.isVisible = extraMessageVisibility
+        searchBvPlaceholderButton.isVisible = buttonVisibility
     }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

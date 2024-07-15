@@ -109,11 +109,11 @@
             android:layout_height="wrap_content"
             style="@style/SearchErrorTextStyle"
             android:layout_marginHorizontal="@dimen/search_error_hor_margin_24"
-            tools:text="Загрузка не удалась. Проверьте подключение к интернету"
+            android:text="@string/search_error_netwwork_extra"
             android:visibility="gone" />
 
         <Button
-            android:id="@+id/search_tv_placeholder_button"
+            android:id="@+id/search_bv_placeholder_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/search_update"
