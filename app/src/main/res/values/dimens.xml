@@ -17,6 +17,12 @@
     <dimen name="search_artistname_height_13">13dp</dimen>
     <dimen name="search_tracktime_width_64">64dp</dimen>
     <dimen name="search_image_corner_radius_2">2dp</dimen>
+    <dimen name="search_error_img_size_120">120dp</dimen>
+    <dimen name="search_error_vert_margin_96">96dp</dimen>
+    <dimen name="search_error_hor_margin_24">24dp</dimen>
+    <dimen name="search_error_text_size_19">19sp</dimen>
+    <dimen name="search_error_button_text_size_14">14sp</dimen>
+    <dimen name="search_error_button_radius_56">56dp</dimen>
 
 
 </resources>

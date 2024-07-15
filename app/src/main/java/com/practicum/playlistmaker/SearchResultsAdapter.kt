@@ -24,7 +24,7 @@ class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchRes
 
             searchTvTrackName.text = track.trackName
             searchTvArtistName.text = track.artistName
-            searchTvTrackTime.text = track.trackTime
+            searchTvTrackTime.text = track.trackTimeMillis.toString()
             Glide.with(parentView)
                 .load(track.artworkUrl100)
                 .centerCrop()
