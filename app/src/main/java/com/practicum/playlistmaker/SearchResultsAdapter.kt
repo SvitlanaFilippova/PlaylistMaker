@@ -1,15 +1,14 @@
 package com.practicum.playlistmaker
 
-import android.renderscript.ScriptGroup.Binding
+import android.icu.text.SimpleDateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.databinding.ActivitySearchTrackCardBinding
+import java.util.Locale
 
 
 class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchResultsHolder>() {
@@ -24,7 +23,8 @@ class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchRes
 
             searchTvTrackName.text = track.trackName
             searchTvArtistName.text = track.artistName
-            searchTvTrackTime.text = track.trackTimeMillis.toString()
+            searchTvTrackTime.text =
+                SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
             Glide.with(parentView)
                 .load(track.artworkUrl100)
                 .centerCrop()

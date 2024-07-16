@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,6 +27,7 @@ class SearchActivity : AppCompatActivity() {
         .build()
     private val iTunesService = retrofit.create(ITunesApi::class.java)
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -36,32 +36,56 @@ class SearchActivity : AppCompatActivity() {
 
         val inputEditText = binding.searchEtInputSeacrh
         val searchClearButton = binding.searchIvClearIcon
+        val placeholderUpdateButton = binding.searchBvPlaceholderButton
 
+        if (searchInput.isNotEmpty()) {
+            inputEditText.setText(searchInput)
+        }
 
         searchClearButton.setOnClickListener {
             inputEditText.setText("")
             hideKeyboard()
+            trackList.clear()
+            adapter.notifyDataSetChanged()
+            placeholderVisibility(false, false, false, false)
         }
 
         binding.searchToolbar.setNavigationOnClickListener() {
             finish()
         }
 
-        if (searchInput.isNotEmpty()) {
-            inputEditText.setText(searchInput)
+        placeholderUpdateButton.setOnClickListener {
+            searchInITunes(inputEditText.text.toString())
+        }
+
+
+        binding.searchEtInputSeacrh.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (inputEditText.text.isNotEmpty()) {
+                    searchInITunes(inputEditText.text.toString())
+                }
+            }
+            false
         }
 
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // empty
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchClearButton.isVisible = !s.isNullOrEmpty()
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             override fun afterTextChanged(s: Editable?) {
                 searchInput = s.toString()
+                if (searchInput.isNotEmpty()) {
+                    searchInITunes(inputEditText.text.toString())
+
+                } else {
+                    trackList.clear()
+                    adapter.notifyDataSetChanged()
+                }
             }
         }
 
@@ -73,58 +97,50 @@ class SearchActivity : AppCompatActivity() {
         tracksRecView.adapter = adapter
 
 
-        binding.searchEtInputSeacrh.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (inputEditText.text.isNotEmpty()) {
-
-                    iTunesService.search(inputEditText.text.toString())
-                        .enqueue(object : Callback<SongsResponse> {
-                            @SuppressLint("NotifyDataSetChanged")
-                            override fun onResponse(
-                                call: Call<SongsResponse>,
-                                response: Response<SongsResponse>
-                            ) {
-                                if (response.code() == 200) {
-                                    trackList.clear()
-                                    if (response.body()?.results?.isNotEmpty() == true) {
-                                        trackList.addAll(response.body()?.results!!)
-                                        adapter.notifyDataSetChanged()
-                                    }
-                                    if (trackList.isEmpty()) {
-                                        showMessage(
-                                            getString(R.string.search_error_nothing_found),
-                                            ""
-                                        )
-
-                                    } else {
-                                        showMessage("", "")
-                                    }
-                                } else {
-                                    showMessage(
-                                        getString(R.string.search_error_netwwork),
-                                        getString(R.string.search_error_netwwork_extra)
-                                    )
-                                }
-                            }
-
-
-                            override fun onFailure(p0: Call<SongsResponse>, p1: Throwable) {
-                                showMessage(
-                                    getString(R.string.search_error_netwwork),
-                                    getString(R.string.search_error_netwwork_extra)
-                                )
-                            }
-
-                        })
-                }// ВЫПОЛНЯЙТЕ ПОИСКОВЫЙ ЗАПРОС ЗДЕСЬ
-
-            }
-            false
-        }
-
-
     }
 
+    fun searchInITunes(text: String) {
+        iTunesService.search(text)
+            .enqueue(object : Callback<SongsResponse> {
+                @SuppressLint("NotifyDataSetChanged")
+                override fun onResponse(
+                    call: Call<SongsResponse>,
+                    response: Response<SongsResponse>
+                ) {
+                    if (response.code() == 200) {
+                        trackList.clear()
+                        if (response.body()?.results?.isNotEmpty() == true) {
+                            trackList.addAll(response.body()?.results!!)
+                            adapter.notifyDataSetChanged()
+                        }
+                        if (trackList.isEmpty()) {
+                            showMessage(
+                                getString(R.string.search_error_nothing_found),
+                                ""
+                            )
+
+                        } else {
+                            showMessage("", "")
+                        }
+                    } else {
+                        showMessage(
+                            getString(R.string.search_error_netwwork),
+                            getString(R.string.search_error_netwwork_extra)
+                        )
+                    }
+                }
+
+                override fun onFailure(p0: Call<SongsResponse>, p1: Throwable) {
+                    showMessage(
+                        getString(R.string.search_error_netwwork),
+                        getString(R.string.search_error_netwwork_extra)
+                    )
+                }
+            })
+    }
+
+
+    @SuppressLint("NotifyDataSetChanged")
     fun showMessage(text: String, additionalMessage: String) = with(binding) {
         if (text.isNotEmpty()) {
             searchIvPlaceholderImage.setImageResource(R.drawable.ic_nothing_found)
@@ -143,7 +159,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    fun placeholderVisibility(
+    private fun placeholderVisibility(
         imageVisibility: Boolean,
         messageVisibility: Boolean,
         extraMessageVisibility: Boolean,
@@ -154,6 +170,7 @@ class SearchActivity : AppCompatActivity() {
         searchTvPlaceholderExtraMessage.isVisible = extraMessageVisibility
         searchBvPlaceholderButton.isVisible = buttonVisibility
     }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SEARCH_INPUT, searchInput)
