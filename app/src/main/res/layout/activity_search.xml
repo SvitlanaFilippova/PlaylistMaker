@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             style="@style/SearchErrorTextStyle"
             android:layout_marginHorizontal="@dimen/search_error_hor_margin_24"
-            android:text="@string/search_error_netwwork_extra"
+            android:text="@string/search_error_network_extra"
             android:visibility="gone" />
 
         <Button

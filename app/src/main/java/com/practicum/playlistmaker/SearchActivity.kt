@@ -47,7 +47,7 @@ class SearchActivity : AppCompatActivity() {
             hideKeyboard()
             trackList.clear()
             adapter.notifyDataSetChanged()
-            placeholderVisibility(false, false, false, false)
+            placeholderVisibility(PlaceholderStatus.DEFAULT)
         }
 
         binding.searchToolbar.setNavigationOnClickListener() {
@@ -79,13 +79,7 @@ class SearchActivity : AppCompatActivity() {
             @SuppressLint("NotifyDataSetChanged")
             override fun afterTextChanged(s: Editable?) {
                 searchInput = s.toString()
-                if (searchInput.isNotEmpty()) {
-                    searchInITunes(inputEditText.text.toString())
 
-                } else {
-                    trackList.clear()
-                    adapter.notifyDataSetChanged()
-                }
             }
         }
 
@@ -109,9 +103,12 @@ class SearchActivity : AppCompatActivity() {
                 ) {
                     if (response.code() == 200) {
                         trackList.clear()
-                        if (response.body()?.results?.isNotEmpty() == true) {
-                            trackList.addAll(response.body()?.results!!)
-                            adapter.notifyDataSetChanged()
+                        var results = response.body()?.results
+                        if (results != null) {
+                            if (results.isNotEmpty()) {
+                                trackList.addAll(results)
+                                adapter.notifyDataSetChanged()
+                            }
                         }
                         if (trackList.isEmpty()) {
                             showMessage(
@@ -124,16 +121,16 @@ class SearchActivity : AppCompatActivity() {
                         }
                     } else {
                         showMessage(
-                            getString(R.string.search_error_netwwork),
-                            getString(R.string.search_error_netwwork_extra)
+                            getString(R.string.search_error_network),
+                            getString(R.string.search_error_network_extra)
                         )
                     }
                 }
 
                 override fun onFailure(p0: Call<SongsResponse>, p1: Throwable) {
                     showMessage(
-                        getString(R.string.search_error_netwwork),
-                        getString(R.string.search_error_netwwork_extra)
+                        getString(R.string.search_error_network),
+                        getString(R.string.search_error_network_extra)
                     )
                 }
             })
@@ -145,31 +142,47 @@ class SearchActivity : AppCompatActivity() {
         if (text.isNotEmpty()) {
             searchIvPlaceholderImage.setImageResource(R.drawable.ic_nothing_found)
             searchTvPlaceholderMessage.text = text
-            placeholderVisibility(true, true, false, false)
+            placeholderVisibility(PlaceholderStatus.NOTHING_FOUND)
             trackList.clear()
             adapter.notifyDataSetChanged()
 
             if (additionalMessage.isNotEmpty()) {
                 searchIvPlaceholderImage.setImageResource(R.drawable.ic_no_internet)
                 searchTvPlaceholderExtraMessage.text = additionalMessage
-                placeholderVisibility(true, true, true, true)
+                placeholderVisibility(PlaceholderStatus.NO_NETWORK)
             }
         } else {
-            placeholderVisibility(false, false, false, false)
+            placeholderVisibility(PlaceholderStatus.DEFAULT)
         }
     }
 
-    private fun placeholderVisibility(
-        imageVisibility: Boolean,
-        messageVisibility: Boolean,
-        extraMessageVisibility: Boolean,
-        buttonVisibility: Boolean,
-    ) = with(binding) {
-        searchIvPlaceholderImage.isVisible = imageVisibility
-        searchTvPlaceholderMessage.isVisible = messageVisibility
-        searchTvPlaceholderExtraMessage.isVisible = extraMessageVisibility
-        searchBvPlaceholderButton.isVisible = buttonVisibility
+    private fun placeholderVisibility(status: PlaceholderStatus) = with(binding) {
+        when (status) {
+            PlaceholderStatus.NOTHING_FOUND -> {
+                searchIvPlaceholderImage.isVisible = true
+                searchTvPlaceholderMessage.isVisible = true
+                searchTvPlaceholderExtraMessage.isVisible = false
+                searchBvPlaceholderButton.isVisible = false
+            }
+
+            PlaceholderStatus.NO_NETWORK -> {
+                searchIvPlaceholderImage.isVisible = true
+                searchTvPlaceholderMessage.isVisible = true
+                searchTvPlaceholderExtraMessage.isVisible = true
+                searchBvPlaceholderButton.isVisible = true
+            }
+
+            PlaceholderStatus.DEFAULT -> {
+                searchIvPlaceholderImage.isVisible = false
+                searchTvPlaceholderMessage.isVisible = false
+                searchTvPlaceholderExtraMessage.isVisible = false
+                searchBvPlaceholderButton.isVisible = false
+
+            }
+
+        }
     }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -186,5 +199,9 @@ class SearchActivity : AppCompatActivity() {
         const val INPUT_DEF = ""
     }
 
-
+    enum class PlaceholderStatus {
+        NOTHING_FOUND,
+        NO_NETWORK,
+        DEFAULT
+    }
 }

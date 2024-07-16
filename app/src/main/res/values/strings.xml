@@ -16,7 +16,7 @@
     <string name="settings_agreement_url" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
     <string name="search_update">Обновить</string>
     <string name="search_error_nothing_found">Ничего не нашлось</string>
-    <string name="search_error_netwwork">Проблемы со связью</string>
-    <string name="search_error_netwwork_extra">Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="search_error_network">Проблемы со связью</string>
+    <string name="search_error_network_extra">Загрузка не удалась. Проверьте подключение к интернету</string>
 
 </resources>
