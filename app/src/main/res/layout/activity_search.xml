@@ -31,7 +31,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/search_iv_searchIcon"
+                android:id="@+id/search_iv_search_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -40,7 +40,7 @@
                 app:tint="@color/search_field_hint" />
 
             <EditText
-                android:id="@+id/search_et_inputSeacrh"
+                android:id="@+id/search_et_input_seacrh"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -52,7 +52,9 @@
                 android:shadowColor="@android:color/transparent"
                 android:textColor="@color/black"
                 android:textColorHint="@color/search_field_hint"
-                android:textSize="@dimen/regular_text_size_16" />
+                android:textSize="@dimen/regular_text_size_16"
+                android:imeOptions="actionDone"
+                android:singleLine="true" />
 
             <ImageView
                 android:id="@+id/search_iv_clearIcon"
@@ -73,4 +75,52 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standart_padding_16"
         tools:listitem="@layout/activity_search_track_card" />
+
+    <LinearLayout
+        android:id="@+id/search_ll_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/search_error_vert_margin_96">
+
+        <ImageView
+            android:id="@+id/search_iv_placeholder_image"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_nothing_found"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/search_tv_placeholder_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/SearchErrorTextStyle"
+            android:gravity=""
+            android:layout_marginHorizontal="@dimen/search_error_hor_margin_24"
+            android:layout_marginBottom="@dimen/search_error_hor_margin_24"
+            android:layout_marginTop="@dimen/standart_padding_16"
+            tools:text="Ничего не нашлось"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/search_tv_placeholder_extra_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/SearchErrorTextStyle"
+            android:layout_marginHorizontal="@dimen/search_error_hor_margin_24"
+            android:text="@string/search_error_network_extra"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/search_bv_placeholder_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_update"
+            android:textSize="@dimen/search_error_button_text_size_14"
+            android:layout_marginTop="@dimen/search_error_hor_margin_24"
+            style="@style/SearchErrorButtonStyle"
+            android:visibility="gone" />
+
+    </LinearLayout>
 </LinearLayout>
