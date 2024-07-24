@@ -22,12 +22,12 @@ class SettingsActivity : AppCompatActivity() {
         }
 
 
-        val rowDarkTheme = findViewById<LinearLayout>(R.id.ll_dark_theme)
+        val rowDarkTheme = binding.swDarkTheme
         rowDarkTheme.setOnClickListener {
             // тут будет обработка клика по строке "Тёмная тема"
         }
 
-        val rowShare = findViewById<LinearLayout>(R.id.ll_share)
+        val rowShare = binding.tvShare
         rowShare.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.setType("text/plain")
@@ -40,7 +40,7 @@ class SettingsActivity : AppCompatActivity() {
             )
         }
 
-        val rowSupport = findViewById<LinearLayout>(R.id.ll_support)
+        val rowSupport = binding.tvSupport
         rowSupport.setOnClickListener {
 
             Intent(Intent.ACTION_SENDTO).apply {
@@ -57,7 +57,7 @@ class SettingsActivity : AppCompatActivity() {
 
             }.also(::startActivity)
         }
-        val rowAgreement = findViewById<LinearLayout>(R.id.ll_agreement)
+        val rowAgreement = binding.tvAgreement
         rowAgreement.setOnClickListener {
             val agreementIntent =
                 Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.settings_agreement_url)))
