@@ -6,21 +6,11 @@ import androidx.appcompat.app.AppCompatDelegate
 
 class App : Application() {
 
-    var darkTheme = false
+    private var darkTheme = false
     override fun onCreate() {
         val sharedPrefs = getSharedPreferences(PLAYLISTMAKER_PREFERENCES, MODE_PRIVATE)
-        val darkThemeWasEnabled = sharedPrefs.getString(THEME_KEY, "false")
 
-
-        if (darkThemeWasEnabled != null) {
-            when (darkThemeWasEnabled) {
-                "true" -> switchTheme(true)
-                "false" -> switchTheme(false)
-            }
-        }
-
-
-
+        switchTheme(sharedPrefs.getBoolean(THEME_KEY, darkTheme))
 
         super.onCreate()
     }

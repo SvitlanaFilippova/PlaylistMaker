@@ -30,11 +30,11 @@ class SettingsActivity : AppCompatActivity() {
         val themeSwitcher = binding.swDarkTheme
         themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
             (applicationContext as App).switchTheme(checked)
-            sharedPrefs.edit().putString(THEME_KEY, checked.toString()).apply()
+            sharedPrefs.edit().putBoolean(THEME_KEY, checked).apply()
 
         }
 
-        if (sharedPrefs.getString(THEME_KEY, "") == "true") {
+        if (sharedPrefs.getBoolean(THEME_KEY, false)) {
             themeSwitcher.isChecked = true
 
         }
