@@ -36,7 +36,7 @@ class SearchResultsAdapter(var trackList: ArrayList<Track>) :
                 )
                 .placeholder(R.drawable.ic_cover_placeholder)
                 .into(searchIvCover)
-
+            searchTvArtistName.requestLayout()
         }
 
     }
