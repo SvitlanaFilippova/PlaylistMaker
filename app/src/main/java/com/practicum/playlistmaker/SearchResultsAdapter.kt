@@ -11,7 +11,8 @@ import com.practicum.playlistmaker.databinding.ActivitySearchTrackCardBinding
 import java.util.Locale
 
 
-class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchResultsHolder>() {
+class SearchResultsAdapter(var trackList: ArrayList<Track>) :
+    RecyclerView.Adapter<SearchResultsAdapter.SearchResultsHolder>() {
 
     class SearchResultsHolder(private val parentView: View) : RecyclerView.ViewHolder(parentView) {
         private val binding = ActivitySearchTrackCardBinding.bind(parentView)
@@ -47,12 +48,12 @@ class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchRes
     }
 
     override fun onBindViewHolder(holder: SearchResultsHolder, position: Int) {
-        holder.bind(trackListOfSearchResults[position])
+        holder.bind(trackList[position])
         holder.itemView.setOnClickListener { /* здесь будет логика добавленпия в историю поиска */ }
 
     }
 
     override fun getItemCount(): Int {
-        return trackListOfSearchResults.size
+        return trackList.size
     }
 }

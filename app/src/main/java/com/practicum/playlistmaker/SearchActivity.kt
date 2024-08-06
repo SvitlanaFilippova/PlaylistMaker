@@ -19,8 +19,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private var searchInput: String = INPUT_DEF
-    val searchResultsAdapter = SearchResultsAdapter()
-    val searchHistoryAdapter = SearchResultsAdapter()
+    val searchResultsAdapter = SearchResultsAdapter(trackListOfSearchResults)
+    val searchHistoryAdapter = SearchResultsAdapter(trackListSearchHistory)
     private val searchBaseUrl = "https://itunes.apple.com"
     val retrofit = Retrofit.Builder()
         .baseUrl(searchBaseUrl)
@@ -87,11 +87,13 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.addTextChangedListener(searchTextWatcher)
 
 
-        val trackSearchResultsRV = binding.searchRcSearchResults
+        val trackSearchResultsRV = binding.searchRvSearchResults
         trackSearchResultsRV.layoutManager = LinearLayoutManager(this)
         trackSearchResultsRV.adapter = searchResultsAdapter
 
-
+        val trackSearchHistoryRV = binding.searchRvSearchHistory
+        trackSearchHistoryRV.layoutManager = LinearLayoutManager(this)
+        trackSearchHistoryRV.adapter = searchHistoryAdapter
     }
 
     fun searchInITunes(text: String) {
