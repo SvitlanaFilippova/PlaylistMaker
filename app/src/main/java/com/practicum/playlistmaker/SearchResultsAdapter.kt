@@ -49,7 +49,12 @@ class SearchResultsAdapter(var trackList: ArrayList<Track>) :
 
     override fun onBindViewHolder(holder: SearchResultsHolder, position: Int) {
         holder.bind(trackList[position])
-        holder.itemView.setOnClickListener { /* здесь будет логика добавленпия в историю поиска */ }
+        holder.itemView.setOnClickListener {
+            //проверка на размер списка (макс 10), проверка на наличие трека в списке
+
+            trackListSearchHistory.add(0, trackList[position])
+//вынести логику в отдельный класс, тут оставить только вызов метода
+        }
 
     }
 

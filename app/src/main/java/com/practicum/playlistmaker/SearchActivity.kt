@@ -77,7 +77,7 @@ class SearchActivity : AppCompatActivity() {
                 searchClearButton.isVisible = !s.isNullOrEmpty()
             }
 
-            @SuppressLint("NotifyDataSetChanged")
+
             override fun afterTextChanged(s: Editable?) {
                 searchInput = s.toString()
 
@@ -87,11 +87,11 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.addTextChangedListener(searchTextWatcher)
 
 
-        val trackSearchResultsRV = binding.searchRvSearchResults
+        val trackSearchResultsRV = binding.searchRvResults
         trackSearchResultsRV.layoutManager = LinearLayoutManager(this)
         trackSearchResultsRV.adapter = searchResultsAdapter
 
-        val trackSearchHistoryRV = binding.searchRvSearchHistory
+        val trackSearchHistoryRV = binding.searchRvHistory
         trackSearchHistoryRV.layoutManager = LinearLayoutManager(this)
         trackSearchHistoryRV.adapter = searchHistoryAdapter
     }
