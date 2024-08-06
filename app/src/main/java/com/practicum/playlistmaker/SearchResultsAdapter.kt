@@ -47,11 +47,12 @@ class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchRes
     }
 
     override fun onBindViewHolder(holder: SearchResultsHolder, position: Int) {
-        holder.bind(trackList[position])
+        holder.bind(trackListOfSearchResults[position])
+        holder.itemView.setOnClickListener { /* здесь будет логика добавленпия в историю поиска */ }
 
     }
 
     override fun getItemCount(): Int {
-        return trackList.size
+        return trackListOfSearchResults.size
     }
 }

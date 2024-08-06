@@ -47,14 +47,14 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:hint="@string/search"
+                android:imeOptions="actionDone"
                 android:inputType="text"
                 android:maxLines="1"
                 android:shadowColor="@android:color/transparent"
+                android:singleLine="true"
                 android:textColor="@color/black"
                 android:textColorHint="@color/search_field_hint"
-                android:textSize="@dimen/regular_text_size_16"
-                android:imeOptions="actionDone"
-                android:singleLine="true" />
+                android:textSize="@dimen/regular_text_size_16" />
 
             <ImageView
                 android:id="@+id/search_iv_clearIcon"
@@ -74,15 +74,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standart_padding_16"
+        tools:itemCount="0"
         tools:listitem="@layout/activity_search_track_card" />
 
     <LinearLayout
         android:id="@+id/search_ll_placeholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginTop="@dimen/search_error_vert_margin_96"
         android:gravity="center"
-        android:layout_marginTop="@dimen/search_error_vert_margin_96">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/search_iv_placeholder_image"
@@ -93,34 +95,59 @@
 
         <TextView
             android:id="@+id/search_tv_placeholder_message"
+            style="@style/SearchMessageTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/SearchErrorTextStyle"
-            android:gravity=""
             android:layout_marginHorizontal="@dimen/search_error_hor_margin_24"
-            android:layout_marginBottom="@dimen/search_error_hor_margin_24"
             android:layout_marginTop="@dimen/standart_padding_16"
-            tools:text="Ничего не нашлось"
-            android:visibility="gone" />
+            android:layout_marginBottom="@dimen/search_error_hor_margin_24"
+            android:gravity=""
+            android:visibility="gone"
+            tools:text="Ничего не нашлось" />
 
         <TextView
             android:id="@+id/search_tv_placeholder_extra_message"
+            style="@style/SearchMessageTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/SearchErrorTextStyle"
             android:layout_marginHorizontal="@dimen/search_error_hor_margin_24"
             android:text="@string/search_error_network_extra"
             android:visibility="gone" />
 
         <Button
             android:id="@+id/search_bv_placeholder_button"
+            style="@style/SearchButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/search_update"
-            android:textSize="@dimen/search_error_button_text_size_14"
             android:layout_marginTop="@dimen/search_error_hor_margin_24"
-            style="@style/SearchErrorButtonStyle"
+            android:text="@string/search_update"
             android:visibility="gone" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/search_tv_search_history"
+        style="@style/SearchMessageTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/search_error_hor_margin_24"
+        android:layout_marginBottom="@dimen/small_margin_8"
+        android:text="@string/you_searched" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_rc_search_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/standart_padding_16"
+        tools:itemCount="3"
+        tools:listitem="@layout/activity_search_track_card" />
+
+    <Button
+        android:id="@+id/search_bv_clear_history"
+        style="@style/SearchButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/search_error_hor_margin_24"
+        android:text="@string/clear_history" />
 </LinearLayout>

@@ -19,7 +19,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private var searchInput: String = INPUT_DEF
-    val adapter = SearchResultsAdapter()
+    val searchResultsAdapter = SearchResultsAdapter()
+    val searchHistoryAdapter = SearchResultsAdapter()
     private val searchBaseUrl = "https://itunes.apple.com"
     val retrofit = Retrofit.Builder()
         .baseUrl(searchBaseUrl)
@@ -45,8 +46,8 @@ class SearchActivity : AppCompatActivity() {
         searchClearButton.setOnClickListener {
             inputEditText.setText("")
             hideKeyboard()
-            trackList.clear()
-            adapter.notifyDataSetChanged()
+            trackListOfSearchResults.clear()
+            searchResultsAdapter.notifyDataSetChanged()
             placeholderVisibility(PlaceholderStatus.DEFAULT)
         }
 
@@ -86,9 +87,9 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.addTextChangedListener(searchTextWatcher)
 
 
-        val tracksRecView = binding.searchRcSearchResults
-        tracksRecView.layoutManager = LinearLayoutManager(this)
-        tracksRecView.adapter = adapter
+        val trackSearchResultsRV = binding.searchRcSearchResults
+        trackSearchResultsRV.layoutManager = LinearLayoutManager(this)
+        trackSearchResultsRV.adapter = searchResultsAdapter
 
 
     }
@@ -102,15 +103,15 @@ class SearchActivity : AppCompatActivity() {
                     response: Response<SongsResponse>
                 ) {
                     if (response.code() == 200) {
-                        trackList.clear()
+                        trackListOfSearchResults.clear()
                         var results = response.body()?.results
                         if (results != null) {
                             if (results.isNotEmpty()) {
-                                trackList.addAll(results)
-                                adapter.notifyDataSetChanged()
+                                trackListOfSearchResults.addAll(results)
+                                searchResultsAdapter.notifyDataSetChanged()
                             }
                         }
-                        if (trackList.isEmpty()) {
+                        if (trackListOfSearchResults.isEmpty()) {
                             showMessage(
                                 getString(R.string.search_error_nothing_found),
                                 ""
@@ -143,8 +144,8 @@ class SearchActivity : AppCompatActivity() {
             searchIvPlaceholderImage.setImageResource(R.drawable.ic_nothing_found)
             searchTvPlaceholderMessage.text = text
             placeholderVisibility(PlaceholderStatus.NOTHING_FOUND)
-            trackList.clear()
-            adapter.notifyDataSetChanged()
+            trackListOfSearchResults.clear()
+            searchResultsAdapter.notifyDataSetChanged()
 
             if (additionalMessage.isNotEmpty()) {
                 searchIvPlaceholderImage.setImageResource(R.drawable.ic_no_internet)
@@ -159,6 +160,7 @@ class SearchActivity : AppCompatActivity() {
     private fun placeholderVisibility(status: PlaceholderStatus) = with(binding) {
         when (status) {
             PlaceholderStatus.NOTHING_FOUND -> {
+                searchLlPlaceholder.isVisible = true
                 searchIvPlaceholderImage.isVisible = true
                 searchTvPlaceholderMessage.isVisible = true
                 searchTvPlaceholderExtraMessage.isVisible = false
@@ -166,6 +168,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
             PlaceholderStatus.NO_NETWORK -> {
+                searchLlPlaceholder.isVisible = true
                 searchIvPlaceholderImage.isVisible = true
                 searchTvPlaceholderMessage.isVisible = true
                 searchTvPlaceholderExtraMessage.isVisible = true
@@ -173,6 +176,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
             PlaceholderStatus.DEFAULT -> {
+                searchLlPlaceholder.isVisible = false
                 searchIvPlaceholderImage.isVisible = false
                 searchTvPlaceholderMessage.isVisible = false
                 searchTvPlaceholderExtraMessage.isVisible = false
