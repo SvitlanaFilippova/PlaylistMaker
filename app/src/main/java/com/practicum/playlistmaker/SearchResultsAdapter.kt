@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker
 
+import android.content.SharedPreferences
 import android.icu.text.SimpleDateFormat
 import android.view.LayoutInflater
 import android.view.View
@@ -11,9 +12,10 @@ import com.practicum.playlistmaker.databinding.ActivitySearchTrackCardBinding
 import java.util.Locale
 
 
-class SearchResultsAdapter(var trackList: ArrayList<Track>) :
+class SearchResultsAdapter :
     RecyclerView.Adapter<SearchResultsAdapter.SearchResultsHolder>() {
-
+    var trackList: ArrayList<Track> = arrayListOf<Track>()
+    lateinit var sharedPreferences: SharedPreferences
     class SearchResultsHolder(private val parentView: View) : RecyclerView.ViewHolder(parentView) {
         private val binding = ActivitySearchTrackCardBinding.bind(parentView)
 
@@ -48,12 +50,31 @@ class SearchResultsAdapter(var trackList: ArrayList<Track>) :
     }
 
     override fun onBindViewHolder(holder: SearchResultsHolder, position: Int) {
-        holder.bind(trackList[position])
+        val track = trackList[position]
+        holder.bind(track)
         holder.itemView.setOnClickListener {
-            //проверка на размер списка (макс 10), проверка на наличие трека в списке
+            val searchHistory = SearchHistory(sharedPreferences)
+            searchHistory.saveHistory(trackListSearchHistory)
+            /*
 
-            trackListSearchHistory.add(0, trackList[position])
-//вынести логику в отдельный класс, тут оставить только вызов метода
+              код ниже работает адекватно только при клике в истории поиска, но не в результатах. Думать дальше.
+                        if (trackListSearchHistory.removeIf() {
+                            it.trackId == track.trackId
+                                  }
+                        ) {
+                            notifyDataSetChanged()
+                        }
+
+                        if (trackListSearchHistory.size > 9) {
+                            trackListSearchHistory.removeAt(9)
+                            notifyItemRemoved(9)
+                            notifyItemRangeChanged(0, trackListSearchHistory.size)
+                        }
+
+                        trackListSearchHistory.add(0, track)
+                        notifyItemInserted(0)
+                        notifyItemRangeChanged(0, trackListSearchHistory.size)*/
+
         }
 
     }

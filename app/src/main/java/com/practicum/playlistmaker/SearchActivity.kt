@@ -8,6 +8,8 @@ import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,14 +21,15 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private var searchInput: String = INPUT_DEF
-    val searchResultsAdapter = SearchResultsAdapter(trackListOfSearchResults)
-    val searchHistoryAdapter = SearchResultsAdapter(trackListSearchHistory)
+    val tracksAdapter = SearchResultsAdapter()
+
     private val searchBaseUrl = "https://itunes.apple.com"
     val retrofit = Retrofit.Builder()
         .baseUrl(searchBaseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val iTunesService = retrofit.create(ITunesApi::class.java)
+
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,35 +38,49 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        val sharedPreferences = getSharedPreferences(PLAYLISTMAKER_PREFERENCES, MODE_PRIVATE)
+        tracksAdapter.sharedPreferences = sharedPreferences
+        val searchHistoryString = sharedPreferences.getString(SEARCH_HISTORY_LIST_KEY, null)
+        if (searchHistoryString != null) {
+            tracksAdapter.trackList = createTrackListFromJson(searchHistoryString)
+        }
+
         val inputEditText = binding.searchEtInputSeacrh
-        val searchClearButton = binding.searchIvClearIcon
-        val placeholderUpdateButton = binding.searchBvPlaceholderButton
 
         if (searchInput.isNotEmpty()) {
             inputEditText.setText(searchInput)
         }
+        val searchClearButton = binding.searchIvClearIcon
 
         searchClearButton.setOnClickListener {
             inputEditText.setText("")
             hideKeyboard()
             trackListOfSearchResults.clear()
-            searchResultsAdapter.notifyDataSetChanged()
+            tracksAdapter.notifyDataSetChanged()
             placeholderVisibility(PlaceholderStatus.DEFAULT)
+            showHistory()
+            // todo добавить проверку, что история не пустая!!!
         }
 
         binding.searchToolbar.setNavigationOnClickListener() {
             finish()
         }
 
+        val placeholderUpdateButton = binding.searchBvPlaceholderButton
         placeholderUpdateButton.setOnClickListener {
             searchInITunes(inputEditText.text.toString())
         }
 
+        tracksAdapter.trackList = trackListSearchHistory
 
         binding.searchEtInputSeacrh.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (inputEditText.text.isNotEmpty()) {
                     searchInITunes(inputEditText.text.toString())
+                    hideHistory()
+                    //передаю список в адаптер
+                    tracksAdapter.trackList = trackListOfSearchResults
                 }
             }
             false
@@ -89,14 +106,25 @@ class SearchActivity : AppCompatActivity() {
 
         val trackSearchResultsRV = binding.searchRvResults
         trackSearchResultsRV.layoutManager = LinearLayoutManager(this)
-        trackSearchResultsRV.adapter = searchResultsAdapter
+        trackSearchResultsRV.adapter = tracksAdapter
 
-        val trackSearchHistoryRV = binding.searchRvHistory
-        trackSearchHistoryRV.layoutManager = LinearLayoutManager(this)
-        trackSearchHistoryRV.adapter = searchHistoryAdapter
+        val clearHistoryButton = binding.searchBvClearHistory
+        val searchHistoryLogic = SearchHistory(sharedPreferences)
+        clearHistoryButton.setOnClickListener {
+            searchHistoryLogic.clearHistory()
+            tracksAdapter.notifyItemRangeRemoved(0, tracksAdapter.trackList.size - 1)
+            hideHistory()
+        }
+
     }
 
-    fun searchInITunes(text: String) {
+    private fun createTrackListFromJson(json: String): ArrayList<Track> {
+        val itemType = object : TypeToken<kotlin.collections.ArrayList<Track>>() {}.type
+        return Gson().fromJson<kotlin.collections.ArrayList<Track>>(json, itemType)
+    }
+
+
+    private fun searchInITunes(text: String) {
         iTunesService.search(text)
             .enqueue(object : Callback<SongsResponse> {
                 @SuppressLint("NotifyDataSetChanged")
@@ -110,7 +138,7 @@ class SearchActivity : AppCompatActivity() {
                         if (results != null) {
                             if (results.isNotEmpty()) {
                                 trackListOfSearchResults.addAll(results)
-                                searchResultsAdapter.notifyDataSetChanged()
+                                tracksAdapter.notifyDataSetChanged()
                             }
                         }
                         if (trackListOfSearchResults.isEmpty()) {
@@ -147,7 +175,7 @@ class SearchActivity : AppCompatActivity() {
             searchTvPlaceholderMessage.text = text
             placeholderVisibility(PlaceholderStatus.NOTHING_FOUND)
             trackListOfSearchResults.clear()
-            searchResultsAdapter.notifyDataSetChanged()
+            tracksAdapter.notifyDataSetChanged()
 
             if (additionalMessage.isNotEmpty()) {
                 searchIvPlaceholderImage.setImageResource(R.drawable.ic_no_internet)
@@ -157,6 +185,16 @@ class SearchActivity : AppCompatActivity() {
         } else {
             placeholderVisibility(PlaceholderStatus.DEFAULT)
         }
+    }
+
+    fun hideHistory() = with(binding) {
+        searchBvClearHistory.isVisible = false
+        searchTvSearchHistory.isVisible = false
+    }
+
+    fun showHistory() = with(binding) {
+        searchBvClearHistory.isVisible = true
+        searchTvSearchHistory.isVisible = true
     }
 
     private fun placeholderVisibility(status: PlaceholderStatus) = with(binding) {

@@ -69,13 +69,40 @@
 
     </FrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/search_rv_results"
+    <LinearLayout
+        android:id="@+id/search_ll_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/standart_padding_16"
-        tools:itemCount="0"
-        tools:listitem="@layout/activity_search_track_card" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/search_tv_search_history"
+            style="@style/SearchMessageTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/search_error_hor_margin_24"
+            android:layout_marginBottom="@dimen/small_margin_8"
+            android:text="@string/you_searched" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_rv_results"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/standart_padding_16"
+            android:layout_weight="1"
+            tools:itemCount="5"
+            tools:listitem="@layout/activity_search_track_card" />
+
+        <Button
+            android:id="@+id/search_bv_clear_history"
+            style="@style/SearchButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/small_margin_8"
+            android:text="@string/clear_history" />
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/search_ll_placeholder"
@@ -125,37 +152,5 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/search_ll_history"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/search_tv_search_history"
-            style="@style/SearchMessageTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/search_error_hor_margin_24"
-            android:layout_marginBottom="@dimen/small_margin_8"
-            android:text="@string/you_searched" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/search_rv_history"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginVertical="@dimen/standart_padding_16"
-            android:layout_weight="1"
-            tools:itemCount="10"
-            tools:listitem="@layout/activity_search_track_card" />
-
-        <Button
-            android:id="@+id/search_bv_clear_history"
-            style="@style/SearchButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/small_margin_8"
-            android:text="@string/clear_history" />
-    </LinearLayout>
 </LinearLayout>
