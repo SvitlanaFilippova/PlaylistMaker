@@ -16,7 +16,7 @@ class SearchResultsAdapter :
     RecyclerView.Adapter<SearchResultsAdapter.SearchResultsHolder>() {
     var trackList: ArrayList<Track> = arrayListOf<Track>()
     lateinit var sharedPreferences: SharedPreferences
-    var historyIsVisible = true
+    var historyIsVisibleFlag = false
 
     class SearchResultsHolder(private val parentView: View) : RecyclerView.ViewHolder(parentView) {
         private val binding = ActivitySearchTrackCardBinding.bind(parentView)
@@ -58,19 +58,19 @@ class SearchResultsAdapter :
             val searchHistory = SearchHistory(sharedPreferences)
 
             if (trackListSearchHistory.removeIf() { it.trackId == track.trackId }) {
-                if (historyIsVisible) notifyDataSetChanged()
+                if (historyIsVisibleFlag) notifyDataSetChanged()
             }
 
             if (trackListSearchHistory.size > 9) {
                 trackListSearchHistory.removeAt(9)
-                if (historyIsVisible) {
+                if (historyIsVisibleFlag) {
                     notifyItemRemoved(9)
                     notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
                 }
             }
 
             trackListSearchHistory.add(0, track)
-            if (historyIsVisible) {
+            if (historyIsVisibleFlag) {
                 notifyItemInserted(0)
                 notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
             }

@@ -9,8 +9,6 @@ import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,7 +28,8 @@ class SearchActivity : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val iTunesService = retrofit.create(ITunesApi::class.java)
-
+    var searchResultsIsVisible = false
+    var placeholderIsVisible = false
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,11 +56,11 @@ class SearchActivity : AppCompatActivity() {
             inputEditText.setText("")
             hideKeyboard()
             trackListOfSearchResults.clear()
-            tracksAdapter.notifyDataSetChanged()
+            searchResultsIsVisible = false
             placeholderVisibility(PlaceholderStatus.DEFAULT)
             getHistory(sharedPreferences)
-            tracksAdapter.trackList = trackListSearchHistory
-
+            showHistory()
+            tracksAdapter.notifyDataSetChanged()
 
         }
 
@@ -74,9 +73,9 @@ class SearchActivity : AppCompatActivity() {
             searchInITunes(inputEditText.text.toString())
         }
 
-        tracksAdapter.trackList = trackListSearchHistory
 
-        binding.searchEtInputSeacrh.setOnEditorActionListener { _, actionId, _ ->
+
+        inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (inputEditText.text.isNotEmpty()) {
                     searchInITunes(inputEditText.text.toString())
@@ -87,12 +86,31 @@ class SearchActivity : AppCompatActivity() {
             false
         }
 
+
+        inputEditText.setOnFocusChangeListener { view, hasFocus ->
+            if (!searchResultsIsVisible) {
+                if (hasFocus && inputEditText.text.isEmpty()) showHistory() else hideHistory()
+            }
+
+        }
+
+
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchClearButton.isVisible = !s.isNullOrEmpty()
+                if (placeholderIsVisible && s?.isEmpty() == true) placeholderVisibility(
+                    PlaceholderStatus.DEFAULT
+                )
+                if (!searchResultsIsVisible) {
+                    if (inputEditText.hasFocus() && s?.isEmpty() == true) {
+                        getHistory(sharedPreferences)
+                        showHistory()
+                        tracksAdapter.notifyDataSetChanged()
+                    } else hideHistory()
+                }
             }
 
 
@@ -127,12 +145,15 @@ class SearchActivity : AppCompatActivity() {
                     call: Call<SongsResponse>,
                     response: Response<SongsResponse>
                 ) {
+                    searchResultsIsVisible = false
                     if (response.code() == 200) {
                         trackListOfSearchResults.clear()
                         var results = response.body()?.results
                         if (results != null) {
                             if (results.isNotEmpty()) {
                                 trackListOfSearchResults.addAll(results)
+                                binding.searchRvResults.isVisible = true
+                                searchResultsIsVisible = true
                                 tracksAdapter.notifyDataSetChanged()
                             }
                         }
@@ -183,24 +204,26 @@ class SearchActivity : AppCompatActivity() {
     }
 
     fun hideHistory() = with(binding) {
+        searchRvResults.isVisible = false
         searchBvClearHistory.isVisible = false
         searchTvSearchHistory.isVisible = false
-        tracksAdapter.historyIsVisible = false
+        tracksAdapter.historyIsVisibleFlag = false
+
     }
 
     fun showHistory() = with(binding) {
-        searchBvClearHistory.isVisible = true
-        searchTvSearchHistory.isVisible = true
-        tracksAdapter.historyIsVisible = true
+        if (trackListSearchHistory.isNotEmpty()) {
+            searchRvResults.isVisible = true
+            searchBvClearHistory.isVisible = true
+            searchTvSearchHistory.isVisible = true
+            tracksAdapter.historyIsVisibleFlag = true
+        }
     }
 
     fun getHistory(sharedPreferences: SharedPreferences) {
         val searchHistory = SearchHistory(sharedPreferences)
         searchHistory.readHistory()
         tracksAdapter.trackList = trackListSearchHistory
-        if (trackListSearchHistory.isNotEmpty()) {
-            showHistory()
-        }
 
 
     }
@@ -214,6 +237,7 @@ class SearchActivity : AppCompatActivity() {
                 searchTvPlaceholderMessage.isVisible = true
                 searchTvPlaceholderExtraMessage.isVisible = false
                 searchBvPlaceholderButton.isVisible = false
+                placeholderIsVisible = true
             }
 
             PlaceholderStatus.NO_NETWORK -> {
@@ -222,6 +246,7 @@ class SearchActivity : AppCompatActivity() {
                 searchTvPlaceholderMessage.isVisible = true
                 searchTvPlaceholderExtraMessage.isVisible = true
                 searchBvPlaceholderButton.isVisible = true
+                placeholderIsVisible = true
             }
 
             PlaceholderStatus.DEFAULT -> {
@@ -230,7 +255,7 @@ class SearchActivity : AppCompatActivity() {
                 searchTvPlaceholderMessage.isVisible = false
                 searchTvPlaceholderExtraMessage.isVisible = false
                 searchBvPlaceholderButton.isVisible = false
-
+                placeholderIsVisible = false
             }
 
         }
