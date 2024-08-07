@@ -70,6 +70,7 @@
 
     </FrameLayout>
 
+
     <LinearLayout
         android:id="@+id/search_ll_history"
         android:layout_width="match_parent"

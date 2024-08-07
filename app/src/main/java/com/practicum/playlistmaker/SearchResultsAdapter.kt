@@ -5,6 +5,7 @@ import android.icu.text.SimpleDateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -18,7 +19,7 @@ class SearchResultsAdapter :
     lateinit var sharedPreferences: SharedPreferences
     var historyIsVisibleFlag = false
 
-    class SearchResultsHolder(private val parentView: View) : RecyclerView.ViewHolder(parentView) {
+    class SearchResultsHolder(val parentView: View) : RecyclerView.ViewHolder(parentView) {
         private val binding = ActivitySearchTrackCardBinding.bind(parentView)
 
 
@@ -55,27 +56,20 @@ class SearchResultsAdapter :
         val track = trackList[position]
         holder.bind(track)
         holder.itemView.setOnClickListener {
-            val searchHistory = SearchHistory(sharedPreferences)
+            if (!historyIsVisibleFlag) {
+                val searchHistory = SearchHistory(sharedPreferences)
 
-            if (trackListSearchHistory.removeIf() { it.trackId == track.trackId }) {
-                if (historyIsVisibleFlag) notifyDataSetChanged()
-            }
+                trackListSearchHistory.removeIf() { it.trackId == track.trackId }
 
-            if (trackListSearchHistory.size > 9) {
-                trackListSearchHistory.removeAt(9)
-                if (historyIsVisibleFlag) {
-                    notifyItemRemoved(9)
-                    notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
+                if (trackListSearchHistory.size > 9) {
+                    trackListSearchHistory.removeAt(9)
+
                 }
-            }
 
-            trackListSearchHistory.add(0, track)
-            if (historyIsVisibleFlag) {
-                notifyItemInserted(0)
-                notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
-            }
-            searchHistory.saveHistory(trackListSearchHistory)
+                trackListSearchHistory.add(0, track)
+                searchHistory.saveHistory(trackListSearchHistory)
 
+            }
         }
 
     }
