@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker
 
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -41,10 +42,9 @@ class SearchActivity : AppCompatActivity() {
 
         val sharedPreferences = getSharedPreferences(PLAYLISTMAKER_PREFERENCES, MODE_PRIVATE)
         tracksAdapter.sharedPreferences = sharedPreferences
-        val searchHistoryString = sharedPreferences.getString(SEARCH_HISTORY_LIST_KEY, null)
-        if (searchHistoryString != null) {
-            tracksAdapter.trackList = createTrackListFromJson(searchHistoryString)
-        }
+
+        getHistory(sharedPreferences)
+
 
         val inputEditText = binding.searchEtInputSeacrh
 
@@ -59,8 +59,10 @@ class SearchActivity : AppCompatActivity() {
             trackListOfSearchResults.clear()
             tracksAdapter.notifyDataSetChanged()
             placeholderVisibility(PlaceholderStatus.DEFAULT)
-            showHistory()
-            //todo (добавить проверку, что история не пустая!!!)
+            getHistory(sharedPreferences)
+            tracksAdapter.trackList = trackListSearchHistory
+
+
         }
 
         binding.searchToolbar.setNavigationOnClickListener() {
@@ -79,7 +81,6 @@ class SearchActivity : AppCompatActivity() {
                 if (inputEditText.text.isNotEmpty()) {
                     searchInITunes(inputEditText.text.toString())
                     hideHistory()
-                    //передаю список в адаптер
                     tracksAdapter.trackList = trackListOfSearchResults
                 }
             }
@@ -112,15 +113,9 @@ class SearchActivity : AppCompatActivity() {
         val searchHistoryLogic = SearchHistory(sharedPreferences)
         clearHistoryButton.setOnClickListener {
             searchHistoryLogic.clearHistory()
-            tracksAdapter.notifyItemRangeRemoved(0, tracksAdapter.trackList.size - 1)
             hideHistory()
         }
 
-    }
-
-    private fun createTrackListFromJson(json: String): ArrayList<Track> {
-        val itemType = object : TypeToken<kotlin.collections.ArrayList<Track>>() {}.type
-        return Gson().fromJson<kotlin.collections.ArrayList<Track>>(json, itemType)
     }
 
 
@@ -190,12 +185,26 @@ class SearchActivity : AppCompatActivity() {
     fun hideHistory() = with(binding) {
         searchBvClearHistory.isVisible = false
         searchTvSearchHistory.isVisible = false
+        tracksAdapter.historyIsVisible = false
     }
 
     fun showHistory() = with(binding) {
         searchBvClearHistory.isVisible = true
         searchTvSearchHistory.isVisible = true
+        tracksAdapter.historyIsVisible = true
     }
+
+    fun getHistory(sharedPreferences: SharedPreferences) {
+        val searchHistory = SearchHistory(sharedPreferences)
+        searchHistory.readHistory()
+        tracksAdapter.trackList = trackListSearchHistory
+        if (trackListSearchHistory.isNotEmpty()) {
+            showHistory()
+        }
+
+
+    }
+
 
     private fun placeholderVisibility(status: PlaceholderStatus) = with(binding) {
         when (status) {

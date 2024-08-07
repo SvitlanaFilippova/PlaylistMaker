@@ -16,6 +16,8 @@ class SearchResultsAdapter :
     RecyclerView.Adapter<SearchResultsAdapter.SearchResultsHolder>() {
     var trackList: ArrayList<Track> = arrayListOf<Track>()
     lateinit var sharedPreferences: SharedPreferences
+    var historyIsVisible = true
+
     class SearchResultsHolder(private val parentView: View) : RecyclerView.ViewHolder(parentView) {
         private val binding = ActivitySearchTrackCardBinding.bind(parentView)
 
@@ -54,26 +56,25 @@ class SearchResultsAdapter :
         holder.bind(track)
         holder.itemView.setOnClickListener {
             val searchHistory = SearchHistory(sharedPreferences)
+
+            if (trackListSearchHistory.removeIf() { it.trackId == track.trackId }) {
+                if (historyIsVisible) notifyDataSetChanged()
+            }
+
+            if (trackListSearchHistory.size > 9) {
+                trackListSearchHistory.removeAt(9)
+                if (historyIsVisible) {
+                    notifyItemRemoved(9)
+                    notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
+                }
+            }
+
+            trackListSearchHistory.add(0, track)
+            if (historyIsVisible) {
+                notifyItemInserted(0)
+                notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
+            }
             searchHistory.saveHistory(trackListSearchHistory)
-            /*
-
-              код ниже работает адекватно только при клике в истории поиска, но не в результатах. Думать дальше.
-                        if (trackListSearchHistory.removeIf() {
-                            it.trackId == track.trackId
-                                  }
-                        ) {
-                            notifyDataSetChanged()
-                        }
-
-                        if (trackListSearchHistory.size > 9) {
-                            trackListSearchHistory.removeAt(9)
-                            notifyItemRemoved(9)
-                            notifyItemRangeChanged(0, trackListSearchHistory.size)
-                        }
-
-                        trackListSearchHistory.add(0, track)
-                        notifyItemInserted(0)
-                        notifyItemRangeChanged(0, trackListSearchHistory.size)*/
 
         }
 
