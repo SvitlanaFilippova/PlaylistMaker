@@ -55,27 +55,18 @@ class SearchResultsAdapter :
         val track = trackList[position]
         holder.bind(track)
         holder.itemView.setOnClickListener {
-            val searchHistory = SearchHistory(sharedPreferences)
+            if (!historyIsVisibleFlag) {
+                val searchHistory = SearchHistory(sharedPreferences)
 
-            if (trackListSearchHistory.removeIf() { it.trackId == track.trackId }) {
-                if (historyIsVisibleFlag) notifyDataSetChanged()
+                if (trackListSearchHistory.removeIf() { it.trackId == track.trackId })
+
+                    if (trackListSearchHistory.size > 9) {
+                        trackListSearchHistory.removeAt(9)
+                    }
+
+                trackListSearchHistory.add(0, track)
+                searchHistory.saveHistory(trackListSearchHistory)
             }
-
-            if (trackListSearchHistory.size > 9) {
-                trackListSearchHistory.removeAt(9)
-                if (historyIsVisibleFlag) {
-                    notifyItemRemoved(9)
-                    notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
-                }
-            }
-
-            trackListSearchHistory.add(0, track)
-            if (historyIsVisibleFlag) {
-                notifyItemInserted(0)
-                notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
-            }
-            searchHistory.saveHistory(trackListSearchHistory)
-
         }
 
     }
