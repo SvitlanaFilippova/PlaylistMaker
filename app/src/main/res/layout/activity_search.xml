@@ -54,7 +54,8 @@
                 android:singleLine="true"
                 android:textColor="@color/black"
                 android:textColorHint="@color/search_field_hint"
-                android:textSize="@dimen/regular_text_size_16" />
+                android:textSize="@dimen/regular_text_size_16"
+                android:textCursorDrawable="@drawable/dr_cursor" />
 
             <ImageView
                 android:id="@+id/search_iv_clearIcon"
