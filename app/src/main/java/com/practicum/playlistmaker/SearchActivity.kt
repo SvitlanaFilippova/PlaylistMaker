@@ -60,7 +60,7 @@ class SearchActivity : AppCompatActivity() {
             tracksAdapter.notifyDataSetChanged()
             placeholderVisibility(PlaceholderStatus.DEFAULT)
             showHistory()
-            // todo добавить проверку, что история не пустая!!!
+            //todo (добавить проверку, что история не пустая!!!)
         }
 
         binding.searchToolbar.setNavigationOnClickListener() {
