@@ -18,100 +18,45 @@
         app:titleTextAppearance="@style/HeadToolbarTextStyle" />
 
 
-    <LinearLayout
-        android:id="@+id/ll_dark_theme"
+    <Switch
+        android:id="@+id/sw_dark_theme"
+        style="@style/SettingsTextStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_row_size_64"
-        android:gravity="center"
-        android:orientation="horizontal"
-        tools:ignore="UseSwitchCompatOrMaterialXml">
+        android:layout_gravity="start"
+        android:layout_marginEnd="0dp"
+        android:text="@string/dark_theme"
+        android:textAlignment="viewStart"
+        app:thumbTint="@color/grey"
+        app:trackDecorationTint="@android:color/transparent"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
 
-        <TextView
-            android:id="@+id/tv_dark_theme"
-            style="@style/SettingsTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/dark_theme" />
-
-        <Switch
-            android:id="@+id/sw_dark_theme"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:layout_marginEnd="@dimen/standart_padding_16"
-            android:paddingEnd="-3dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_share"
+    <TextView
+        android:id="@+id/tv_share"
+        style="@style/SettingsTextStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_row_size_64"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:text="@string/share"
+        app:drawableEndCompat="@drawable/ic_share_light_mode" />
 
-        <TextView
-            android:id="@+id/tv_share"
-            style="@style/SettingsTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/share" />
 
-        <ImageView
-            android:id="@+id/iv_share"
-            style="@style/SettingsIconStyle"
-            android:src="@drawable/ic_share_light_mode" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_support"
+    <TextView
+        android:id="@+id/tv_support"
+        style="@style/SettingsTextStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_row_size_64"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:text="@string/support"
+        app:drawableEndCompat="@drawable/ic_support_light_mode" />
 
-        <TextView
-            android:id="@+id/tv_support"
-            style="@style/SettingsTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:text="@string/support" />
 
-        <ImageView
-            android:id="@+id/iv_support"
-            style="@style/SettingsIconStyle"
-            android:src="@drawable/ic_support_light_mode" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_agreement"
+    <TextView
+        android:id="@+id/tv_agreement"
+        style="@style/SettingsTextStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_row_size_64"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:text="@string/agreement"
+        app:drawableEndCompat="@drawable/ic_arrow_forward_light_mode" />
 
-        <TextView
-            android:id="@+id/tv_agreement"
-            style="@style/SettingsTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:text="@string/agreement"
 
-            />
-
-        <ImageView
-            android:id="@+id/iv_agreement"
-            style="@style/SettingsIconStyle"
-            android:src="@drawable/ic_arrow_forward_light_mode" />
-
-    </LinearLayout>
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker
 
+import android.content.SharedPreferences
 import android.icu.text.SimpleDateFormat
 import android.view.LayoutInflater
 import android.view.View
@@ -11,9 +12,13 @@ import com.practicum.playlistmaker.databinding.ActivitySearchTrackCardBinding
 import java.util.Locale
 
 
-class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchResultsHolder>() {
+class SearchResultsAdapter :
+    RecyclerView.Adapter<SearchResultsAdapter.SearchResultsHolder>() {
+    var trackList: ArrayList<Track> = arrayListOf<Track>()
+    lateinit var sharedPreferences: SharedPreferences
+    var historyIsVisibleFlag = false
 
-    class SearchResultsHolder(private val parentView: View) : RecyclerView.ViewHolder(parentView) {
+    class SearchResultsHolder(val parentView: View) : RecyclerView.ViewHolder(parentView) {
         private val binding = ActivitySearchTrackCardBinding.bind(parentView)
 
 
@@ -35,7 +40,7 @@ class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchRes
                 )
                 .placeholder(R.drawable.ic_cover_placeholder)
                 .into(searchIvCover)
-
+            searchTvArtistName.requestLayout()
         }
 
     }
@@ -47,7 +52,33 @@ class SearchResultsAdapter : RecyclerView.Adapter<SearchResultsAdapter.SearchRes
     }
 
     override fun onBindViewHolder(holder: SearchResultsHolder, position: Int) {
-        holder.bind(trackList[position])
+        val track = trackList[position]
+        holder.bind(track)
+        holder.itemView.setOnClickListener {
+
+                val searchHistory = SearchHistory(sharedPreferences)
+
+            if (trackListSearchHistory.removeIf() { it.trackId == track.trackId }) {
+                if (historyIsVisibleFlag) notifyDataSetChanged()
+            }
+
+            if (trackListSearchHistory.size > 9) {
+                trackListSearchHistory.removeAt(9)
+                if (historyIsVisibleFlag) {
+                    notifyItemRemoved(9)
+                    notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
+                }
+            }
+
+            trackListSearchHistory.add(0, track)
+            if (historyIsVisibleFlag) {
+                notifyItemInserted(0)
+                notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
+            }
+                searchHistory.saveHistory(trackListSearchHistory)
+
+
+        }
 
     }
 

@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker
 
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,13 +20,16 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private var searchInput: String = INPUT_DEF
-    val adapter = SearchResultsAdapter()
+    val tracksAdapter = SearchResultsAdapter()
+
     private val searchBaseUrl = "https://itunes.apple.com"
     val retrofit = Retrofit.Builder()
         .baseUrl(searchBaseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val iTunesService = retrofit.create(ITunesApi::class.java)
+    var searchResultsIsVisible = false
+    var placeholderIsVisible = false
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,39 +38,62 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        val sharedPreferences = getSharedPreferences(PLAYLISTMAKER_PREFERENCES, MODE_PRIVATE)
+        tracksAdapter.sharedPreferences = sharedPreferences
+
+        getHistory(sharedPreferences)
+
+
         val inputEditText = binding.searchEtInputSeacrh
-        val searchClearButton = binding.searchIvClearIcon
-        val placeholderUpdateButton = binding.searchBvPlaceholderButton
 
         if (searchInput.isNotEmpty()) {
             inputEditText.setText(searchInput)
         }
+        val searchClearButton = binding.searchIvClearIcon
 
         searchClearButton.setOnClickListener {
             inputEditText.setText("")
             hideKeyboard()
-            trackList.clear()
-            adapter.notifyDataSetChanged()
+            trackListOfSearchResults.clear()
+            searchResultsIsVisible = false
             placeholderVisibility(PlaceholderStatus.DEFAULT)
+            getHistory(sharedPreferences)
+            showHistory()
+            tracksAdapter.notifyDataSetChanged()
+
         }
 
         binding.searchToolbar.setNavigationOnClickListener() {
             finish()
         }
 
+        val placeholderUpdateButton = binding.searchBvPlaceholderButton
         placeholderUpdateButton.setOnClickListener {
             searchInITunes(inputEditText.text.toString())
         }
 
 
-        binding.searchEtInputSeacrh.setOnEditorActionListener { _, actionId, _ ->
+
+        inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (inputEditText.text.isNotEmpty()) {
                     searchInITunes(inputEditText.text.toString())
+                    hideHistory()
+                    tracksAdapter.trackList = trackListOfSearchResults
                 }
             }
             false
         }
+
+
+        inputEditText.setOnFocusChangeListener { view, hasFocus ->
+            if (!searchResultsIsVisible) {
+                if (hasFocus && inputEditText.text.isEmpty()) showHistory() else hideHistory()
+            }
+
+        }
+
 
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -74,9 +101,19 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchClearButton.isVisible = !s.isNullOrEmpty()
+                if (placeholderIsVisible && s?.isEmpty() == true) placeholderVisibility(
+                    PlaceholderStatus.DEFAULT
+                )
+                if (!searchResultsIsVisible) {
+                    if (inputEditText.hasFocus() && s?.isEmpty() == true) {
+                        getHistory(sharedPreferences)
+                        showHistory()
+                        tracksAdapter.notifyDataSetChanged()
+                    } else hideHistory()
+                }
             }
 
-            @SuppressLint("NotifyDataSetChanged")
+
             override fun afterTextChanged(s: Editable?) {
                 searchInput = s.toString()
 
@@ -86,14 +123,21 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.addTextChangedListener(searchTextWatcher)
 
 
-        val tracksRecView = binding.searchRcSearchResults
-        tracksRecView.layoutManager = LinearLayoutManager(this)
-        tracksRecView.adapter = adapter
+        val trackSearchResultsRV = binding.searchRvResults
+        trackSearchResultsRV.layoutManager = LinearLayoutManager(this)
+        trackSearchResultsRV.adapter = tracksAdapter
 
+        val clearHistoryButton = binding.searchBvClearHistory
+        val searchHistoryLogic = SearchHistory(sharedPreferences)
+        clearHistoryButton.setOnClickListener {
+            searchHistoryLogic.clearHistory()
+            hideHistory()
+        }
 
     }
 
-    fun searchInITunes(text: String) {
+
+    private fun searchInITunes(text: String) {
         iTunesService.search(text)
             .enqueue(object : Callback<SongsResponse> {
                 @SuppressLint("NotifyDataSetChanged")
@@ -101,16 +145,19 @@ class SearchActivity : AppCompatActivity() {
                     call: Call<SongsResponse>,
                     response: Response<SongsResponse>
                 ) {
+                    searchResultsIsVisible = false
                     if (response.code() == 200) {
-                        trackList.clear()
+                        trackListOfSearchResults.clear()
                         var results = response.body()?.results
                         if (results != null) {
                             if (results.isNotEmpty()) {
-                                trackList.addAll(results)
-                                adapter.notifyDataSetChanged()
+                                trackListOfSearchResults.addAll(results)
+                                binding.searchRvResults.isVisible = true
+                                searchResultsIsVisible = true
+                                tracksAdapter.notifyDataSetChanged()
                             }
                         }
-                        if (trackList.isEmpty()) {
+                        if (trackListOfSearchResults.isEmpty()) {
                             showMessage(
                                 getString(R.string.search_error_nothing_found),
                                 ""
@@ -143,8 +190,8 @@ class SearchActivity : AppCompatActivity() {
             searchIvPlaceholderImage.setImageResource(R.drawable.ic_nothing_found)
             searchTvPlaceholderMessage.text = text
             placeholderVisibility(PlaceholderStatus.NOTHING_FOUND)
-            trackList.clear()
-            adapter.notifyDataSetChanged()
+            trackListOfSearchResults.clear()
+            tracksAdapter.notifyDataSetChanged()
 
             if (additionalMessage.isNotEmpty()) {
                 searchIvPlaceholderImage.setImageResource(R.drawable.ic_no_internet)
@@ -156,28 +203,59 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    fun hideHistory() = with(binding) {
+        searchRvResults.isVisible = false
+        searchBvClearHistory.isVisible = false
+        searchTvSearchHistory.isVisible = false
+        tracksAdapter.historyIsVisibleFlag = false
+
+    }
+
+    fun showHistory() = with(binding) {
+        if (trackListSearchHistory.isNotEmpty()) {
+            searchRvResults.isVisible = true
+            searchBvClearHistory.isVisible = true
+            searchTvSearchHistory.isVisible = true
+            tracksAdapter.historyIsVisibleFlag = true
+        }
+    }
+
+    fun getHistory(sharedPreferences: SharedPreferences) {
+        val searchHistory = SearchHistory(sharedPreferences)
+        searchHistory.readHistory()
+        tracksAdapter.trackList = trackListSearchHistory
+
+
+    }
+
+
     private fun placeholderVisibility(status: PlaceholderStatus) = with(binding) {
         when (status) {
             PlaceholderStatus.NOTHING_FOUND -> {
+                searchLlPlaceholder.isVisible = true
                 searchIvPlaceholderImage.isVisible = true
                 searchTvPlaceholderMessage.isVisible = true
                 searchTvPlaceholderExtraMessage.isVisible = false
                 searchBvPlaceholderButton.isVisible = false
+                placeholderIsVisible = true
             }
 
             PlaceholderStatus.NO_NETWORK -> {
+                searchLlPlaceholder.isVisible = true
                 searchIvPlaceholderImage.isVisible = true
                 searchTvPlaceholderMessage.isVisible = true
                 searchTvPlaceholderExtraMessage.isVisible = true
                 searchBvPlaceholderButton.isVisible = true
+                placeholderIsVisible = true
             }
 
             PlaceholderStatus.DEFAULT -> {
+                searchLlPlaceholder.isVisible = false
                 searchIvPlaceholderImage.isVisible = false
                 searchTvPlaceholderMessage.isVisible = false
                 searchTvPlaceholderExtraMessage.isVisible = false
                 searchBvPlaceholderButton.isVisible = false
-
+                placeholderIsVisible = false
             }
 
         }

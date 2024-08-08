@@ -29,11 +29,14 @@
 
     <style name="SettingsTextStyle">
         <item name="android:textColor">@color/black</item>
+        <item name="android:layout_height">@dimen/settings_row_size_64</item>
         <item name="android:textSize">@dimen/regular_text_size_16</item>
-        <item name="android:layout_marginStart">@dimen/standart_padding_16</item>
+        <item name="android:paddingHorizontal">@dimen/standart_padding_16</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
+
 
     <style name="SearchSmallTextStyle">
         <item name="android:textColor">@color/grey</item>
@@ -42,7 +45,7 @@
         <item name="android:textFontWeight">400</item>
     </style>
 
-    <style name="SearchErrorTextStyle">
+    <style name="SearchMessageTextStyle">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/search_error_text_size_19</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
@@ -51,21 +54,15 @@
 
     </style>
 
-    <style name="SearchErrorButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+    <style name="SearchButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:textAllCaps">false</item>
         <item name="android:backgroundTint">@color/black</item>
         <item name="android:textColor">@color/white</item>
         <item name="cornerRadius">@dimen/search_error_button_radius_56</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">500</item>
-    </style>
-
-    <style name="SettingsIconStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">@dimen/standart_icon_size_24</item>
-        <item name="android:layout_marginEnd">@dimen/standart_padding_16</item>
-        <item name="tint">?attr/colorSecondaryVariant</item>
-        <item name="android:contentDescription">@null</item>
+        <item name="android:textSize">@dimen/search_error_button_text_size_14</item>
+        <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
 

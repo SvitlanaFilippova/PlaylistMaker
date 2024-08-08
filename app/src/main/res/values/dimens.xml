@@ -23,6 +23,7 @@
     <dimen name="search_error_text_size_19">19sp</dimen>
     <dimen name="search_error_button_text_size_14">14sp</dimen>
     <dimen name="search_error_button_radius_56">56dp</dimen>
+    <dimen name="dr_cursor_wight_2">2dp</dimen>
 
 
 </resources>

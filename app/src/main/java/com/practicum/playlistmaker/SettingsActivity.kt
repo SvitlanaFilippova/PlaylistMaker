@@ -1,10 +1,12 @@
 package com.practicum.playlistmaker
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
@@ -12,7 +14,10 @@ import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
+
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
+        val sharedPrefs = getSharedPreferences(PLAYLISTMAKER_PREFERENCES, MODE_PRIVATE)
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -22,12 +27,19 @@ class SettingsActivity : AppCompatActivity() {
         }
 
 
-        val rowDarkTheme = findViewById<LinearLayout>(R.id.ll_dark_theme)
-        rowDarkTheme.setOnClickListener {
-            // тут будет обработка клика по строке "Тёмная тема"
+        val themeSwitcher = binding.swDarkTheme
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+            sharedPrefs.edit().putBoolean(THEME_KEY, checked).apply()
+
         }
 
-        val rowShare = findViewById<LinearLayout>(R.id.ll_share)
+        if (sharedPrefs.getBoolean(THEME_KEY, false)) {
+            themeSwitcher.isChecked = true
+
+        }
+
+        val rowShare = binding.tvShare
         rowShare.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.setType("text/plain")
@@ -40,7 +52,7 @@ class SettingsActivity : AppCompatActivity() {
             )
         }
 
-        val rowSupport = findViewById<LinearLayout>(R.id.ll_support)
+        val rowSupport = binding.tvSupport
         rowSupport.setOnClickListener {
 
             Intent(Intent.ACTION_SENDTO).apply {
@@ -57,7 +69,7 @@ class SettingsActivity : AppCompatActivity() {
 
             }.also(::startActivity)
         }
-        val rowAgreement = findViewById<LinearLayout>(R.id.ll_agreement)
+        val rowAgreement = binding.tvAgreement
         rowAgreement.setOnClickListener {
             val agreementIntent =
                 Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.settings_agreement_url)))
@@ -66,4 +78,3 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 }
-
