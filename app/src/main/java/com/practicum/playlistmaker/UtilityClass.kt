@@ -6,6 +6,8 @@ import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 fun Fragment.hideKeyboard() {
     view?.let { activity?.hideKeyboard(it) }
@@ -20,5 +22,9 @@ fun Context.hideKeyboard(view: View) {
     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
-
+fun getYearFromDateString(dateString: String): Int {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+    val localDateTime = LocalDateTime.parse(dateString, formatter)
+    return localDateTime.year
+}
 

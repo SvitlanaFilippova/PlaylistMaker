@@ -1,13 +1,16 @@
 package com.practicum.playlistmaker
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.icu.text.SimpleDateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.gson.Gson
 import com.practicum.playlistmaker.databinding.ActivitySearchTrackCardBinding
 import java.util.Locale
 
@@ -56,7 +59,7 @@ class SearchResultsAdapter :
         holder.bind(track)
         holder.itemView.setOnClickListener {
 
-                val searchHistory = SearchHistory(sharedPreferences)
+            val searchHistory = SearchHistory(sharedPreferences)
 
             if (trackListSearchHistory.removeIf() { it.trackId == track.trackId }) {
                 if (historyIsVisibleFlag) notifyDataSetChanged()
@@ -75,11 +78,13 @@ class SearchResultsAdapter :
                 notifyItemInserted(0)
                 notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
             }
-                searchHistory.saveHistory(trackListSearchHistory)
+            searchHistory.saveHistory(trackListSearchHistory)
 
+            val playerIntent = Intent(holder.parentView.context, PlayerActivity::class.java)
+            playerIntent.putExtra("track", Gson().toJson(track)) // Добавляем объект в Intent
+            holder.parentView.context.startActivity(playerIntent)
 
         }
-
     }
 
     override fun getItemCount(): Int {
