@@ -112,7 +112,7 @@
 
     <TextView
         android:id="@+id/tv_duration_title"
-        style="PlayerLeftSmallTextStyle"
+        style="@style/PlayerLeftSmallTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/player_big_margin_48"
@@ -122,8 +122,8 @@
 
 
     <TextView
-        android:id="@+id/tv_album_title"
-        style="PlayerLeftSmallTextStyle"
+        android:id="@+id/tv_collection_title"
+        style="@style/PlayerLeftSmallTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standart_padding_16"
@@ -134,17 +134,17 @@
 
     <TextView
         android:id="@+id/tv_year_title"
-        style="PlayerLeftSmallTextStyle"
+        style="@style/PlayerLeftSmallTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standart_padding_16"
         android:text="@string/year"
         app:layout_constraintStart_toEndOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/tv_album_title" />
+        app:layout_constraintTop_toBottomOf="@id/tv_collection_title" />
 
     <TextView
         android:id="@+id/tv_genre_title"
-        style="PlayerLeftSmallTextStyle"
+        style="@style/PlayerLeftSmallTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standart_padding_16"
@@ -154,7 +154,7 @@
 
     <TextView
         android:id="@+id/tv_country_title"
-        style="PlayerLeftSmallTextStyle"
+        style="@style/PlayerLeftSmallTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standart_padding_16"
@@ -164,7 +164,7 @@
 
     <TextView
         android:id="@+id/tv_duration_track"
-        style="PlayerRightSmallTextStyle"
+        style="@style/PlayerRightSmallTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/player_big_margin_48"
@@ -173,8 +173,8 @@
         tools:text="05:35" />
 
     <TextView
-        android:id="@+id/tv_album_track"
-        style="PlayerRightSmallTextStyle"
+        android:id="@+id/tv_collection_track"
+        style="@style/PlayerRightSmallTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standart_padding_16"
@@ -184,17 +184,17 @@
 
     <TextView
         android:id="@+id/tv_year_track"
-        style="PlayerRightSmallTextStyle"
+        style="@style/PlayerRightSmallTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standart_padding_16"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
-        app:layout_constraintTop_toBottomOf="@id/tv_album_track"
+        app:layout_constraintTop_toBottomOf="@id/tv_collection_track"
         tools:text="2009" />
 
     <TextView
         android:id="@+id/tv_genre_track"
-        style="PlayerRightSmallTextStyle"
+        style="@style/PlayerRightSmallTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standart_padding_16"
@@ -204,7 +204,7 @@
 
     <TextView
         android:id="@+id/tv_country_track"
-        style="PlayerRightSmallTextStyle"
+        style="@style/PlayerRightSmallTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standart_padding_16"
