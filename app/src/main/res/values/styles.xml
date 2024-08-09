@@ -74,4 +74,26 @@
         <item name="android:textSize">@dimen/button_text_size_24</item>
     </style>
 
+    <style name="PlayerMainTextStyle">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
+    </style>
+
+    <style name="PlayerLeftSmallTextStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">@dimen/player_small_text_13</item>
+    </style>
+
+    <style name="PlayerRightSmallTextStyle">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">@dimen/player_small_text_13</item>
+    </style>
+
 </resources>

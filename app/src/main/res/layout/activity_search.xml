@@ -27,7 +27,7 @@
             android:id="@+id/search_ll_container"
             android:layout_width="match_parent"
             android:layout_height="@dimen/search_input_size_36"
-            android:background="@drawable/et_background"
+            android:background="@drawable/shape_background"
             android:orientation="horizontal">
 
             <ImageView
@@ -55,7 +55,7 @@
                 android:textColor="@color/black"
                 android:textColorHint="@color/search_field_hint"
                 android:textSize="@dimen/regular_text_size_16"
-                android:textCursorDrawable="@drawable/dr_cursor" />
+                android:textCursorDrawable="@drawable/shape_cursor" />
 
             <ImageView
                 android:id="@+id/search_iv_clearIcon"
