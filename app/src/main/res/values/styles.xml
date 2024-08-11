@@ -77,8 +77,7 @@
     <style name="PlayerMainTextStyle">
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">400</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:maxLines">2</item>
+
     </style>
 
     <style name="PlayerSmallTextStyle" parent="Widget.MaterialComponents.TextView">
@@ -91,9 +90,5 @@
         <item name="android:textColor">@color/grey</item>
     </style>
 
-    <style name="PlayerRightSmallTextStyle" parent="PlayerSmallTextStyle">
-        <item name="android:ellipsize">end</item>
-        <item name="android:maxLines">1</item>
-    </style>
 
 </resources>

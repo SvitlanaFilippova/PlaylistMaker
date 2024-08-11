@@ -29,7 +29,8 @@ class PlayerActivity() : AppCompatActivity() {
             tvArtistName.text = track.artistName
             tvDurationTrack.text =
                 SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
-            tvYearTrack.text = "1991" // TODO как преобразовать track.releaseDate в год?
+            tvYearTrack.text = track.releaseDate.slice(0..3)
+
             tvGenreTrack.text = track.primaryGenreName
             tvCountryTrack.text = track.country
             Glide.with(applicationContext)
