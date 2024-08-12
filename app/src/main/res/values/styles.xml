@@ -74,4 +74,21 @@
         <item name="android:textSize">@dimen/button_text_size_24</item>
     </style>
 
+    <style name="PlayerMainTextStyle">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">400</item>
+
+    </style>
+
+    <style name="PlayerSmallTextStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">@dimen/player_small_text_13</item>
+    </style>
+
+    <style name="PlayerLeftSmallTextStyle" parent="PlayerSmallTextStyle">
+        <item name="android:textColor">@color/grey</item>
+    </style>
+
+
 </resources>

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingStart="@dimen/search_supersmall_margin_size_4">
+    android:paddingStart="@dimen/supersmall_margin_size_4">
 
     <ImageView
         android:id="@+id/search_iv_cover"
@@ -69,7 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/standart_icon_size_24"
         android:layout_gravity="center"
-        android:layout_marginEnd="@dimen/search_margin_size_12"
+        android:layout_marginEnd="@dimen/margin_size_12"
         android:contentDescription="@null"
         app:srcCompat="@drawable/ic_arrow_forward_light_mode"
         app:tint="?attr/colorSecondaryVariant" />

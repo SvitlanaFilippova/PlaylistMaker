@@ -6,7 +6,12 @@ data class Track
     val artistName: String,
     val trackTimeMillis: Int,
     val artworkUrl100: String,
-    val trackId: Int
-)
-
+    val trackId: Int,
+    var collectionName: String,
+    val releaseDate: String,
+    val primaryGenreName: String,
+    val country: String
+) {
+    fun getCoverArtwork() = artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
+}
 val trackListOfSearchResults = arrayListOf<Track>()
