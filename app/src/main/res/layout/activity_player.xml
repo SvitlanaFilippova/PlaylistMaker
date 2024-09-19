@@ -112,12 +112,12 @@
             android:layout_marginTop="@dimen/supersmall_margin_size_4"
             android:fontFamily="@font/ys_display_medium"
             android:gravity="center_horizontal"
-            android:text="00:00"
             android:textFontWeight="500"
             android:textSize="@dimen/player_artist_name_size_14"
             app:layout_constraintEnd_toStartOf="@id/rightBorder"
             app:layout_constraintStart_toEndOf="@id/leftBorder"
-            app:layout_constraintTop_toBottomOf="@id/ib_play" />
+            app:layout_constraintTop_toBottomOf="@id/ib_play"
+            tools:text="00:10" />
 
 
         <TextView
