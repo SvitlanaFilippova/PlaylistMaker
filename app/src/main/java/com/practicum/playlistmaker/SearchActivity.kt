@@ -109,6 +109,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
 
+
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
