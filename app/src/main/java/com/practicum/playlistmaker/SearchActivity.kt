@@ -24,8 +24,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private var searchInput: String = INPUT_DEF
     val tracksAdapter = SearchResultsAdapter()
-    private val handler = Handler(Looper.getMainLooper())
-
+    private var mainThreadHandler: Handler? = null
     private val searchBaseUrl = "https://itunes.apple.com"
     val retrofit = Retrofit.Builder()
         .baseUrl(searchBaseUrl)
@@ -44,7 +43,7 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        mainThreadHandler = Handler(Looper.getMainLooper())
         val sharedPreferences = getSharedPreferences(PLAYLISTMAKER_PREFERENCES, MODE_PRIVATE)
         tracksAdapter.sharedPreferences = sharedPreferences
 
@@ -63,7 +62,7 @@ class SearchActivity : AppCompatActivity() {
         searchClearButton.setOnClickListener {
             inputEditText.setText("")
             hideKeyboard()
-            handler.removeCallbacks(searchRunnable)
+            mainThreadHandler?.removeCallbacks(searchRunnable)
             trackListOfSearchResults.clear()
             searchResultsIsVisible = false
             placeholderVisibility(PlaceholderStatus.DEFAULT)
@@ -104,8 +103,8 @@ class SearchActivity : AppCompatActivity() {
 
 
         fun searchDebounce() {
-            handler.removeCallbacks(searchRunnable)
-            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+            mainThreadHandler?.removeCallbacks(searchRunnable)
+            mainThreadHandler?.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
         }
 
 
@@ -117,7 +116,7 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchClearButton.isVisible = !s.isNullOrEmpty()
                 if (s.isNullOrEmpty()) {
-                    handler.removeCallbacks(searchRunnable)
+                    mainThreadHandler?.removeCallbacks(searchRunnable)
                 } else {
                     searchDebounce()
                 }
