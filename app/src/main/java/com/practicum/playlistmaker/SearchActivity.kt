@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -31,8 +32,10 @@ class SearchActivity : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val iTunesService = retrofit.create(ITunesApi::class.java)
+    lateinit var progressBar: View
     var searchResultsIsVisible = false
     var placeholderIsVisible = false
+
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +58,7 @@ class SearchActivity : AppCompatActivity() {
             inputEditText.setText(searchInput)
         }
         val searchClearButton = binding.searchIvClearIcon
+        progressBar = binding.searchProgressBar
 
         searchClearButton.setOnClickListener {
             inputEditText.setText("")
@@ -161,8 +165,9 @@ class SearchActivity : AppCompatActivity() {
 
 
     private fun startSearch(text: String) {
-        searchInITunes(text)
         hideHistory()
+        progressBar.isVisible = true
+        searchInITunes(text)
         tracksAdapter.trackList = trackListOfSearchResults
     }
 
@@ -174,6 +179,7 @@ class SearchActivity : AppCompatActivity() {
                     call: Call<SongsResponse>,
                     response: Response<SongsResponse>
                 ) {
+                    progressBar.isVisible = false
                     searchResultsIsVisible = false
                     if (response.code() == 200) {
                         trackListOfSearchResults.clear()
@@ -245,6 +251,7 @@ class SearchActivity : AppCompatActivity() {
             searchRvResults.isVisible = true
             searchBvClearHistory.isVisible = true
             searchTvSearchHistory.isVisible = true
+            progressBar.isVisible = false
             tracksAdapter.historyIsVisibleFlag = true
         }
     }
@@ -267,6 +274,7 @@ class SearchActivity : AppCompatActivity() {
                 searchTvPlaceholderExtraMessage.isVisible = false
                 searchBvPlaceholderButton.isVisible = false
                 placeholderIsVisible = true
+
             }
 
             PlaceholderStatus.NO_NETWORK -> {
@@ -275,6 +283,7 @@ class SearchActivity : AppCompatActivity() {
                 searchTvPlaceholderMessage.isVisible = true
                 searchTvPlaceholderExtraMessage.isVisible = true
                 searchBvPlaceholderButton.isVisible = true
+                progressBar.isVisible = false
                 placeholderIsVisible = true
             }
 

@@ -108,6 +108,14 @@
             android:visibility="gone" />
     </LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/search_progressBar"
+        android:layout_width="@dimen/search_progress_size_44"
+        android:layout_height="@dimen/search_progress_size_44"
+        android:layout_marginTop="@dimen/search_progress_vert_margin_140"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/blue"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/search_ll_placeholder"
