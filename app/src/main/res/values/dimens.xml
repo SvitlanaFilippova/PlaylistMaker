@@ -33,6 +33,8 @@
     <dimen name="player_small_text_13">13sp</dimen>
     <dimen name="player_big_margin_40">40dp</dimen>
     <dimen name="player_cover_radius_8">8dp</dimen>
+    <dimen name="search_progress_vert_margin_140">140dp</dimen>
+    <dimen name="search_progress_size_44">44dp</dimen>
 
 
 </resources>

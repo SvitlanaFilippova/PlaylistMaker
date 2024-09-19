@@ -3,8 +3,11 @@ package com.practicum.playlistmaker
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -21,15 +24,17 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private var searchInput: String = INPUT_DEF
     val tracksAdapter = SearchResultsAdapter()
-
+    private var mainThreadHandler: Handler? = null
     private val searchBaseUrl = "https://itunes.apple.com"
     val retrofit = Retrofit.Builder()
         .baseUrl(searchBaseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val iTunesService = retrofit.create(ITunesApi::class.java)
+    lateinit var progressBar: View
     var searchResultsIsVisible = false
     var placeholderIsVisible = false
+
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +43,7 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        mainThreadHandler = Handler(Looper.getMainLooper())
         val sharedPreferences = getSharedPreferences(PLAYLISTMAKER_PREFERENCES, MODE_PRIVATE)
         tracksAdapter.sharedPreferences = sharedPreferences
 
@@ -46,15 +51,18 @@ class SearchActivity : AppCompatActivity() {
 
 
         val inputEditText = binding.searchEtInputSeacrh
+        val searchRunnable = Runnable { startSearch(inputEditText.text.toString()) }
 
         if (searchInput.isNotEmpty()) {
             inputEditText.setText(searchInput)
         }
         val searchClearButton = binding.searchIvClearIcon
+        progressBar = binding.searchProgressBar
 
         searchClearButton.setOnClickListener {
             inputEditText.setText("")
             hideKeyboard()
+            mainThreadHandler?.removeCallbacks(searchRunnable)
             trackListOfSearchResults.clear()
             searchResultsIsVisible = false
             placeholderVisibility(PlaceholderStatus.DEFAULT)
@@ -78,9 +86,8 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (inputEditText.text.isNotEmpty()) {
-                    searchInITunes(inputEditText.text.toString())
-                    hideHistory()
-                    tracksAdapter.trackList = trackListOfSearchResults
+                    startSearch(inputEditText.text.toString())
+
                 }
             }
             false
@@ -95,12 +102,25 @@ class SearchActivity : AppCompatActivity() {
         }
 
 
+        fun searchDebounce() {
+            mainThreadHandler?.removeCallbacks(searchRunnable)
+            mainThreadHandler?.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        }
+
+
+
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchClearButton.isVisible = !s.isNullOrEmpty()
+                if (s.isNullOrEmpty()) {
+                    mainThreadHandler?.removeCallbacks(searchRunnable)
+                } else {
+                    searchDebounce()
+                }
+
                 if (placeholderIsVisible && s?.isEmpty() == true) placeholderVisibility(
                     PlaceholderStatus.DEFAULT
                 )
@@ -116,6 +136,12 @@ class SearchActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {
                 searchInput = s.toString()
+
+                if (inputEditText.hasFocus() && s?.isEmpty() == true) {
+                    getHistory(sharedPreferences)
+                    showHistory()
+                    tracksAdapter.notifyDataSetChanged()
+                } else hideHistory()
 
             }
         }
@@ -134,8 +160,16 @@ class SearchActivity : AppCompatActivity() {
             hideHistory()
         }
 
+
     }
 
+
+    private fun startSearch(text: String) {
+        hideHistory()
+        progressBar.isVisible = true
+        searchInITunes(text)
+        tracksAdapter.trackList = trackListOfSearchResults
+    }
 
     private fun searchInITunes(text: String) {
         iTunesService.search(text)
@@ -145,6 +179,7 @@ class SearchActivity : AppCompatActivity() {
                     call: Call<SongsResponse>,
                     response: Response<SongsResponse>
                 ) {
+                    progressBar.isVisible = false
                     searchResultsIsVisible = false
                     if (response.code() == 200) {
                         trackListOfSearchResults.clear()
@@ -216,6 +251,7 @@ class SearchActivity : AppCompatActivity() {
             searchRvResults.isVisible = true
             searchBvClearHistory.isVisible = true
             searchTvSearchHistory.isVisible = true
+            progressBar.isVisible = false
             tracksAdapter.historyIsVisibleFlag = true
         }
     }
@@ -238,6 +274,7 @@ class SearchActivity : AppCompatActivity() {
                 searchTvPlaceholderExtraMessage.isVisible = false
                 searchBvPlaceholderButton.isVisible = false
                 placeholderIsVisible = true
+
             }
 
             PlaceholderStatus.NO_NETWORK -> {
@@ -246,6 +283,7 @@ class SearchActivity : AppCompatActivity() {
                 searchTvPlaceholderMessage.isVisible = true
                 searchTvPlaceholderExtraMessage.isVisible = true
                 searchBvPlaceholderButton.isVisible = true
+                progressBar.isVisible = false
                 placeholderIsVisible = true
             }
 
@@ -275,6 +313,7 @@ class SearchActivity : AppCompatActivity() {
     private companion object {
         const val SEARCH_INPUT = "SEARCH_INPUT"
         const val INPUT_DEF = ""
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
     enum class PlaceholderStatus {

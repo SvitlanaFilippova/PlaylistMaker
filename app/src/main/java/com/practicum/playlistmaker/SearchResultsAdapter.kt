@@ -3,10 +3,11 @@ package com.practicum.playlistmaker
 import android.content.Intent
 import android.content.SharedPreferences
 import android.icu.text.SimpleDateFormat
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -20,6 +21,8 @@ class SearchResultsAdapter :
     var trackList: ArrayList<Track> = arrayListOf<Track>()
     lateinit var sharedPreferences: SharedPreferences
     var historyIsVisibleFlag = false
+    private var isClickAllowed = true
+    private val handler = Handler(Looper.getMainLooper())
 
     class SearchResultsHolder(val parentView: View) : RecyclerView.ViewHolder(parentView) {
         private val binding = ActivitySearchTrackCardBinding.bind(parentView)
@@ -58,36 +61,50 @@ class SearchResultsAdapter :
         val track = trackList[position]
         holder.bind(track)
         holder.itemView.setOnClickListener {
+            if (clickDebounce()) {
+                val searchHistory = SearchHistory(sharedPreferences)
 
-            val searchHistory = SearchHistory(sharedPreferences)
+                if (trackListSearchHistory.removeIf() { it.trackId == track.trackId }) {
+                    if (historyIsVisibleFlag) notifyDataSetChanged()
+                }
 
-            if (trackListSearchHistory.removeIf() { it.trackId == track.trackId }) {
-                if (historyIsVisibleFlag) notifyDataSetChanged()
-            }
+                if (trackListSearchHistory.size > 9) {
+                    trackListSearchHistory.removeAt(9)
+                    if (historyIsVisibleFlag) {
+                        notifyItemRemoved(9)
+                        notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
+                    }
+                }
 
-            if (trackListSearchHistory.size > 9) {
-                trackListSearchHistory.removeAt(9)
+                trackListSearchHistory.add(0, track)
                 if (historyIsVisibleFlag) {
-                    notifyItemRemoved(9)
+                    notifyItemInserted(0)
                     notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
                 }
+                searchHistory.saveHistory(trackListSearchHistory)
+
+                val playerIntent = Intent(holder.parentView.context, PlayerActivity::class.java)
+                playerIntent.putExtra("track", Gson().toJson(track)) // Добавляем объект в Intent
+                holder.parentView.context.startActivity(playerIntent)
             }
-
-            trackListSearchHistory.add(0, track)
-            if (historyIsVisibleFlag) {
-                notifyItemInserted(0)
-                notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
-            }
-            searchHistory.saveHistory(trackListSearchHistory)
-
-            val playerIntent = Intent(holder.parentView.context, PlayerActivity::class.java)
-            playerIntent.putExtra("track", Gson().toJson(track)) // Добавляем объект в Intent
-            holder.parentView.context.startActivity(playerIntent)
-
         }
     }
 
     override fun getItemCount(): Int {
         return trackList.size
     }
+
+    fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
+
 }
