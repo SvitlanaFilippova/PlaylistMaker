@@ -22,9 +22,5 @@ fun Context.hideKeyboard(view: View) {
     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
-fun getYearFromDateString(dateString: String): Int {
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-    val localDateTime = LocalDateTime.parse(dateString, formatter)
-    return localDateTime.year
-}
+
 

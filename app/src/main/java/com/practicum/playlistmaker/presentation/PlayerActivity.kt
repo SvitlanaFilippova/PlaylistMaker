@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.presentation
 
 import android.icu.text.SimpleDateFormat
 import android.media.MediaPlayer
@@ -12,6 +12,8 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
 import java.util.Locale
 
@@ -43,13 +45,13 @@ class PlayerActivity() : AppCompatActivity() {
             tvTrackProgress.text = formatTime(0)
             tvTrackName.text = track.trackName
             tvArtistName.text = track.artistName
-            tvDurationTrack.text = formatTime(track.trackTimeMillis)
+            tvDurationTrack.text = track.trackTime
             tvYearTrack.text = track.releaseDate.slice(0..3)
 
             tvGenreTrack.text = track.primaryGenreName
             tvCountryTrack.text = track.country
             Glide.with(applicationContext)
-                .load(track.getCoverArtwork())
+                .load(track.coverArtwork)
                 .centerCrop()
                 .transform(
                     RoundedCorners(

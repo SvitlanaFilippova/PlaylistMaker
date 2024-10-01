@@ -1,14 +1,14 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.presentation
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.practicum.playlistmaker.databinding.ActivitySearchBinding
+import com.practicum.playlistmaker.App
+import com.practicum.playlistmaker.PLAYLISTMAKER_PREFERENCES
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.THEME_KEY
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
 
 
