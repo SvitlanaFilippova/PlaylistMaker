@@ -4,13 +4,10 @@ import com.practicum.playlistmaker.domain.models.Track
 
 interface HistoryInteractor {
 
-    fun clear(history: ArrayList<Track>)
+    fun clear()
 
     fun read(): ArrayList<Track>
 
     fun save(history: ArrayList<Track>)
 
-    interface HistoryConsumer {
-        fun consume(history: ArrayList<Track>)
-    }
 }

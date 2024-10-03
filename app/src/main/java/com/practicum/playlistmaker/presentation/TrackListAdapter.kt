@@ -16,10 +16,10 @@ import com.practicum.playlistmaker.domain.api.HistoryInteractor
 import com.practicum.playlistmaker.domain.models.Track
 
 
-class SearchResultsAdapter(private val historyInteractor: HistoryInteractor) :
-    RecyclerView.Adapter<SearchResultsAdapter.SearchResultsHolder>() {
-    var trackList: ArrayList<Track> = arrayListOf<Track>()
-    var historyIsVisibleFlag = false
+class TrackListAdapter(private val historyInteractor: HistoryInteractor) :
+    RecyclerView.Adapter<TrackListAdapter.SearchResultsHolder>() {
+    var trackList: ArrayList<Track> = arrayListOf()
+    private var historyIsVisibleFlag = false
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
 
@@ -105,6 +105,14 @@ class SearchResultsAdapter(private val historyInteractor: HistoryInteractor) :
             handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
         }
         return current
+    }
+
+    fun setHistoryVisibilityFlag(isVisible: Boolean) {
+        if (isVisible) {
+            historyIsVisibleFlag = true
+        } else {
+            historyIsVisibleFlag = false
+        }
     }
 
     companion object {
