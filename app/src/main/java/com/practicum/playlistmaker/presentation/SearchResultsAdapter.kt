@@ -1,8 +1,6 @@
 package com.practicum.playlistmaker.presentation
 
 import android.content.Intent
-import android.content.SharedPreferences
-import android.icu.text.SimpleDateFormat
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -13,24 +11,21 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.SearchHistory
 import com.practicum.playlistmaker.databinding.ActivitySearchTrackCardBinding
+import com.practicum.playlistmaker.domain.api.HistoryInteractor
 import com.practicum.playlistmaker.domain.models.Track
-import com.practicum.playlistmaker.trackListSearchHistory
-import java.util.Locale
 
 
-class SearchResultsAdapter :
+class SearchResultsAdapter(private val historyInteractor: HistoryInteractor) :
     RecyclerView.Adapter<SearchResultsAdapter.SearchResultsHolder>() {
     var trackList: ArrayList<Track> = arrayListOf<Track>()
-    lateinit var sharedPreferences: SharedPreferences
     var historyIsVisibleFlag = false
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
 
+
     class SearchResultsHolder(val parentView: View) : RecyclerView.ViewHolder(parentView) {
         private val binding = ActivitySearchTrackCardBinding.bind(parentView)
-
 
         fun bind(track: Track) = with(binding) {
             val cornerRadius =
@@ -66,26 +61,31 @@ class SearchResultsAdapter :
         holder.bind(track)
         holder.itemView.setOnClickListener {
             if (clickDebounce()) {
-                val searchHistory = SearchHistory(sharedPreferences)
+                val historyTrackList = historyInteractor.read()
 
-                if (trackListSearchHistory.removeIf() { it.trackId == track.trackId }) {
-                    if (historyIsVisibleFlag) notifyDataSetChanged()
-                }
-
-                if (trackListSearchHistory.size > 9) {
-                    trackListSearchHistory.removeAt(9)
+                if (historyTrackList.removeIf() { it.trackId == track.trackId }) {
                     if (historyIsVisibleFlag) {
-                        notifyItemRemoved(9)
-                        notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
+                        trackList.removeAt(position)
+                        notifyItemRemoved(position)
                     }
                 }
 
-                trackListSearchHistory.add(0, track)
-                if (historyIsVisibleFlag) {
-                    notifyItemInserted(0)
-                    notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
+                if (historyTrackList.size > 9) {
+                    historyTrackList.removeAt(9)
+                    if (historyIsVisibleFlag) {
+                        notifyItemRemoved(9)
+                        notifyItemRangeChanged(0, historyTrackList.size - 1)
+                    }
                 }
-                searchHistory.saveHistory(trackListSearchHistory)
+
+                historyTrackList.add(0, track)
+                if (historyIsVisibleFlag) {
+                    trackList.add(0, track)
+                    notifyItemInserted(0)
+                    notifyItemRangeChanged(0, historyTrackList.size - 1)
+                }
+
+                historyInteractor.save(historyTrackList)
 
                 val playerIntent = Intent(holder.parentView.context, PlayerActivity::class.java)
                 playerIntent.putExtra("track", Gson().toJson(track)) // Добавляем объект в Intent

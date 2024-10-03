@@ -3,6 +3,9 @@ package com.practicum.playlistmaker
 import android.app.Application
 
 import androidx.appcompat.app.AppCompatDelegate
+import com.practicum.playlistmaker.data.storage.PLAYLISTMAKER_PREFERENCES
+
+const val THEME_KEY = "theme_key"
 
 class App : Application() {
 
@@ -28,7 +31,5 @@ class App : Application() {
 
 }
 
-const val PLAYLISTMAKER_PREFERENCES = "playlistmaker_preferences"
-const val THEME_KEY = "theme_key"
 
 

@@ -10,7 +10,6 @@ class TracksInteractorImpl(private val repository: TracksRepository) : TracksInt
         executor.execute {
 
             try {
-
                 val tracks = repository.searchTracks(expression)
                 if (repository.resultCode == 200 && tracks.isNotEmpty()) {
                     consumer.consume(tracks)

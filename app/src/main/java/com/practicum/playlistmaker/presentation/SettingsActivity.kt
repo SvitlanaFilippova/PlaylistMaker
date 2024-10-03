@@ -6,9 +6,10 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.App
-import com.practicum.playlistmaker.PLAYLISTMAKER_PREFERENCES
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.THEME_KEY
+import com.practicum.playlistmaker.data.storage.PLAYLISTMAKER_PREFERENCES
+
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
 
 

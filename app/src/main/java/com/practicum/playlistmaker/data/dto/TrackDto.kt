@@ -1,8 +1,5 @@
 package com.practicum.playlistmaker.data.dto
 
-import android.icu.text.SimpleDateFormat
-import java.util.Locale
-
 data class TrackDto
     (
     val trackName: String,
@@ -15,12 +12,4 @@ data class TrackDto
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String
-) {
-    fun convertMillisToString(): String =
-        SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)
-
-    fun getCoverArtwork(): String =
-        artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
-
-
-}
+)

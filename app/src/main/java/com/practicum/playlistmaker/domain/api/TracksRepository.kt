@@ -6,5 +6,5 @@ interface TracksRepository {
 
     val resultCode: Int
 
-    fun searchTracks(expression: String): List<Track>
+    fun searchTracks(expression: String): ArrayList<Track>
 }
