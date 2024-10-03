@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.presentation
+package com.practicum.playlistmaker.presentation.player
 
 import android.icu.text.SimpleDateFormat
 import android.media.MediaPlayer

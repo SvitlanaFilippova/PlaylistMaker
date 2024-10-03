@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.presentation.VIews
+package com.practicum.playlistmaker.presentation.search.views
 
 import android.view.View
 import android.widget.Button

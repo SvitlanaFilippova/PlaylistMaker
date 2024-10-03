@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.presentation
+package com.practicum.playlistmaker.presentation.search
 
 import android.content.Intent
 import android.os.Handler
@@ -14,6 +14,7 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySearchTrackCardBinding
 import com.practicum.playlistmaker.domain.api.HistoryInteractor
 import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.presentation.player.PlayerActivity
 
 
 class TrackListAdapter(private val historyInteractor: HistoryInteractor) :

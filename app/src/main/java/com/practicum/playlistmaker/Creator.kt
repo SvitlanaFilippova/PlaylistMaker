@@ -16,14 +16,16 @@ import com.practicum.playlistmaker.domain.api.TracksInteractor
 import com.practicum.playlistmaker.domain.api.TracksRepository
 import com.practicum.playlistmaker.domain.impl.HistoryInteractorImpl
 import com.practicum.playlistmaker.domain.impl.TracksInteractorImpl
-import com.practicum.playlistmaker.domain.models.Track
-import com.practicum.playlistmaker.presentation.HistoryVisibilityManagerImpl
-import com.practicum.playlistmaker.presentation.interfaces.PlaceholderManager
-import com.practicum.playlistmaker.presentation.PlaceholderManagerImpl
-import com.practicum.playlistmaker.presentation.TrackListAdapter
-import com.practicum.playlistmaker.presentation.VIews.HistoryViews
-import com.practicum.playlistmaker.presentation.VIews.PlaceholderViews
-import com.practicum.playlistmaker.presentation.interfaces.HistoryVisibilityManager
+import com.practicum.playlistmaker.presentation.search.HistoryVisibilityManagerImpl
+import com.practicum.playlistmaker.presentation.search.PlaceholderManager
+import com.practicum.playlistmaker.presentation.search.PlaceholderManagerImpl
+import com.practicum.playlistmaker.presentation.search.TrackListAdapter
+import com.practicum.playlistmaker.presentation.search.views.HistoryViews
+import com.practicum.playlistmaker.presentation.search.views.PlaceholderViews
+import com.practicum.playlistmaker.presentation.search.HistoryVisibilityManager
+import com.practicum.playlistmaker.presentation.search.SearchResultsVisibilityManager
+import com.practicum.playlistmaker.presentation.search.SearchResultsVisibilityManagerImpl
+import com.practicum.playlistmaker.presentation.search.views.SearchResultsViews
 
 @SuppressLint("StaticFieldLeak")
 object Creator {
@@ -82,6 +84,16 @@ object Creator {
                 searchBvClearHistory,
                 searchTvSearchHistory
             ), tracksAdapter
+        )
+    }
+
+    fun provideSearchResultsVisibilityManager(
+        searchRvResults: RecyclerView,
+        tracksAdapter: TrackListAdapter
+    ): SearchResultsVisibilityManager {
+        return SearchResultsVisibilityManagerImpl(
+            SearchResultsViews(searchRvResults),
+            tracksAdapter
         )
     }
 }

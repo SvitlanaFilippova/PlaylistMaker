@@ -1,10 +1,9 @@
-package com.practicum.playlistmaker.presentation
+package com.practicum.playlistmaker.presentation.search
 
 import android.content.Context
 import androidx.core.view.isVisible
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.presentation.VIews.PlaceholderViews
-import com.practicum.playlistmaker.presentation.interfaces.PlaceholderManager
+import com.practicum.playlistmaker.presentation.search.views.PlaceholderViews
 
 
 class PlaceholderManagerImpl(val context: Context, val placeholderViews: PlaceholderViews) :

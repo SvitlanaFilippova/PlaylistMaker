@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.presentation
+package com.practicum.playlistmaker.presentation.settings
 
 import android.annotation.SuppressLint
 import android.content.Intent
