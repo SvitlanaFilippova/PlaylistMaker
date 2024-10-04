@@ -32,6 +32,10 @@ class HistoryRepositoryImpl(context: Context) : HistoryRepository {
         } else return arrayListOf()
     }
 
+    override fun clear() {
+        sharedPreferences.edit().remove(SEARCH_HISTORY_LIST_KEY).apply()
+    }
+
 }
 
 

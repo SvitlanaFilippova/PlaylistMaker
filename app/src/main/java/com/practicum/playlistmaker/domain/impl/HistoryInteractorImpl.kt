@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.domain.impl
 
-import com.practicum.playlistmaker.data.storage.SEARCH_HISTORY_LIST_KEY
 import com.practicum.playlistmaker.domain.api.HistoryInteractor
 import com.practicum.playlistmaker.domain.api.HistoryRepository
 import com.practicum.playlistmaker.domain.models.Track
@@ -9,7 +8,7 @@ class HistoryInteractorImpl(private val repository: HistoryRepository) : History
 
 
     override fun clear() {
-        repository.sharedPreferences.edit().remove(SEARCH_HISTORY_LIST_KEY).apply()
+        repository.clear()
     }
 
     override fun read(): ArrayList<Track> {

@@ -11,5 +11,6 @@ interface HistoryRepository {
 
     fun save(history: ArrayList<Track>)
     fun read(): ArrayList<Track>
+    fun clear()
 }
 
