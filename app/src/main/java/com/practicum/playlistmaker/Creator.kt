@@ -5,16 +5,22 @@ import android.content.Context
 import androidx.viewbinding.ViewBinding
 import com.practicum.playlistmaker.data.repository.TracksRepositoryImpl
 import com.practicum.playlistmaker.data.network.RetrofitNetworkClient
+import com.practicum.playlistmaker.data.repository.AgreementRepositoryImpl
+import com.practicum.playlistmaker.data.repository.ShareRepositoryImpl
+import com.practicum.playlistmaker.data.repository.SupportRepositoryImpl
 import com.practicum.playlistmaker.data.storage.HistoryRepositoryImpl
 import com.practicum.playlistmaker.data.storage.ThemeRepositoryImpl
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.domain.api.HistoryInteractor
 import com.practicum.playlistmaker.domain.api.HistoryRepository
+import com.practicum.playlistmaker.domain.api.IntentRepository
+import com.practicum.playlistmaker.domain.api.IntentUseCase
 import com.practicum.playlistmaker.domain.api.ThemeInteractor
 import com.practicum.playlistmaker.domain.api.ThemeRepository
 import com.practicum.playlistmaker.domain.api.TracksInteractor
 import com.practicum.playlistmaker.domain.api.TracksRepository
 import com.practicum.playlistmaker.domain.impl.HistoryInteractorImpl
+import com.practicum.playlistmaker.domain.impl.IntentUseCaseImpl
 import com.practicum.playlistmaker.domain.impl.ThemeInteractorImpl
 import com.practicum.playlistmaker.domain.impl.TracksInteractorImpl
 import com.practicum.playlistmaker.presentation.search.HistoryVisibilityManagerImpl
@@ -27,6 +33,7 @@ import com.practicum.playlistmaker.presentation.search.HistoryVisibilityManager
 import com.practicum.playlistmaker.presentation.search.SearchResultsVisibilityManager
 import com.practicum.playlistmaker.presentation.search.SearchResultsVisibilityManagerImpl
 import com.practicum.playlistmaker.presentation.search.views.SearchResultsViews
+import com.practicum.playlistmaker.presentation.settings.SettingsActivity
 
 @SuppressLint("StaticFieldLeak")
 object Creator {
@@ -65,7 +72,7 @@ object Creator {
                 (binding as ActivitySearchBinding).searchTvPlaceholderMessage,
                 (binding as ActivitySearchBinding).searchTvPlaceholderExtraMessage,
                 (binding as ActivitySearchBinding).searchBvPlaceholderButton,
-                )
+            )
         )
     }
 
@@ -98,5 +105,20 @@ object Creator {
 
     fun provideThemeInteractor(): ThemeInteractor {
         return ThemeInteractorImpl(getThemeRepository())
+    }
+
+    private fun getIntentRepository(intentType: SettingsActivity.IntentType): IntentRepository {
+        when (intentType) {
+            SettingsActivity.IntentType.SHARE -> return ShareRepositoryImpl(context)
+            SettingsActivity.IntentType.SUPPORT ->
+                return SupportRepositoryImpl(context)
+
+            SettingsActivity.IntentType.AGREEMENT -> return AgreementRepositoryImpl(context)
+        }
+
+    }
+
+    fun provideIntentUseCase(intentType: SettingsActivity.IntentType): IntentUseCase {
+        return IntentUseCaseImpl(getIntentRepository(intentType))
     }
 }

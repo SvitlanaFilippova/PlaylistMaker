@@ -2,13 +2,12 @@ package com.practicum.playlistmaker.presentation.settings
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.Creator
 import com.practicum.playlistmaker.R
-
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
+import com.practicum.playlistmaker.domain.api.IntentUseCase
 
 
 class SettingsActivity : AppCompatActivity() {
@@ -32,43 +31,25 @@ class SettingsActivity : AppCompatActivity() {
         }
 
 
-        val rowShare = binding.tvShare
-        rowShare.setOnClickListener {
-            val shareIntent = Intent(Intent.ACTION_SEND)
-            shareIntent.setType("text/plain")
-            shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.settings_share_message))
-            startActivity(
-                Intent.createChooser(
-                    shareIntent,
-                    getString(R.string.settings_share_title)
-                )
-            )
+        binding.tvShare.setOnClickListener {
+            Creator.provideIntentUseCase(IntentType.SHARE).execute(context = this)
         }
 
         val rowSupport = binding.tvSupport
         rowSupport.setOnClickListener {
-
-            Intent(Intent.ACTION_SENDTO).apply {
-                data = Uri.parse(getString(R.string.settings_support_mailto))
-                putExtra(
-                    Intent.EXTRA_EMAIL, arrayOf(getString(R.string.settings_support_email))
-                )
-                putExtra(
-                    Intent.EXTRA_SUBJECT, getString(R.string.settings_support_subject)
-                )
-                putExtra(
-                    Intent.EXTRA_TEXT, getString(R.string.settings_support_message)
-                )
-
-            }.also(::startActivity)
+            Creator.provideIntentUseCase(IntentType.SUPPORT).execute(context = this)
         }
 
         val rowAgreement = binding.tvAgreement
         rowAgreement.setOnClickListener {
-            val agreementIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.settings_agreement_url)))
-            startActivity(agreementIntent)
+            Creator.provideIntentUseCase(IntentType.AGREEMENT).execute(context = this)
 
         }
+    }
+
+    enum class IntentType {
+        SHARE,
+        SUPPORT,
+        AGREEMENT
     }
 }
