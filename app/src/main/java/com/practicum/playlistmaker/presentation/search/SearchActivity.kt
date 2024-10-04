@@ -39,7 +39,7 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
         mainThreadHandler = Handler(Looper.getMainLooper())
-        Creator.init(applicationContext)
+        Creator.init(applicationContext, binding)
         historyInteractor = Creator.provideHistoryInteractor()
         progressBar = binding.searchProgressBar
         val searchClearButton = binding.searchIvClearIcon
@@ -139,27 +139,16 @@ class SearchActivity : AppCompatActivity() {
             historyVisibilityManager.hide()
         }
 
-        placeholderManager = with(binding) {
-            Creator.providePlaceholderManager(
-                searchLlPlaceholder,
-                searchIvPlaceholderImage,
-                searchTvPlaceholderMessage,
-                searchTvPlaceholderExtraMessage,
-                searchBvPlaceholderButton
-            )
-        }
+        placeholderManager = Creator.providePlaceholderManager()
 
-        historyVisibilityManager = with(binding) {
-            Creator.provideHistoryVisibilityManager(
-                searchRvResults,
-                searchBvClearHistory,
-                searchTvSearchHistory,
-                tracksAdapter
-            )
-        }
+
+        historyVisibilityManager = Creator.provideHistoryVisibilityManager(
+            tracksAdapter
+        )
+
 
         searchResultsVisibilityManager =
-            Creator.provideSearchResultsVisibilityManager(binding.searchRvResults, tracksAdapter)
+            Creator.provideSearchResultsVisibilityManager(tracksAdapter)
     }
 
     private fun startSearch(expression: String) {

@@ -5,10 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.practicum.playlistmaker.App
+import com.practicum.playlistmaker.Creator
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.THEME_KEY
-import com.practicum.playlistmaker.data.storage.PLAYLISTMAKER_PREFERENCES
 
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
 
@@ -18,27 +16,21 @@ class SettingsActivity : AppCompatActivity() {
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
-        val sharedPrefs = getSharedPreferences(PLAYLISTMAKER_PREFERENCES, MODE_PRIVATE)
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        binding.settingsToolbar.setNavigationOnClickListener() {
+        Creator.init(applicationContext, binding)
+        binding.settingsToolbar.setNavigationOnClickListener {
             finish()
         }
-
+        val settingsInteractor = Creator.provideThemeInteractor()
 
         val themeSwitcher = binding.swDarkTheme
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as App).switchTheme(checked)
-            sharedPrefs.edit().putBoolean(THEME_KEY, checked).apply()
-
+        themeSwitcher.isChecked = settingsInteractor.read()
+        themeSwitcher.setOnCheckedChangeListener { _, checked ->
+            settingsInteractor.save(checked)
         }
 
-        if (sharedPrefs.getBoolean(THEME_KEY, false)) {
-            themeSwitcher.isChecked = true
-
-        }
 
         val rowShare = binding.tvShare
         rowShare.setOnClickListener {
@@ -70,6 +62,7 @@ class SettingsActivity : AppCompatActivity() {
 
             }.also(::startActivity)
         }
+
         val rowAgreement = binding.tvAgreement
         rowAgreement.setOnClickListener {
             val agreementIntent =
