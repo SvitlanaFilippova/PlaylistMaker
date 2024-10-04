@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
+import com.practicum.playlistmaker.Creator
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySearchTrackCardBinding
 import com.practicum.playlistmaker.domain.api.HistoryInteractor
@@ -62,34 +63,18 @@ class TrackListAdapter(private val historyInteractor: HistoryInteractor) :
         holder.bind(track)
         holder.itemView.setOnClickListener {
             if (clickDebounce()) {
+
                 val historyTrackList = historyInteractor.read()
-
-                if (historyTrackList.removeIf() { it.trackId == track.trackId }) {
-                    if (historyIsVisibleFlag) {
-                        trackList.removeAt(position)
-                        notifyItemRemoved(position)
-                    }
-                }
-
-                if (historyTrackList.size > 9) {
-                    historyTrackList.removeAt(9)
-                    if (historyIsVisibleFlag) {
-                        notifyItemRemoved(9)
-                        notifyItemRangeChanged(0, historyTrackList.size - 1)
-                    }
-                }
-
-                historyTrackList.add(0, track)
-                if (historyIsVisibleFlag) {
-                    trackList.add(0, track)
-                    notifyItemInserted(0)
-                    notifyItemRangeChanged(0, historyTrackList.size - 1)
-                }
-
+                Creator.provideHistoryUpdUseCase().upgrade(
+                    historyTrackList,
+                    historyIsVisibleFlag,
+                    position,
+                    this
+                )
                 historyInteractor.save(historyTrackList)
 
                 val playerIntent = Intent(holder.parentView.context, PlayerActivity::class.java)
-                playerIntent.putExtra("track", Gson().toJson(track)) // Добавляем объект в Intent
+                playerIntent.putExtra("track", Gson().toJson(track))
                 holder.parentView.context.startActivity(playerIntent)
             }
         }
