@@ -1,20 +1,16 @@
 package com.practicum.playlistmaker.presentation
 
 import android.app.Application
-
 import androidx.appcompat.app.AppCompatDelegate
-import com.practicum.playlistmaker.data.storage.PLAYLISTMAKER_PREFERENCES
+import com.practicum.playlistmaker.Creator
 
-const val THEME_KEY = "theme_key"
 
 class App : Application() {
 
     private var darkTheme = false
     override fun onCreate() {
-
-        val sharedPrefs = getSharedPreferences(PLAYLISTMAKER_PREFERENCES, MODE_PRIVATE)
-
-        switchTheme(sharedPrefs.getBoolean(THEME_KEY, darkTheme))
+        Creator.init(applicationContext)
+        switchTheme(Creator.provideThemeInteractor().read())
 
         super.onCreate()
     }
@@ -30,6 +26,9 @@ class App : Application() {
         )
     }
 
+    companion object {
+        const val THEME_KEY = "theme_key"
+    }
 }
 
 

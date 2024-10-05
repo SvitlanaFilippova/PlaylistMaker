@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.presentation.settings
+package com.practicum.playlistmaker.presentation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -15,7 +15,6 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Creator.init(applicationContext, binding)
         binding.settingsToolbar.setNavigationOnClickListener {
             finish()
         }

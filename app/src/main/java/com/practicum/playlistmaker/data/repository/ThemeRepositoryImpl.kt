@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import com.practicum.playlistmaker.domain.api.ThemeRepository
 import com.practicum.playlistmaker.presentation.App
-import com.practicum.playlistmaker.presentation.THEME_KEY
+import com.practicum.playlistmaker.presentation.App.Companion.THEME_KEY
 
 
 class ThemeRepositoryImpl(val context: Context) : ThemeRepository {

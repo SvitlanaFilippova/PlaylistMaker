@@ -1,5 +1,6 @@
-package com.practicum.playlistmaker.presentation.search
+package com.practicum.playlistmaker.presentation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,11 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.Creator
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.domain.api.HistoryInteractor
 import com.practicum.playlistmaker.domain.api.TracksInteractor
 import com.practicum.playlistmaker.domain.models.Track
-import com.practicum.playlistmaker.presentation.HideKeyboard
+
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
@@ -29,9 +31,6 @@ class SearchActivity : AppCompatActivity() {
     private var foundTracks = ArrayList<Track>()
     var searchResultsIsVisible = false
     var placeholderIsVisible = false
-    lateinit var placeholderManager: PlaceholderManager
-    lateinit var historyVisibilityManager: HistoryVisibilityManager
-    lateinit var searchResultsVisibilityManager: SearchResultsVisibilityManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +38,6 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
         mainThreadHandler = Handler(Looper.getMainLooper())
-        Creator.init(applicationContext, binding)
         historyInteractor = Creator.provideHistoryInteractor()
         progressBar = binding.searchProgressBar
         val searchClearButton = binding.searchIvClearIcon
@@ -56,10 +54,10 @@ class SearchActivity : AppCompatActivity() {
             HideKeyboard.execute(applicationContext, inputEditText)
             mainThreadHandler?.removeCallbacks(searchRunnable)
             foundTracks.clear()
-            searchResultsIsVisible = searchResultsVisibilityManager.hide()
+            searchResultsIsVisible = hideSearchResults()
             placeholderIsVisible =
-                placeholderManager.execute(PlaceholderManager.PlaceholderStatus.HIDDEN)
-            historyVisibilityManager.show(historyInteractor.read())
+                placeholderManager(PlaceholderStatus.HIDDEN)
+            showHistory(historyInteractor.read())
         }
 
         binding.searchToolbar.setNavigationOnClickListener {
@@ -86,8 +84,8 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
             if (!searchResultsIsVisible) {
                 if (hasFocus && inputEditText.text.isEmpty()) {
-                    historyVisibilityManager.show(historyInteractor.read())
-                } else historyVisibilityManager.hide()
+                    showHistory(historyInteractor.read())
+                } else hideHistory()
             }
 
         }
@@ -110,12 +108,12 @@ class SearchActivity : AppCompatActivity() {
 
                 if (placeholderIsVisible && s?.isEmpty() == true)
                     placeholderIsVisible =
-                        placeholderManager.execute(PlaceholderManager.PlaceholderStatus.HIDDEN)
+                        placeholderManager(PlaceholderStatus.HIDDEN)
 
                 if (!searchResultsIsVisible) {
                     if (inputEditText.hasFocus() && s?.isEmpty() == true) {
-                        historyVisibilityManager.show(historyInteractor.read())
-                    } else historyVisibilityManager.hide()
+                        showHistory(historyInteractor.read())
+                    } else hideHistory()
                 }
             }
 
@@ -123,8 +121,8 @@ class SearchActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
                 searchInput = s.toString()
                 if (inputEditText.hasFocus() && s?.isEmpty() == true) {
-                    historyVisibilityManager.show(historyInteractor.read())
-                } else historyVisibilityManager.hide()
+                    showHistory(historyInteractor.read())
+                } else hideHistory()
             }
         }
 
@@ -136,24 +134,14 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchBvClearHistory.setOnClickListener {
             historyInteractor.clear()
-            historyVisibilityManager.hide()
+            hideHistory()
         }
-
-        placeholderManager = Creator.providePlaceholderManager()
-
-
-        historyVisibilityManager = Creator.provideHistoryVisibilityManager(
-            tracksAdapter
-        )
-
-
-        searchResultsVisibilityManager =
-            Creator.provideSearchResultsVisibilityManager(tracksAdapter)
     }
+
 
     private fun startSearch(expression: String) {
         placeholderIsVisible =
-            placeholderManager.execute(PlaceholderManager.PlaceholderStatus.HIDDEN)
+            placeholderManager(PlaceholderStatus.HIDDEN)
         progressBar.isVisible = true
 
         Creator.provideTracksInteractor()
@@ -163,7 +151,8 @@ class SearchActivity : AppCompatActivity() {
                 override fun consume(foundTracks: ArrayList<Track>) {
                     runOnUiThread {
                         progressBar.isVisible = false
-                        searchResultsIsVisible = searchResultsVisibilityManager.show(foundTracks)
+                        searchResultsIsVisible =
+                            showSearchResults(foundTracks)
                     }
                 }
 
@@ -171,10 +160,10 @@ class SearchActivity : AppCompatActivity() {
                     runOnUiThread {
                         progressBar.isVisible = false
                         if (resultCode == 200) {
-                            placeholderManager.execute(PlaceholderManager.PlaceholderStatus.NOTHING_FOUND)
+                            placeholderManager(PlaceholderStatus.NOTHING_FOUND)
 
                         } else {
-                            placeholderManager.execute(PlaceholderManager.PlaceholderStatus.NO_NETWORK)
+                            placeholderManager(PlaceholderStatus.NO_NETWORK)
                         }
                         foundTracks.clear()
                     }
@@ -182,6 +171,96 @@ class SearchActivity : AppCompatActivity() {
             })
     }
 
+    fun placeholderManager(status: PlaceholderStatus): Boolean {
+        binding.apply {
+            when (status) {
+
+                PlaceholderStatus.NOTHING_FOUND -> {
+                    searchLlPlaceholder.isVisible = true
+                    searchTvPlaceholderExtraMessage.isVisible = false
+                    searchBvPlaceholderButton.isVisible = false
+
+                    searchIvPlaceholderImage.apply {
+                        setImageResource(R.drawable.ic_nothing_found)
+                        isVisible = true
+                    }
+                    searchTvPlaceholderMessage.apply {
+                        isVisible = true
+                        text = getString(R.string.search_error_nothing_found)
+                    }
+                    placeholderIsVisible = true
+                }
+
+
+                PlaceholderStatus.NO_NETWORK -> {
+                    searchLlPlaceholder.isVisible = true
+                    searchBvPlaceholderButton.isVisible = true
+
+                    searchIvPlaceholderImage.apply {
+                        isVisible = true
+                        setImageResource(R.drawable.ic_no_internet)
+                    }
+                    searchTvPlaceholderMessage.apply {
+                        isVisible = true
+                        text = context.getString(R.string.search_error_network)
+                    }
+                    searchTvPlaceholderExtraMessage.apply {
+                        isVisible = true
+                        text =
+                            context.getString(R.string.search_error_network_extra)
+                    }
+                    placeholderIsVisible = true
+                }
+
+                PlaceholderStatus.HIDDEN -> {
+                    searchLlPlaceholder.isVisible = false
+                    searchIvPlaceholderImage.isVisible = false
+                    searchTvPlaceholderMessage.isVisible = false
+                    searchTvPlaceholderExtraMessage.isVisible = false
+                    searchBvPlaceholderButton.isVisible = false
+                    placeholderIsVisible = false
+                }
+            }
+        }
+        return placeholderIsVisible
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun showHistory(searchHistory: ArrayList<Track>) {
+        binding.apply {
+            if (searchHistory.isNotEmpty()) {
+                searchRvResults.isVisible = true
+                searchBvClearHistory.isVisible = true
+                searchTvSearchHistory.isVisible = true
+                tracksAdapter.setHistoryVisibilityFlag(true)
+                tracksAdapter.trackList = searchHistory
+                tracksAdapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    fun hideHistory() {
+        binding.apply {
+            searchRvResults.isVisible = false
+            searchBvClearHistory.isVisible = false
+            searchTvSearchHistory.isVisible = false
+            tracksAdapter.setHistoryVisibilityFlag(false)
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun showSearchResults(foundTracks: ArrayList<Track>): Boolean {
+        binding.searchRvResults.isVisible = true
+        tracksAdapter.trackList = foundTracks
+        tracksAdapter.notifyDataSetChanged()
+        var searchResultsIsVisible = true
+        return searchResultsIsVisible
+    }
+
+
+    fun hideSearchResults(): Boolean {
+        return false
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -193,9 +272,16 @@ class SearchActivity : AppCompatActivity() {
         searchInput = savedInstanceState.getString(SEARCH_INPUT, searchInput)
     }
 
-    private companion object {
+    companion object {
         const val SEARCH_INPUT = "SEARCH_INPUT"
         const val INPUT_DEF = ""
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
+
+        enum class PlaceholderStatus {
+            NOTHING_FOUND,
+            NO_NETWORK,
+            HIDDEN
+        }
     }
 }
+

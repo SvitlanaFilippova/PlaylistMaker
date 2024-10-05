@@ -1,7 +1,7 @@
-package com.practicum.playlistmaker.presentation.library
+package com.practicum.playlistmaker.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.databinding.ActivityLibraryBinding
 
 class LibraryActivity : AppCompatActivity() {

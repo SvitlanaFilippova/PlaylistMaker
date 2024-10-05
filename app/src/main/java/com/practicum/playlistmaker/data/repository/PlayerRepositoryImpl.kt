@@ -2,25 +2,25 @@ package com.practicum.playlistmaker.data.repository
 
 import android.icu.text.SimpleDateFormat
 import android.media.MediaPlayer
+import android.widget.ImageButton
+import android.widget.TextView
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker.domain.api.PlayerRepository
 import com.practicum.playlistmaker.domain.models.Track
-import com.practicum.playlistmaker.presentation.player.PlayerActivity.Companion.PROGRESS_REFRESH_DELAY_MILLIS
-import com.practicum.playlistmaker.presentation.player.PlayerActivity.Companion.STATE_PAUSED
-import com.practicum.playlistmaker.presentation.player.PlayerActivity.Companion.STATE_PLAYING
-import com.practicum.playlistmaker.presentation.player.PlayerActivity.Companion.STATE_PREPARED
+import com.practicum.playlistmaker.presentation.PlayerActivity.Companion.PROGRESS_REFRESH_DELAY_MILLIS
+import com.practicum.playlistmaker.presentation.PlayerActivity.Companion.STATE_PAUSED
+import com.practicum.playlistmaker.presentation.PlayerActivity.Companion.STATE_PLAYING
+import com.practicum.playlistmaker.presentation.PlayerActivity.Companion.STATE_PREPARED
 import java.util.Locale
 
 
 class PlayerRepositoryImpl(
     val mediaPlayer: MediaPlayer,
-    val binding: ActivityPlayerBinding,
+    val buttonPlay: ImageButton,
+    val tvTrackProgress: TextView,
     val mainThreadHandler: android.os.Handler?,
     val track: Track
 ) : PlayerRepository {
-
-    val buttonPlay = binding.ibPlay
 
 
     override fun preparePlayer() {
@@ -36,7 +36,7 @@ class PlayerRepositoryImpl(
     override fun setOnCompletionListener(): Int {
         buttonPlay.setImageResource(R.drawable.ic_play)
         stopRefreshingProgress()
-        binding.tvTrackProgress.text = "00:00"
+        tvTrackProgress.text = "00:00"
         return STATE_PREPARED
     }
 
@@ -71,7 +71,7 @@ class PlayerRepositoryImpl(
 
     private val refreshProgressRunnable = object : Runnable {
         override fun run() {
-            binding.tvTrackProgress.text =
+            tvTrackProgress.text =
                 SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
 
             mainThreadHandler?.postDelayed(
