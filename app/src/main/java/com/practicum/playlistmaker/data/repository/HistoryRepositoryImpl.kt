@@ -1,5 +1,4 @@
-package com.practicum.playlistmaker.data.storage
-
+package com.practicum.playlistmaker.data.repository
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
@@ -9,16 +8,12 @@ import com.practicum.playlistmaker.domain.api.HistoryRepository
 import com.practicum.playlistmaker.domain.models.Track
 
 
-const val PLAYLISTMAKER_PREFERENCES = "playlistmaker_preferences"
-const val SEARCH_HISTORY_LIST_KEY = "key_for_search_history_list"
-
-
 class HistoryRepositoryImpl(context: Context) : HistoryRepository {
     override val sharedPreferences: SharedPreferences = context.getSharedPreferences(
-        PLAYLISTMAKER_PREFERENCES, MODE_PRIVATE
+        PLAYLISTMAKER_HISTORY_PREFS, MODE_PRIVATE
     )
 
-    override fun save(history: ArrayList<Track>) {
+    override fun save(history: List<Track>) {
         sharedPreferences.edit()
             .putString(SEARCH_HISTORY_LIST_KEY, Gson().toJson(history))
             .apply()
@@ -27,7 +22,7 @@ class HistoryRepositoryImpl(context: Context) : HistoryRepository {
     override fun read(): ArrayList<Track> {
         val historyJson = sharedPreferences.getString(SEARCH_HISTORY_LIST_KEY, null)
         if (historyJson != null) {
-            val itemType = object : TypeToken<ArrayList<Track>>() {}.type
+            val itemType = object : TypeToken<List<Track>>() {}.type
             return Gson().fromJson(historyJson, itemType)
         } else return arrayListOf()
     }
@@ -36,6 +31,11 @@ class HistoryRepositoryImpl(context: Context) : HistoryRepository {
         sharedPreferences.edit().remove(SEARCH_HISTORY_LIST_KEY).apply()
     }
 
+    private companion object {
+        const val PLAYLISTMAKER_HISTORY_PREFS = "playlistmaker_history_preferences"
+        const val SEARCH_HISTORY_LIST_KEY = "key_for_search_history_list"
+
+    }
 }
 
 

@@ -40,7 +40,7 @@
                 app:tint="@color/search_field_hint" />
 
             <EditText
-                android:id="@+id/search_et_input_seacrh"
+                android:id="@+id/et_input_search"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"

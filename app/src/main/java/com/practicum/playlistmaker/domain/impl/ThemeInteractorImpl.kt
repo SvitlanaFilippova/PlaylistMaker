@@ -12,4 +12,8 @@ class ThemeInteractorImpl(private val repository: ThemeRepository) : ThemeIntera
     override fun save(isChecked: Boolean) {
         repository.save(isChecked)
     }
+
+    override fun switchTheme(isChecked: Boolean) {
+        repository.switchTheme(isChecked)
+    }
 }

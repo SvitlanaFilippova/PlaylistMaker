@@ -9,8 +9,8 @@ interface HistoryRepository {
 
     val sharedPreferences: SharedPreferences
 
-    fun save(history: ArrayList<Track>)
-    fun read(): ArrayList<Track>
+    fun save(history: List<Track>)
+    fun read(): List<Track>
     fun clear()
 }
 

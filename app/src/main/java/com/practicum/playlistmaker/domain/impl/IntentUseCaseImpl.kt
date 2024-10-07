@@ -5,7 +5,7 @@ import com.practicum.playlistmaker.domain.api.IntentRepository
 import com.practicum.playlistmaker.domain.api.IntentUseCase
 
 
-class IntentUseCaseImpl(val repository: IntentRepository) : IntentUseCase {
+class IntentUseCaseImpl(private val repository: IntentRepository) : IntentUseCase {
 
     override fun execute(context: Context) {
         context.startActivity(repository.getIntent())

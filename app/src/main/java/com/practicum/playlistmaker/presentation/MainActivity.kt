@@ -11,24 +11,38 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        applyOnClickListeners()
 
-
-        binding.apply {
-            btSearch.setOnClickListener {
-                val searchIntent = Intent(this@MainActivity, SearchActivity::class.java)
-                startActivity(searchIntent)
-            }
-            btLibrary.setOnClickListener {
-                val libraryIntent = Intent(this@MainActivity, LibraryActivity::class.java)
-                startActivity(libraryIntent)
-            }
-            btSettings.setOnClickListener {
-                val settingsIntent = Intent(this@MainActivity, SettingsActivity::class.java)
-                startActivity(settingsIntent)
-            }
-        }
     }
 
+    private fun runSearchIntent() {
+        val searchIntent = Intent(this@MainActivity, SearchActivity::class.java)
+        startActivity(searchIntent)
+    }
 
+    private fun runLibraryIntent() {
+        val libraryIntent = Intent(this@MainActivity, LibraryActivity::class.java)
+        startActivity(libraryIntent)
+    }
+
+    private fun runSettingsIntent() {
+        val settingsIntent = Intent(this@MainActivity, SettingsActivity::class.java)
+        startActivity(settingsIntent)
+    }
+
+    private fun applyOnClickListeners() {
+        binding.apply {
+            btSearch.setOnClickListener {
+                runSearchIntent()
+            }
+            btLibrary.setOnClickListener {
+                runLibraryIntent()
+            }
+            btSettings.setOnClickListener {
+                runSettingsIntent()
+            }
+        }
+
+    }
 }
 

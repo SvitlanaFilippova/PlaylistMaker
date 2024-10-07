@@ -4,7 +4,6 @@ import android.icu.text.SimpleDateFormat
 import android.media.MediaPlayer
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.domain.api.PlayerRepository
-import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.presentation.PlayerActivity.Companion.PROGRESS_REFRESH_DELAY_MILLIS
 import com.practicum.playlistmaker.presentation.PlayerActivity.Companion.STATE_PAUSED
 import com.practicum.playlistmaker.presentation.PlayerActivity.Companion.STATE_PLAYING
@@ -13,14 +12,13 @@ import java.util.Locale
 
 
 class PlayerRepositoryImpl(
-    val mainThreadHandler: android.os.Handler?,
-    val track: Track,
-    val mediaPlayer: MediaPlayer
+    val mainThreadHandler: android.os.Handler
 ) : PlayerRepository {
 
+    val mediaPlayer = MediaPlayer()
 
-    override fun preparePlayer() {
-        mediaPlayer.setDataSource(track.previewUrl)
+    override fun preparePlayer(trackUrl: String) {
+        mediaPlayer.setDataSource(trackUrl)
         mediaPlayer.prepareAsync()
     }
 

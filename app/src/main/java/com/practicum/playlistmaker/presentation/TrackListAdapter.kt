@@ -62,7 +62,7 @@ class TrackListAdapter(private val historyInteractor: HistoryInteractor) :
         holder.itemView.setOnClickListener {
             if (clickDebounce()) {
 
-                val historyTrackList = historyInteractor.read()
+                val historyTrackList = historyInteractor.read() as ArrayList<Track>
                 updateHistory(historyTrackList, position)
                 historyInteractor.save(historyTrackList)
 

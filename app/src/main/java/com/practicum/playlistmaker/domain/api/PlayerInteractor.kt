@@ -2,7 +2,7 @@ package com.practicum.playlistmaker.domain.api
 
 
 interface PlayerInteractor {
-    fun prepare()
+    fun prepare(trackUrl: String)
     fun setOnPreparedListener(onPrepare: (buttonEnabled: Boolean, playerState: Int) -> Unit)
     fun setOnCompletionListener(
         onCompletion: (trackProgressText: String, image: Int, playerState: Int) -> Unit

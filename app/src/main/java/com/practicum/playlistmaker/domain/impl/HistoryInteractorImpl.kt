@@ -11,11 +11,11 @@ class HistoryInteractorImpl(private val repository: HistoryRepository) : History
         repository.clear()
     }
 
-    override fun read(): ArrayList<Track> {
+    override fun read(): List<Track> {
         return repository.read()
     }
 
-    override fun save(history: ArrayList<Track>) {
+    override fun save(history: List<Track>) {
         repository.save(history)
     }
 

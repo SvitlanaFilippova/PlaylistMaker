@@ -3,8 +3,6 @@ package com.practicum.playlistmaker.presentation
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.widget.ImageButton
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -18,54 +16,45 @@ import com.practicum.playlistmaker.domain.models.Track
 
 
 class PlayerActivity() : AppCompatActivity() {
-    private lateinit var binding: ActivityPlayerBinding
-    private lateinit var buttonPlay: ImageButton
-    private lateinit var trackProgress: TextView
-    private var mainThreadHandler: Handler? = null
-    private lateinit var playerInteractor: PlayerInteractor
 
+    private lateinit var binding: ActivityPlayerBinding
+    private val mainThreadHandler: Handler by lazy { Handler(Looper.getMainLooper()) }
+    private lateinit var playerInteractor: PlayerInteractor
+    private var playerState = STATE_DEFAULT
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val track = Gson().fromJson(intent.getStringExtra("track"), Track::class.java)
+
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mainThreadHandler = Handler(Looper.getMainLooper())
+
         playerInteractor =
-            Creator.providePlayerInteractor(
-                mainThreadHandler,
-                track
-            )
+            Creator.providePlayerInteractor(mainThreadHandler)
 
         binding.ibArrowBack.setOnClickListener { finish() }
+        binding.buttonPlay.isEnabled = false
 
-        binding.apply {
-            buttonPlay = ibPlay
-            buttonPlay.isEnabled = false
-            trackProgress = tvTrackProgress
-        }
-        playerInteractor.prepare()
+        playerInteractor.prepare(track.previewUrl)
 
         playerInteractor.setOnPreparedListener { buttonEnabled, playerState ->
-            buttonPlay.isEnabled = buttonEnabled
+            binding.buttonPlay.isEnabled = buttonEnabled
             this.playerState = playerState
         }
-
         playerInteractor.setOnCompletionListener { trackProgressText, image, playerState ->
             binding.tvTrackProgress.text = trackProgressText
-            buttonPlay.setImageResource(image)
+            binding.buttonPlay.setImageResource(image)
             this.playerState = playerState
 
         }
 
-
-        buttonPlay.setOnClickListener {
+        binding.buttonPlay.setOnClickListener {
             playerState =
                 playerInteractor.playbackControl(playerState,
-                    { img -> buttonPlay.setImageResource(img) },
+                    { img -> binding.buttonPlay.setImageResource(img) },
                     { trackProgressText ->
-                        trackProgress.text = trackProgressText
+                        binding.tvTrackProgress.text = trackProgressText
                     })
 
         }
@@ -107,13 +96,14 @@ class PlayerActivity() : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
 
-        playerState = playerInteractor.pause { img -> buttonPlay.setImageResource(img) }
+        playerState = playerInteractor.pause { img -> binding.buttonPlay.setImageResource(img) }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         playerInteractor.stopRefreshingProgress()
         playerInteractor.release()
+
     }
 
     companion object {
@@ -124,5 +114,5 @@ class PlayerActivity() : AppCompatActivity() {
         const val PROGRESS_REFRESH_DELAY_MILLIS = 400L
     }
 
-    private var playerState = STATE_DEFAULT
+
 }

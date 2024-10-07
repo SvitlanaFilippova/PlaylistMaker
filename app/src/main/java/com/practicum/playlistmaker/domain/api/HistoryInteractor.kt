@@ -6,8 +6,8 @@ interface HistoryInteractor {
 
     fun clear()
 
-    fun read(): ArrayList<Track>
+    fun read(): List<Track>
 
-    fun save(history: ArrayList<Track>)
+    fun save(history: List<Track>)
 
 }

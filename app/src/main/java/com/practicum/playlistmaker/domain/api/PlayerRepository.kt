@@ -3,7 +3,7 @@ package com.practicum.playlistmaker.domain.api
 
 interface PlayerRepository {
 
-    fun preparePlayer()
+    fun preparePlayer(trackUrl: String)
     fun setOnPreparedListener(onPrepare: (buttonEnabled: Boolean, playerState: Int) -> Unit)
     fun setOnCompletionListener(
         onCompletion: (trackProgressText: String, image: Int, playerState: Int) -> Unit,

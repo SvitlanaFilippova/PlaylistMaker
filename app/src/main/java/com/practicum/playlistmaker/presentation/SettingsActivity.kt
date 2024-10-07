@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.Creator
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
+import com.practicum.playlistmaker.domain.api.IntentUseCase
 
 
 class SettingsActivity : AppCompatActivity() {
@@ -28,24 +29,20 @@ class SettingsActivity : AppCompatActivity() {
 
 
         binding.tvShare.setOnClickListener {
-            Creator.provideIntentUseCase(IntentType.SHARE).execute(context = this)
+            Creator.provideIntentUseCase(IntentUseCase.IntentType.SHARE).execute(context = this)
         }
 
         val rowSupport = binding.tvSupport
         rowSupport.setOnClickListener {
-            Creator.provideIntentUseCase(IntentType.SUPPORT).execute(context = this)
+            Creator.provideIntentUseCase(IntentUseCase.IntentType.SUPPORT).execute(context = this)
         }
 
         val rowAgreement = binding.tvAgreement
         rowAgreement.setOnClickListener {
-            Creator.provideIntentUseCase(IntentType.AGREEMENT).execute(context = this)
+            Creator.provideIntentUseCase(IntentUseCase.IntentType.AGREEMENT).execute(context = this)
 
         }
     }
 
-    enum class IntentType {
-        SHARE,
-        SUPPORT,
-        AGREEMENT
-    }
+
 }

@@ -2,15 +2,14 @@ package com.practicum.playlistmaker
 
 
 import android.content.Context
-import android.media.MediaPlayer
 import com.practicum.playlistmaker.data.network.RetrofitNetworkClient
 import com.practicum.playlistmaker.data.repository.AgreementRepositoryImpl
+import com.practicum.playlistmaker.data.repository.HistoryRepositoryImpl
 import com.practicum.playlistmaker.data.repository.PlayerRepositoryImpl
 import com.practicum.playlistmaker.data.repository.ShareRepositoryImpl
 import com.practicum.playlistmaker.data.repository.SupportRepositoryImpl
+import com.practicum.playlistmaker.data.repository.ThemeRepositoryImpl
 import com.practicum.playlistmaker.data.repository.TracksRepositoryImpl
-import com.practicum.playlistmaker.data.storage.HistoryRepositoryImpl
-import com.practicum.playlistmaker.data.storage.ThemeRepositoryImpl
 import com.practicum.playlistmaker.domain.api.HistoryInteractor
 import com.practicum.playlistmaker.domain.api.HistoryRepository
 import com.practicum.playlistmaker.domain.api.IntentRepository
@@ -19,21 +18,19 @@ import com.practicum.playlistmaker.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.domain.api.PlayerRepository
 import com.practicum.playlistmaker.domain.api.ThemeInteractor
 import com.practicum.playlistmaker.domain.api.ThemeRepository
-import com.practicum.playlistmaker.domain.api.TracksInteractor
 import com.practicum.playlistmaker.domain.api.TracksRepository
+import com.practicum.playlistmaker.domain.api.TracksSearchUseCase
 import com.practicum.playlistmaker.domain.impl.HistoryInteractorImpl
 import com.practicum.playlistmaker.domain.impl.IntentUseCaseImpl
 import com.practicum.playlistmaker.domain.impl.PlayerInteractorImpl
 import com.practicum.playlistmaker.domain.impl.ThemeInteractorImpl
-import com.practicum.playlistmaker.domain.impl.TracksInteractorImpl
-import com.practicum.playlistmaker.domain.models.Track
-import com.practicum.playlistmaker.presentation.SettingsActivity
+import com.practicum.playlistmaker.domain.impl.TracksSearchUseCaseImpl
 
 object Creator {
     private lateinit var appContext: Context
 
     fun init(context: Context) {
-        this.appContext = context
+        appContext = context
     }
 
     //for SearchActivity
@@ -41,8 +38,8 @@ object Creator {
         return TracksRepositoryImpl(RetrofitNetworkClient())
     }
 
-    fun provideTracksInteractor(): TracksInteractor {
-        return TracksInteractorImpl(getTracksRepository())
+    fun provideTracksSearchUseCase(): TracksSearchUseCase {
+        return TracksSearchUseCaseImpl(getTracksRepository())
     }
 
     private fun getHistoryRepository(): HistoryRepository {
@@ -63,43 +60,37 @@ object Creator {
         return ThemeInteractorImpl(getThemeRepository())
     }
 
-    private fun getIntentRepository(intentType: SettingsActivity.IntentType): IntentRepository {
+    private fun getIntentRepository(intentType: IntentUseCase.IntentType): IntentRepository {
         return when (intentType) {
-            SettingsActivity.IntentType.SHARE -> ShareRepositoryImpl(appContext)
-            SettingsActivity.IntentType.SUPPORT ->
+            IntentUseCase.IntentType.SHARE -> ShareRepositoryImpl(appContext)
+            IntentUseCase.IntentType.SUPPORT ->
                 SupportRepositoryImpl(appContext)
 
-            SettingsActivity.IntentType.AGREEMENT -> AgreementRepositoryImpl(appContext)
+            IntentUseCase.IntentType.AGREEMENT -> AgreementRepositoryImpl(appContext)
         }
 
     }
 
-    fun provideIntentUseCase(intentType: SettingsActivity.IntentType): IntentUseCase {
+    fun provideIntentUseCase(intentType: IntentUseCase.IntentType): IntentUseCase {
         return IntentUseCaseImpl(getIntentRepository(intentType))
     }
 
 
     // for PlayerActivity
     private fun getPlayerRepository(
-        mainThreadHandler: android.os.Handler?,
-        track: Track
+        mainThreadHandler: android.os.Handler,
     ): PlayerRepository {
-        return PlayerRepositoryImpl(
-            mainThreadHandler,
-            track,
-            MediaPlayer()
-        )
+        return PlayerRepositoryImpl(mainThreadHandler)
     }
 
     fun providePlayerInteractor(
-        mainThreadHandler: android.os.Handler?,
-        track: Track
+        mainThreadHandler: android.os.Handler,
     ): PlayerInteractor {
         return PlayerInteractorImpl(
             getPlayerRepository(
                 mainThreadHandler,
-                track
-            )
+
+                )
         )
     }
 

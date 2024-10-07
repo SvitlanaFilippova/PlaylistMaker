@@ -1,20 +1,20 @@
-package com.practicum.playlistmaker.data.storage
+package com.practicum.playlistmaker.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
+import androidx.appcompat.app.AppCompatDelegate
 import com.practicum.playlistmaker.domain.api.ThemeRepository
-import com.practicum.playlistmaker.presentation.App
-import com.practicum.playlistmaker.presentation.App.Companion.THEME_KEY
 
 
-class ThemeRepositoryImpl(val context: Context) : ThemeRepository {
+class ThemeRepositoryImpl(context: Context) : ThemeRepository {
+    var darkTheme = false
     override val sharedPreferences: SharedPreferences = context.getSharedPreferences(
-        PLAYLISTMAKER_PREFERENCES, MODE_PRIVATE
+        PLAYLISTMAKER_THEME_PREFS, MODE_PRIVATE
     )
 
     override fun save(isChecked: Boolean) {
-        (context as App).switchTheme(isChecked)
+        switchTheme(isChecked)
         sharedPreferences.edit().putBoolean(THEME_KEY, isChecked).apply()
     }
 
@@ -23,6 +23,23 @@ class ThemeRepositoryImpl(val context: Context) : ThemeRepository {
         return sharedPreferences.getBoolean(THEME_KEY, false)
     }
 
+    override fun switchTheme(isChecked: Boolean) {
+        darkTheme = isChecked
+        AppCompatDelegate.setDefaultNightMode(
+            if (isChecked) {
+                AppCompatDelegate.MODE_NIGHT_YES
+
+            } else {
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+        )
+
+    }
+
+    private companion object {
+        const val PLAYLISTMAKER_THEME_PREFS = "playlistmaker_theme_preferences"
+        const val THEME_KEY = "theme_key"
+    }
 }
 
 

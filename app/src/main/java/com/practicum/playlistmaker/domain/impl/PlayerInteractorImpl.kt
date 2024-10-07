@@ -4,9 +4,9 @@ import com.practicum.playlistmaker.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.domain.api.PlayerRepository
 
 
-class PlayerInteractorImpl(val repository: PlayerRepository) : PlayerInteractor {
-    override fun prepare() {
-        repository.preparePlayer()
+class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInteractor {
+    override fun prepare(trackUrl: String) {
+        repository.preparePlayer(trackUrl)
     }
 
     override fun setOnPreparedListener(onPrepare: (buttonEnabled: Boolean, playerState: Int) -> Unit) {

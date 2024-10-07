@@ -6,7 +6,7 @@ import android.net.Uri
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.domain.api.IntentRepository
 
-class SupportRepositoryImpl(val context: Context) : IntentRepository {
+class SupportRepositoryImpl(private val context: Context) : IntentRepository {
     override fun getIntent(): Intent {
         return Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse(context.getString(R.string.settings_support_mailto))
