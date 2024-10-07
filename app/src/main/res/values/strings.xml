@@ -26,5 +26,12 @@
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
     <string name="default_track_progress">"00:00"</string>
+    <string name="add_to_favorite">Добавить в избранное</string>
+    <string name="play_or_pause">Играть/приостановить</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
+    <string name="back">Назад</string>
+    <string name="album_cover">Обложка альбома</string>
+    <string name="error">Произошла ошибка</string>
+
 
 </resources>

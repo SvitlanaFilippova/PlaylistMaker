@@ -87,7 +87,7 @@ class PlayerRepositoryImpl(
     }
 
     fun postRunnableInMainThread(r: Runnable) {
-        mainThreadHandler?.postDelayed(
+        mainThreadHandler.postDelayed(
             r,
             PROGRESS_REFRESH_DELAY_MILLIS
         )
@@ -108,13 +108,13 @@ class PlayerRepositoryImpl(
     }
 
     private fun startRefreshingProgress(onRun: (currentPosition: String) -> Unit) {
-        mainThreadHandler?.postDelayed(
+        mainThreadHandler.postDelayed(
             getRefreshProgressRunnable(onRun), PROGRESS_REFRESH_DELAY_MILLIS
         )
     }
 
     override fun stopRefreshingProgress() {
-        mainThreadHandler?.removeCallbacks(refreshProgressRunnable)
+        mainThreadHandler.removeCallbacks(refreshProgressRunnable)
     }
 
     override fun release() {

@@ -131,7 +131,8 @@
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_nothing_found"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:contentDescription="@string/error" />
 
         <TextView
             android:id="@+id/search_tv_placeholder_message"

@@ -35,7 +35,8 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_arrow_back_light_mode" />
+            app:srcCompat="@drawable/ic_arrow_back_light_mode"
+            android:contentDescription="@string/back" />
 
         <ImageView
             android:id="@+id/iv_cover"
@@ -46,7 +47,8 @@
             app:layout_constraintEnd_toStartOf="@id/rightBorder"
             app:layout_constraintStart_toEndOf="@id/leftBorder"
             app:layout_constraintTop_toBottomOf="@id/ib_arrow_back"
-            tools:srcCompat="@tools:sample/avatars" />
+            tools:srcCompat="@tools:sample/avatars"
+            android:contentDescription="@string/album_cover" />
 
         <TextView
             android:id="@+id/tv_track_name"
@@ -80,7 +82,8 @@
             android:src="@drawable/ic_add_to_playlist"
             app:layout_constraintBottom_toTopOf="@id/button_play"
             app:layout_constraintStart_toEndOf="@id/leftBorder"
-            app:layout_constraintTop_toBottomOf="@id/button_play" />
+            app:layout_constraintTop_toBottomOf="@id/button_play"
+            android:contentDescription="@string/add_to_playlist" />
 
         <ImageButton
             android:id="@+id/button_play"
@@ -92,7 +95,8 @@
             android:src="@drawable/ic_play"
             app:layout_constraintEnd_toStartOf="@id/rightBorder"
             app:layout_constraintStart_toEndOf="@id/leftBorder"
-            app:layout_constraintTop_toBottomOf="@id/tv_artist_name" />
+            app:layout_constraintTop_toBottomOf="@id/tv_artist_name"
+            android:contentDescription="@string/play_or_pause" />
 
         <ImageButton
             android:id="@+id/ib_add_to_favorite"
@@ -102,7 +106,8 @@
             android:src="@drawable/ic_favorite"
             app:layout_constraintBottom_toTopOf="@id/button_play"
             app:layout_constraintEnd_toStartOf="@id/rightBorder"
-            app:layout_constraintTop_toBottomOf="@id/button_play" />
+            app:layout_constraintTop_toBottomOf="@id/button_play"
+            android:contentDescription="@string/add_to_favorite" />
 
 
         <TextView
