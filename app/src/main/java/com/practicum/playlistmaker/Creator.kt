@@ -3,8 +3,6 @@ package com.practicum.playlistmaker
 
 import android.content.Context
 import android.media.MediaPlayer
-import android.widget.ImageButton
-import android.widget.TextView
 import com.practicum.playlistmaker.data.network.RetrofitNetworkClient
 import com.practicum.playlistmaker.data.repository.AgreementRepositoryImpl
 import com.practicum.playlistmaker.data.repository.PlayerRepositoryImpl
@@ -29,8 +27,6 @@ import com.practicum.playlistmaker.domain.impl.PlayerInteractorImpl
 import com.practicum.playlistmaker.domain.impl.ThemeInteractorImpl
 import com.practicum.playlistmaker.domain.impl.TracksInteractorImpl
 import com.practicum.playlistmaker.domain.models.Track
-import com.practicum.playlistmaker.presentation.HistoryUpdUseCase
-import com.practicum.playlistmaker.presentation.HistoryUpdUseCaseImpl
 import com.practicum.playlistmaker.presentation.SettingsActivity
 
 object Creator {
@@ -83,49 +79,29 @@ object Creator {
     }
 
 
-    // for RecycleViewAdapter
-    fun provideHistoryUpdUseCase(): HistoryUpdUseCase {
-        return HistoryUpdUseCaseImpl()
-    }
-
-
     // for PlayerActivity
     private fun getPlayerRepository(
-        mediaPlayer: MediaPlayer,
-        buttonPlay: ImageButton,
-        tvTrackProgress: TextView,
         mainThreadHandler: android.os.Handler?,
         track: Track
     ): PlayerRepository {
         return PlayerRepositoryImpl(
-            mediaPlayer,
-            buttonPlay,
-            tvTrackProgress,
             mainThreadHandler,
-            track
+            track,
+            MediaPlayer()
         )
     }
 
     fun providePlayerInteractor(
-        mediaPlayer: MediaPlayer,
-        buttonPlay: ImageButton,
-        tvTrackProgress: TextView,
         mainThreadHandler: android.os.Handler?,
         track: Track
     ): PlayerInteractor {
         return PlayerInteractorImpl(
             getPlayerRepository(
-                mediaPlayer,
-                buttonPlay,
-                tvTrackProgress,
                 mainThreadHandler,
                 track
             )
         )
     }
 
-    fun provideMediaPlayer(): MediaPlayer {
-        return MediaPlayer()
-    }
 
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -18,8 +19,8 @@ import com.practicum.playlistmaker.domain.models.Track
 
 class PlayerActivity() : AppCompatActivity() {
     private lateinit var binding: ActivityPlayerBinding
-    private var mediaPlayer = Creator.provideMediaPlayer()
     private lateinit var buttonPlay: ImageButton
+    private lateinit var trackProgress: TextView
     private var mainThreadHandler: Handler? = null
     private lateinit var playerInteractor: PlayerInteractor
 
@@ -33,9 +34,6 @@ class PlayerActivity() : AppCompatActivity() {
         mainThreadHandler = Handler(Looper.getMainLooper())
         playerInteractor =
             Creator.providePlayerInteractor(
-                mediaPlayer,
-                binding.ibPlay,
-                binding.tvTrackProgress,
                 mainThreadHandler,
                 track
             )
@@ -45,19 +43,30 @@ class PlayerActivity() : AppCompatActivity() {
         binding.apply {
             buttonPlay = ibPlay
             buttonPlay.isEnabled = false
+            trackProgress = tvTrackProgress
         }
         playerInteractor.prepare()
 
-        mediaPlayer.setOnPreparedListener {
-            playerState = playerInteractor.setOnPreparedListener()
+        playerInteractor.setOnPreparedListener { buttonEnabled, playerState ->
+            buttonPlay.isEnabled = buttonEnabled
+            this.playerState = playerState
         }
 
-        mediaPlayer.setOnCompletionListener {
-            playerState = playerInteractor.setOnCompletionListener()
+        playerInteractor.setOnCompletionListener { trackProgressText, image, playerState ->
+            binding.tvTrackProgress.text = trackProgressText
+            buttonPlay.setImageResource(image)
+            this.playerState = playerState
+
         }
+
 
         buttonPlay.setOnClickListener {
-            playerState = playerInteractor.playbackControl(playerState)
+            playerState =
+                playerInteractor.playbackControl(playerState,
+                    { img -> buttonPlay.setImageResource(img) },
+                    { trackProgressText ->
+                        trackProgress.text = trackProgressText
+                    })
 
         }
         updateTrackData(track)
@@ -97,13 +106,14 @@ class PlayerActivity() : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        playerState = playerInteractor.pause()
+
+        playerState = playerInteractor.pause { img -> buttonPlay.setImageResource(img) }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         playerInteractor.stopRefreshingProgress()
-        mediaPlayer.release()
+        playerInteractor.release()
     }
 
     companion object {

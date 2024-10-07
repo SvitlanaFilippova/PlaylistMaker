@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
-import com.practicum.playlistmaker.Creator
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySearchTrackCardBinding
 import com.practicum.playlistmaker.domain.api.HistoryInteractor
@@ -64,12 +63,7 @@ class TrackListAdapter(private val historyInteractor: HistoryInteractor) :
             if (clickDebounce()) {
 
                 val historyTrackList = historyInteractor.read()
-                Creator.provideHistoryUpdUseCase().upgrade(
-                    historyTrackList,
-                    historyIsVisibleFlag,
-                    position,
-                    this
-                )
+                updateHistory(historyTrackList, position)
                 historyInteractor.save(historyTrackList)
 
                 val playerIntent = Intent(holder.parentView.context, PlayerActivity::class.java)
@@ -97,6 +91,36 @@ class TrackListAdapter(private val historyInteractor: HistoryInteractor) :
             historyIsVisibleFlag = true
         } else {
             historyIsVisibleFlag = false
+        }
+    }
+
+    fun updateHistory(
+        historyTrackList: ArrayList<Track>,
+        position: Int,
+
+        ) {
+        val track = trackList[position]
+
+        if (historyTrackList.removeIf { it.trackId == track.trackId }) {
+            if (historyIsVisibleFlag) {
+                trackList.removeAt(position)
+                notifyItemRemoved(position)
+            }
+        }
+
+        if (historyTrackList.size > 9) {
+            historyTrackList.removeAt(9)
+            if (historyIsVisibleFlag) {
+                notifyItemRemoved(9)
+                notifyItemRangeChanged(0, historyTrackList.size - 1)
+            }
+        }
+
+        historyTrackList.add(0, track)
+        if (historyIsVisibleFlag) {
+            trackList.add(0, track)
+            notifyItemInserted(0)
+            notifyItemRangeChanged(0, historyTrackList.size - 1)
         }
     }
 
