@@ -1,4 +1,4 @@
-package com.android.utils
+package com.practicum.playlistmaker.util
 
 import android.content.Context
 import android.view.inputmethod.InputMethodManager

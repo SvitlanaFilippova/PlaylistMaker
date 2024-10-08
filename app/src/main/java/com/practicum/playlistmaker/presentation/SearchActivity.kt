@@ -10,13 +10,13 @@ import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.utils.hideKeyBoard
-import com.practicum.playlistmaker.Creator
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.domain.api.HistoryInteractor
 import com.practicum.playlistmaker.domain.api.TracksSearchUseCase
 import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.util.Creator
+import com.practicum.playlistmaker.util.hideKeyBoard
 
 
 class SearchActivity : AppCompatActivity() {
@@ -136,6 +136,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun cleanInput() {
         binding.etInputSearch.setText("")
         binding.etInputSearch.hideKeyBoard()
@@ -155,26 +156,34 @@ class SearchActivity : AppCompatActivity() {
         tracksSearchUseCase.execute(expression, object : TracksSearchUseCase.TracksConsumer {
             //Выполнение происходит в другом потоке
 
-            override fun consume(foundTracks: ArrayList<Track>) {
+            override fun consume(foundTracks: ArrayList<Track>?, errorMessage: String?) {
                 runOnUiThread {
                     binding.searchProgressBar.isVisible = false
+                    if (!foundTracks.isNullOrEmpty()) {
                     searchResultsIsVisible =
                         showSearchResults(foundTracks)
-                }
-            }
-
-            override fun onError(resultCode: Int) {
-                runOnUiThread {
-                    binding.searchProgressBar.isVisible = false
-                    if (resultCode == 200) {
+                    } else if (foundTracks != null && foundTracks.isEmpty()) {
                         placeholderManager(PlaceholderStatus.NOTHING_FOUND)
+                    }
 
-                    } else {
+                    if (errorMessage != null) {
                         placeholderManager(PlaceholderStatus.NO_NETWORK)
                     }
-                    foundTracks.clear()
                 }
             }
+
+//            override fun onError(resultCode: Int) {
+//                runOnUiThread {
+//                    binding.searchProgressBar.isVisible = false
+//                    if (resultCode == 200) {
+//                        placeholderManager(PlaceholderStatus.NOTHING_FOUND)
+//
+//                    } else {
+//                        placeholderManager(PlaceholderStatus.NO_NETWORK)
+//                    }
+//                    foundTracks.clear()
+//                }
+//            }
         })
     }
 

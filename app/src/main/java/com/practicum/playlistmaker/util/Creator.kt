@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.util
 
 
 import android.content.Context
@@ -35,7 +35,7 @@ object Creator {
 
     //for SearchActivity
     private fun getTracksRepository(): TracksRepository {
-        return TracksRepositoryImpl(RetrofitNetworkClient())
+        return TracksRepositoryImpl(RetrofitNetworkClient(appContext))
     }
 
     fun provideTracksSearchUseCase(): TracksSearchUseCase {

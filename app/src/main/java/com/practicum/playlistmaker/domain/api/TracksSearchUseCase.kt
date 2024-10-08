@@ -6,7 +6,6 @@ interface TracksSearchUseCase {
     fun execute(expression: String, consumer: TracksConsumer)
 
     interface TracksConsumer {
-        fun consume(foundTracks: ArrayList<Track>)
-        fun onError(resultCode: Int)
+        fun consume(foundTracks: ArrayList<Track>?, errorMessage: String?)
     }
 }
