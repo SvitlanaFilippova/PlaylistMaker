@@ -1,6 +1,6 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.data.dto
 
-data class Track
+data class TrackDto
     (
     val trackName: String,
     val artistName: String,
@@ -12,8 +12,4 @@ data class Track
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String
-) {
-    fun getCoverArtwork() = artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
-}
-
-val trackListOfSearchResults = arrayListOf<Track>()
+)

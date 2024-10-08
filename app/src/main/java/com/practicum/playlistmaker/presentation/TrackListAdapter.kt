@@ -1,8 +1,6 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.presentation
 
 import android.content.Intent
-import android.content.SharedPreferences
-import android.icu.text.SimpleDateFormat
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -12,21 +10,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySearchTrackCardBinding
-import java.util.Locale
+import com.practicum.playlistmaker.domain.api.HistoryInteractor
+import com.practicum.playlistmaker.domain.models.Track
 
 
-class SearchResultsAdapter :
-    RecyclerView.Adapter<SearchResultsAdapter.SearchResultsHolder>() {
-    var trackList: ArrayList<Track> = arrayListOf<Track>()
-    lateinit var sharedPreferences: SharedPreferences
-    var historyIsVisibleFlag = false
+class TrackListAdapter(private val historyInteractor: HistoryInteractor) :
+    RecyclerView.Adapter<TrackListAdapter.SearchResultsHolder>() {
+    var trackList: ArrayList<Track> = arrayListOf()
+    private var historyIsVisibleFlag = false
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
 
+
     class SearchResultsHolder(val parentView: View) : RecyclerView.ViewHolder(parentView) {
         private val binding = ActivitySearchTrackCardBinding.bind(parentView)
-
 
         fun bind(track: Track) = with(binding) {
             val cornerRadius =
@@ -34,8 +33,8 @@ class SearchResultsAdapter :
 
             searchTvTrackName.text = track.trackName
             searchTvArtistName.text = track.artistName
-            searchTvTrackTime.text =
-                SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
+            searchTvTrackTime.text = track.trackTime
+
             Glide.with(parentView)
                 .load(track.artworkUrl100)
                 .centerCrop()
@@ -62,29 +61,13 @@ class SearchResultsAdapter :
         holder.bind(track)
         holder.itemView.setOnClickListener {
             if (clickDebounce()) {
-                val searchHistory = SearchHistory(sharedPreferences)
 
-                if (trackListSearchHistory.removeIf() { it.trackId == track.trackId }) {
-                    if (historyIsVisibleFlag) notifyDataSetChanged()
-                }
-
-                if (trackListSearchHistory.size > 9) {
-                    trackListSearchHistory.removeAt(9)
-                    if (historyIsVisibleFlag) {
-                        notifyItemRemoved(9)
-                        notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
-                    }
-                }
-
-                trackListSearchHistory.add(0, track)
-                if (historyIsVisibleFlag) {
-                    notifyItemInserted(0)
-                    notifyItemRangeChanged(0, trackListSearchHistory.size - 1)
-                }
-                searchHistory.saveHistory(trackListSearchHistory)
+                val historyTrackList = historyInteractor.read() as ArrayList<Track>
+                updateHistory(historyTrackList, position)
+                historyInteractor.save(historyTrackList)
 
                 val playerIntent = Intent(holder.parentView.context, PlayerActivity::class.java)
-                playerIntent.putExtra("track", Gson().toJson(track)) // Добавляем объект в Intent
+                playerIntent.putExtra("track", Gson().toJson(track))
                 holder.parentView.context.startActivity(playerIntent)
             }
         }
@@ -101,6 +84,44 @@ class SearchResultsAdapter :
             handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
         }
         return current
+    }
+
+    fun setHistoryVisibilityFlag(isVisible: Boolean) {
+        if (isVisible) {
+            historyIsVisibleFlag = true
+        } else {
+            historyIsVisibleFlag = false
+        }
+    }
+
+    fun updateHistory(
+        historyTrackList: ArrayList<Track>,
+        position: Int,
+
+        ) {
+        val track = trackList[position]
+
+        if (historyTrackList.removeIf { it.trackId == track.trackId }) {
+            if (historyIsVisibleFlag) {
+                trackList.removeAt(position)
+                notifyItemRemoved(position)
+            }
+        }
+
+        if (historyTrackList.size > 9) {
+            historyTrackList.removeAt(9)
+            if (historyIsVisibleFlag) {
+                notifyItemRemoved(9)
+                notifyItemRangeChanged(0, historyTrackList.size - 1)
+            }
+        }
+
+        historyTrackList.add(0, track)
+        if (historyIsVisibleFlag) {
+            trackList.add(0, track)
+            notifyItemInserted(0)
+            notifyItemRangeChanged(0, historyTrackList.size - 1)
+        }
     }
 
     companion object {

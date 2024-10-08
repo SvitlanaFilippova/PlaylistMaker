@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/settings_ll_screen"
     style="@style/ParentVerticalLayoutStyle"
-    tools:context=".SearchActivity"
+    tools:context=".presentation.SearchActivity"
     tools:ignore="MissingConstraints">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -40,7 +40,7 @@
                 app:tint="@color/search_field_hint" />
 
             <EditText
-                android:id="@+id/search_et_input_seacrh"
+                android:id="@+id/et_input_search"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -131,7 +131,8 @@
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_nothing_found"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:contentDescription="@string/error" />
 
         <TextView
             android:id="@+id/search_tv_placeholder_message"
