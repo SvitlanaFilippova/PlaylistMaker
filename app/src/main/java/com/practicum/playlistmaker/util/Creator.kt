@@ -2,6 +2,7 @@ package com.practicum.playlistmaker.util
 
 
 import android.content.Context
+import com.practicum.playlistmaker.data.FavoritesStorage
 import com.practicum.playlistmaker.data.Impl.AgreementRepositoryImpl
 import com.practicum.playlistmaker.data.Impl.HistoryRepositoryImpl
 import com.practicum.playlistmaker.data.Impl.PlayerRepositoryImpl
@@ -18,16 +19,18 @@ import com.practicum.playlistmaker.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.domain.api.PlayerRepository
 import com.practicum.playlistmaker.domain.api.ThemeInteractor
 import com.practicum.playlistmaker.domain.api.ThemeRepository
+import com.practicum.playlistmaker.domain.api.TrackInteractor
 import com.practicum.playlistmaker.domain.api.TracksRepository
-import com.practicum.playlistmaker.domain.api.TracksSearchUseCase
 import com.practicum.playlistmaker.domain.impl.HistoryInteractorImpl
 import com.practicum.playlistmaker.domain.impl.IntentUseCaseImpl
 import com.practicum.playlistmaker.domain.impl.PlayerInteractorImpl
 import com.practicum.playlistmaker.domain.impl.ThemeInteractorImpl
-import com.practicum.playlistmaker.domain.impl.TracksSearchUseCaseImpl
+import com.practicum.playlistmaker.domain.impl.TrackInteractorImpl
 
 object Creator {
     private lateinit var appContext: Context
+    private const val PLAYLISTMAKER_HISTORY_PREFS = "playlistmaker_history_preferences"
+    private const val PLAYLISTMAKER_FAVORITES_PREFS = "playlistmaker_favorites_preferences"
 
     fun init(context: Context) {
         appContext = context
@@ -35,15 +38,27 @@ object Creator {
 
     //for SearchActivity
     private fun getTracksRepository(): TracksRepository {
-        return TracksRepositoryImpl(RetrofitNetworkClient(appContext))
+        return TracksRepositoryImpl(
+            RetrofitNetworkClient(appContext),
+            FavoritesStorage(
+                appContext.getSharedPreferences(
+                    PLAYLISTMAKER_FAVORITES_PREFS,
+                    Context.MODE_PRIVATE
+                )
+            )
+        )
     }
 
-    fun provideTracksSearchUseCase(): TracksSearchUseCase {
-        return TracksSearchUseCaseImpl(getTracksRepository())
+    fun provideTracksSearchUseCase(): TrackInteractor {
+        return TrackInteractorImpl(getTracksRepository())
     }
 
     private fun getHistoryRepository(): HistoryRepository {
-        return HistoryRepositoryImpl(appContext)
+        return HistoryRepositoryImpl(
+            appContext.getSharedPreferences(
+                PLAYLISTMAKER_HISTORY_PREFS, Context.MODE_PRIVATE
+            )
+        )
     }
 
     fun provideHistoryInteractor(): HistoryInteractor {
@@ -64,6 +79,7 @@ object Creator {
             IntentUseCase.IntentType.SHARE -> ShareRepositoryImpl(appContext)
             IntentUseCase.IntentType.SUPPORT ->
                 SupportRepositoryImpl(appContext)
+
             IntentUseCase.IntentType.AGREEMENT -> AgreementRepositoryImpl(appContext)
         }
     }
@@ -76,7 +92,15 @@ object Creator {
     private fun getPlayerRepository(
         mainThreadHandler: android.os.Handler,
     ): PlayerRepository {
-        return PlayerRepositoryImpl(mainThreadHandler)
+        return PlayerRepositoryImpl(
+            mainThreadHandler,
+            FavoritesStorage(
+                appContext.getSharedPreferences(
+                    PLAYLISTMAKER_FAVORITES_PREFS,
+                    Context.MODE_PRIVATE
+                )
+            )
+        )
     }
 
     fun providePlayerInteractor(

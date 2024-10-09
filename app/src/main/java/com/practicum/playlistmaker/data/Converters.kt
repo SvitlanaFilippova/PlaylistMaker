@@ -5,7 +5,7 @@ import com.practicum.playlistmaker.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-fun TrackDto.toDomain() = Track(
+fun TrackDto.toDomain(storedFavorites: Set<String>) = Track(
     trackName,
     artistName,
     SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis),
@@ -16,6 +16,7 @@ fun TrackDto.toDomain() = Track(
     primaryGenreName,
     country,
     previewUrl,
-    artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
+    artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"),
+    inFavorite = storedFavorites.contains(trackId.toString())
 )
 

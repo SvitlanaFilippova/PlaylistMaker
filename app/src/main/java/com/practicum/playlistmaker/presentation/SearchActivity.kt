@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.domain.api.HistoryInteractor
-import com.practicum.playlistmaker.domain.api.TracksSearchUseCase
+import com.practicum.playlistmaker.domain.api.TrackInteractor
 import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.util.Creator
 import com.practicum.playlistmaker.util.hideKeyBoard
@@ -152,7 +152,7 @@ class SearchActivity : AppCompatActivity() {
             placeholderManager(PlaceholderStatus.HIDDEN)
         binding.searchProgressBar.isVisible = true
         val tracksSearchUseCase = Creator.provideTracksSearchUseCase()
-        tracksSearchUseCase.execute(expression, object : TracksSearchUseCase.TracksConsumer {
+        tracksSearchUseCase.search(expression, object : TrackInteractor.TracksConsumer {
             //Выполнение происходит в другом потоке
             override fun consume(foundTracks: ArrayList<Track>?, errorMessage: String?) {
                 runOnUiThread {

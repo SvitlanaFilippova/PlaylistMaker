@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.domain.api
 
+import com.practicum.playlistmaker.domain.models.Track
+
 
 interface PlayerRepository {
 
@@ -21,4 +23,7 @@ interface PlayerRepository {
 
     fun stopRefreshingProgress()
     fun release()
+
+    fun addTrackToFavorites(track: Track)
+    fun removeTrackFromFavorites(track: Track)
 }

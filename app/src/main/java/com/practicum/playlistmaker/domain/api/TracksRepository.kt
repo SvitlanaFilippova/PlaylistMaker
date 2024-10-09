@@ -6,4 +6,5 @@ import com.practicum.playlistmaker.util.Resource
 interface TracksRepository {
 
         fun searchTracks(expression: String): Resource<ArrayList<Track>>
+
 }

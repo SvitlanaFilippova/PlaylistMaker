@@ -3,7 +3,9 @@ package com.practicum.playlistmaker.data.Impl
 import android.icu.text.SimpleDateFormat
 import android.media.MediaPlayer
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.data.FavoritesStorage
 import com.practicum.playlistmaker.domain.api.PlayerRepository
+import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.presentation.PlayerActivity.Companion.PROGRESS_REFRESH_DELAY_MILLIS
 import com.practicum.playlistmaker.presentation.PlayerActivity.Companion.STATE_PAUSED
 import com.practicum.playlistmaker.presentation.PlayerActivity.Companion.STATE_PLAYING
@@ -12,7 +14,8 @@ import java.util.Locale
 
 
 class PlayerRepositoryImpl(
-    val mainThreadHandler: android.os.Handler
+    private val mainThreadHandler: android.os.Handler,
+    private val favoritesStorage: FavoritesStorage
 ) : PlayerRepository {
 
     val mediaPlayer = MediaPlayer()
@@ -119,5 +122,13 @@ class PlayerRepositoryImpl(
 
     override fun release() {
         mediaPlayer.release()
+    }
+
+    override fun addTrackToFavorites(track: Track) {
+        favoritesStorage.addToFavorites(track.trackId)
+    }
+
+    override fun removeTrackFromFavorites(track: Track) {
+        favoritesStorage.removeFromFavorites(track.trackId)
     }
 }

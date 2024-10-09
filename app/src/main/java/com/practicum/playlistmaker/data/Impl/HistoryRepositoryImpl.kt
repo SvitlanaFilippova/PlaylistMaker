@@ -1,17 +1,13 @@
 package com.practicum.playlistmaker.data.Impl
-import android.content.Context
+
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.domain.api.HistoryRepository
 import com.practicum.playlistmaker.domain.models.Track
 
 
-class HistoryRepositoryImpl(context: Context) : HistoryRepository {
-    override val sharedPreferences: SharedPreferences = context.getSharedPreferences(
-        PLAYLISTMAKER_HISTORY_PREFS, MODE_PRIVATE
-    )
+class HistoryRepositoryImpl(private val sharedPreferences: SharedPreferences) : HistoryRepository {
 
     override fun save(history: List<Track>) {
         sharedPreferences.edit()
@@ -32,9 +28,7 @@ class HistoryRepositoryImpl(context: Context) : HistoryRepository {
     }
 
     private companion object {
-        const val PLAYLISTMAKER_HISTORY_PREFS = "playlistmaker_history_preferences"
         const val SEARCH_HISTORY_LIST_KEY = "key_for_search_history_list"
-
     }
 }
 

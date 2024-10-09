@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.domain.api
 
+import com.practicum.playlistmaker.domain.models.Track
+
 
 interface PlayerInteractor {
     fun prepare(trackUrl: String)
@@ -17,5 +19,8 @@ interface PlayerInteractor {
     fun pause(onPause: (imageRes: Int) -> Unit): Int
     fun stopRefreshingProgress()
     fun release()
+
+    fun addTrackToFavorites(track: Track)
+    fun removeTrackFromFavorites(track: Track)
 
 }

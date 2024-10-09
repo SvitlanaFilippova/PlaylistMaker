@@ -2,6 +2,7 @@ package com.practicum.playlistmaker.domain.impl
 
 import com.practicum.playlistmaker.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.domain.api.PlayerRepository
+import com.practicum.playlistmaker.domain.models.Track
 
 
 class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInteractor {
@@ -38,6 +39,12 @@ class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInt
     override fun release() {
         repository.release()
     }
+    override fun addTrackToFavorites(track: Track) {
+        repository.addTrackToFavorites(track)
+    }
 
+    override fun removeTrackFromFavorites(track: Track) {
+        repository.removeTrackFromFavorites(track)
+    }
 }
 

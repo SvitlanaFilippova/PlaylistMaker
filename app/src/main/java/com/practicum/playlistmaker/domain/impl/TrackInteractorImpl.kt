@@ -1,14 +1,14 @@
 package com.practicum.playlistmaker.domain.impl
 
+import com.practicum.playlistmaker.domain.api.TrackInteractor
 import com.practicum.playlistmaker.domain.api.TracksRepository
-import com.practicum.playlistmaker.domain.api.TracksSearchUseCase
 import com.practicum.playlistmaker.util.Resource
 import java.util.concurrent.Executors
 
-class TracksSearchUseCaseImpl(private val repository: TracksRepository) : TracksSearchUseCase {
+class TrackInteractorImpl(private val repository: TracksRepository) : TrackInteractor {
     private val executor = Executors.newCachedThreadPool()
 
-    override fun execute(expression: String, consumer: TracksSearchUseCase.TracksConsumer) {
+    override fun search(expression: String, consumer: TrackInteractor.TracksConsumer) {
         executor.execute {
             when (val resource = repository.searchTracks(expression)) {
                 is Resource.Success -> {
@@ -21,6 +21,8 @@ class TracksSearchUseCaseImpl(private val repository: TracksRepository) : Tracks
             }
         }
     }
+
+
 }
 
 
