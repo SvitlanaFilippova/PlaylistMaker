@@ -136,9 +136,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
 
-    @SuppressLint("SetTextI18n")
     private fun cleanInput() {
-        binding.etInputSearch.setText("")
+        binding.etInputSearch.setText(INPUT_DEF)
         binding.etInputSearch.hideKeyBoard()
         mainThreadHandler.removeCallbacks(searchRunnable)
         foundTracks.clear()
@@ -155,13 +154,12 @@ class SearchActivity : AppCompatActivity() {
         val tracksSearchUseCase = Creator.provideTracksSearchUseCase()
         tracksSearchUseCase.execute(expression, object : TracksSearchUseCase.TracksConsumer {
             //Выполнение происходит в другом потоке
-
             override fun consume(foundTracks: ArrayList<Track>?, errorMessage: String?) {
                 runOnUiThread {
                     binding.searchProgressBar.isVisible = false
                     if (!foundTracks.isNullOrEmpty()) {
-                    searchResultsIsVisible =
-                        showSearchResults(foundTracks)
+                        searchResultsIsVisible =
+                            showSearchResults(foundTracks)
                     } else if (foundTracks != null && foundTracks.isEmpty()) {
                         placeholderManager(PlaceholderStatus.NOTHING_FOUND)
                     }
@@ -171,19 +169,6 @@ class SearchActivity : AppCompatActivity() {
                     }
                 }
             }
-
-//            override fun onError(resultCode: Int) {
-//                runOnUiThread {
-//                    binding.searchProgressBar.isVisible = false
-//                    if (resultCode == 200) {
-//                        placeholderManager(PlaceholderStatus.NOTHING_FOUND)
-//
-//                    } else {
-//                        placeholderManager(PlaceholderStatus.NO_NETWORK)
-//                    }
-//                    foundTracks.clear()
-//                }
-//            }
         })
     }
 

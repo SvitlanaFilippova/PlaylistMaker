@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.data.repository
+package com.practicum.playlistmaker.data.Impl
 
 import com.practicum.playlistmaker.data.dto.TracksSearchRequest
 import com.practicum.playlistmaker.data.dto.TracksSearchResponse
@@ -10,10 +10,9 @@ import com.practicum.playlistmaker.util.Resource
 import com.practicum.playlistmaker.util.Resource.Success
 
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
-    override var resultCode = 0
+
     override fun searchTracks(expression: String): Resource<ArrayList<Track>> {
         val response = networkClient.doRequest(TracksSearchRequest(expression))
-        resultCode = response.resultCode
         return when (response.resultCode) {
             -1 -> {
                 Resource.Error("Проверьте подключение к интернету")

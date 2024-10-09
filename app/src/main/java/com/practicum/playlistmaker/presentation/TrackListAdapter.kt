@@ -77,7 +77,7 @@ class TrackListAdapter(private val historyInteractor: HistoryInteractor) :
         return trackList.size
     }
 
-    fun clickDebounce(): Boolean {
+    private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
@@ -94,7 +94,7 @@ class TrackListAdapter(private val historyInteractor: HistoryInteractor) :
         }
     }
 
-    fun updateHistory(
+    private fun updateHistory(
         historyTrackList: ArrayList<Track>,
         position: Int,
 

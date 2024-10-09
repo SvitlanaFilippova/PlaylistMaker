@@ -2,14 +2,14 @@ package com.practicum.playlistmaker.util
 
 
 import android.content.Context
+import com.practicum.playlistmaker.data.Impl.AgreementRepositoryImpl
+import com.practicum.playlistmaker.data.Impl.HistoryRepositoryImpl
+import com.practicum.playlistmaker.data.Impl.PlayerRepositoryImpl
+import com.practicum.playlistmaker.data.Impl.ShareRepositoryImpl
+import com.practicum.playlistmaker.data.Impl.SupportRepositoryImpl
+import com.practicum.playlistmaker.data.Impl.ThemeRepositoryImpl
+import com.practicum.playlistmaker.data.Impl.TracksRepositoryImpl
 import com.practicum.playlistmaker.data.network.RetrofitNetworkClient
-import com.practicum.playlistmaker.data.repository.AgreementRepositoryImpl
-import com.practicum.playlistmaker.data.repository.HistoryRepositoryImpl
-import com.practicum.playlistmaker.data.repository.PlayerRepositoryImpl
-import com.practicum.playlistmaker.data.repository.ShareRepositoryImpl
-import com.practicum.playlistmaker.data.repository.SupportRepositoryImpl
-import com.practicum.playlistmaker.data.repository.ThemeRepositoryImpl
-import com.practicum.playlistmaker.data.repository.TracksRepositoryImpl
 import com.practicum.playlistmaker.domain.api.HistoryInteractor
 import com.practicum.playlistmaker.domain.api.HistoryRepository
 import com.practicum.playlistmaker.domain.api.IntentRepository
@@ -50,7 +50,6 @@ object Creator {
         return HistoryInteractorImpl(getHistoryRepository())
     }
 
-
     //for SettingsActivity
     private fun getThemeRepository(): ThemeRepository {
         return ThemeRepositoryImpl(appContext)
@@ -65,16 +64,13 @@ object Creator {
             IntentUseCase.IntentType.SHARE -> ShareRepositoryImpl(appContext)
             IntentUseCase.IntentType.SUPPORT ->
                 SupportRepositoryImpl(appContext)
-
             IntentUseCase.IntentType.AGREEMENT -> AgreementRepositoryImpl(appContext)
         }
-
     }
 
     fun provideIntentUseCase(intentType: IntentUseCase.IntentType): IntentUseCase {
         return IntentUseCaseImpl(getIntentRepository(intentType))
     }
-
 
     // for PlayerActivity
     private fun getPlayerRepository(

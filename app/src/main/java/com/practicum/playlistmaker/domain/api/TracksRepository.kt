@@ -5,7 +5,5 @@ import com.practicum.playlistmaker.util.Resource
 
 interface TracksRepository {
 
-    val resultCode: Int
-
-    fun searchTracks(expression: String): Resource<ArrayList<Track>>
+        fun searchTracks(expression: String): Resource<ArrayList<Track>>
 }
