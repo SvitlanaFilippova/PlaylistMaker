@@ -5,7 +5,7 @@
     android:id="@+id/library_ll_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.LibraryActivity">
+    tools:context=".ui.library.LibraryActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/library_toolbar"
