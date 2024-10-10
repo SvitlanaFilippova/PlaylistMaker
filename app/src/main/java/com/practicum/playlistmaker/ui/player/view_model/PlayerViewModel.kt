@@ -104,9 +104,9 @@ class PlayerViewModel(private val trackPreviewUrl: String) : ViewModel() {
     }
 }
 
-sealed class PlayerState {
-    data object Default : PlayerState()
-    data object Prepared : PlayerState()
-    data object Playing : PlayerState()
-    data object Paused : PlayerState()
+sealed interface PlayerState {
+    data object Default : PlayerState
+    data object Prepared : PlayerState
+    data object Playing : PlayerState
+    data object Paused : PlayerState
 }
