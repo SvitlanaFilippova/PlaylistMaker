@@ -8,8 +8,8 @@ import com.practicum.playlistmaker.domain.settings.ThemeRepository
 
 
 class ThemeRepositoryImpl(context: Context) : ThemeRepository {
-    var darkTheme = false
-    override val sharedPreferences: SharedPreferences = context.getSharedPreferences(
+    private var darkTheme = false
+    private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
         PLAYLISTMAKER_THEME_PREFS, MODE_PRIVATE
     )
 

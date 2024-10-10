@@ -3,7 +3,6 @@ package com.practicum.playlistmaker.creator
 
 import android.content.Context
 import com.practicum.playlistmaker.data.FavoritesStorage
-import com.practicum.playlistmaker.data.player.PlayerRepositoryImpl
 import com.practicum.playlistmaker.data.search.HistoryRepositoryImpl
 import com.practicum.playlistmaker.data.search.TracksRepositoryImpl
 import com.practicum.playlistmaker.data.search.network.RetrofitNetworkClient
@@ -11,9 +10,6 @@ import com.practicum.playlistmaker.data.settings.ThemeRepositoryImpl
 import com.practicum.playlistmaker.data.sharing.AgreementRepositoryImpl
 import com.practicum.playlistmaker.data.sharing.ShareRepositoryImpl
 import com.practicum.playlistmaker.data.sharing.SupportRepositoryImpl
-import com.practicum.playlistmaker.domain.player.PlayerInteractor
-import com.practicum.playlistmaker.domain.player.PlayerRepository
-import com.practicum.playlistmaker.domain.player.impl.PlayerInteractorImpl
 import com.practicum.playlistmaker.domain.search.HistoryInteractor
 import com.practicum.playlistmaker.domain.search.HistoryRepository
 import com.practicum.playlistmaker.domain.search.TrackInteractor
@@ -88,31 +84,6 @@ object Creator {
         return IntentUseCaseImpl(getIntentRepository(intentType))
     }
 
-    // for PlayerActivity
-    private fun getPlayerRepository(
-        mainThreadHandler: android.os.Handler,
-    ): PlayerRepository {
-        return PlayerRepositoryImpl(
-            mainThreadHandler,
-            FavoritesStorage(
-                appContext.getSharedPreferences(
-                    PLAYLISTMAKER_FAVORITES_PREFS,
-                    Context.MODE_PRIVATE
-                )
-            )
-        )
-    }
-
-    fun providePlayerInteractor(
-        mainThreadHandler: android.os.Handler,
-    ): PlayerInteractor {
-        return PlayerInteractorImpl(
-            getPlayerRepository(
-                mainThreadHandler,
-
-                )
-        )
-    }
 
 
 }
