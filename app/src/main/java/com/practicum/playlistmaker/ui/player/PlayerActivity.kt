@@ -21,7 +21,7 @@ class PlayerActivity() : AppCompatActivity() {
     private val vm: PlayerViewModel by lazy {
         ViewModelProvider(
             this,
-            PlayerViewModel.factory(track)
+            PlayerViewModel.factory(track.previewUrl)
         )[PlayerViewModel::class.java]
     }
 

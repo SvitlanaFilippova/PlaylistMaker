@@ -11,10 +11,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmaker.domain.Track
 import java.util.Locale
 
-class PlayerViewModel(private val track: Track) : ViewModel() {
+class PlayerViewModel(private val trackPreviewUrl: String) : ViewModel() {
 
     private var mediaPlayer: MediaPlayer = MediaPlayer()
     private var playerStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default)
@@ -30,7 +29,7 @@ class PlayerViewModel(private val track: Track) : ViewModel() {
     }
 
     private fun preparePlayer() {
-        mediaPlayer.setDataSource(track.previewUrl)
+        mediaPlayer.setDataSource(trackPreviewUrl)
         mediaPlayer.prepareAsync()
     }
 
@@ -93,14 +92,21 @@ class PlayerViewModel(private val track: Track) : ViewModel() {
     }
 
     companion object {
-        fun factory(track: Track): ViewModelProvider.Factory =
+        fun factory(trackPreviewUrl: String): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
-                    PlayerViewModel(track)
+                    PlayerViewModel(trackPreviewUrl)
                 }
             }
 
         const val DEFAULT_TRACK_PROGRESS = "00:00"
         const val PROGRESS_REFRESH_DELAY_MILLIS = 400L
     }
+}
+
+sealed class PlayerState {
+    data object Default : PlayerState()
+    data object Prepared : PlayerState()
+    data object Playing : PlayerState()
+    data object Paused : PlayerState()
 }
