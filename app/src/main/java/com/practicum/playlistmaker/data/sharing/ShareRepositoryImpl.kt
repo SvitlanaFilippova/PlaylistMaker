@@ -10,6 +10,8 @@ class ShareRepositoryImpl(private val context: Context) : IntentRepository {
         return Intent(Intent.ACTION_SEND).apply {
             setType("text/plain")
             putExtra(Intent.EXTRA_TEXT, context.getString(R.string.settings_share_message))
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
         }
 
     }

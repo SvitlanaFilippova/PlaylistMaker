@@ -3,46 +3,58 @@ package com.practicum.playlistmaker.ui.settings
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.practicum.playlistmaker.creator.Creator
+import androidx.lifecycle.ViewModelProvider
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
-import com.practicum.playlistmaker.domain.sharing.IntentUseCase
+import com.practicum.playlistmaker.ui.settings.view_model.SettingsViewModel
 
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
+    private val vm: SettingsViewModel by lazy {
+        ViewModelProvider(this)[SettingsViewModel::class.java]
+    }
 
-    @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.settingsToolbar.setNavigationOnClickListener {
-            finish()
-        }
-        val settingsInteractor = Creator.provideThemeInteractor()
-
-        val themeSwitcher = binding.swDarkTheme
-        themeSwitcher.isChecked = settingsInteractor.read()
-        themeSwitcher.setOnCheckedChangeListener { _, checked ->
-            settingsInteractor.save(checked)
-        }
-
-
-        binding.tvShare.setOnClickListener {
-            Creator.provideIntentUseCase(IntentUseCase.IntentType.SHARE).execute(context = this)
-        }
-
-        val rowSupport = binding.tvSupport
-        rowSupport.setOnClickListener {
-            Creator.provideIntentUseCase(IntentUseCase.IntentType.SUPPORT).execute(context = this)
-        }
-
-        val rowAgreement = binding.tvAgreement
-        rowAgreement.setOnClickListener {
-            Creator.provideIntentUseCase(IntentUseCase.IntentType.AGREEMENT).execute(context = this)
-
-        }
+        applyOnClickListeners()
     }
 
 
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
+    private fun applyOnClickListeners() {
+        binding.apply {
+            settingsToolbar.setNavigationOnClickListener {
+                finish()
+            }
+            setSwitcherState()
+            swDarkTheme.setOnCheckedChangeListener { _, checked ->
+                vm.saveTheme(checked)
+            }
+
+            tvShare.setOnClickListener {
+                vm.startIntent(SettingsViewModel.IntentType.SHARE)
+            }
+
+            tvSupport.setOnClickListener {
+                vm.startIntent(SettingsViewModel.IntentType.SUPPORT)
+            }
+
+            tvAgreement.setOnClickListener {
+                vm.startIntent(SettingsViewModel.IntentType.AGREEMENT)
+            }
+        }
+    }
+
+    private fun setSwitcherState() {
+        val switcherState = vm.getDarkThemeLiveData().value
+        if (switcherState != null) {
+            binding.swDarkTheme.isChecked = switcherState
+
+            vm.getDarkThemeLiveData().observe(this) {
+                binding.swDarkTheme.isChecked
+            }
+        }
+    }
 }

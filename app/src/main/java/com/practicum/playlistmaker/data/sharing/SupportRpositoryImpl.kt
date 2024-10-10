@@ -19,6 +19,7 @@ class SupportRepositoryImpl(private val context: Context) : IntentRepository {
             putExtra(
                 Intent.EXTRA_TEXT, context.getString(R.string.settings_support_message)
             )
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
         }
     }

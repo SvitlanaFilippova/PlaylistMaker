@@ -22,6 +22,7 @@ import com.practicum.playlistmaker.domain.settings.impl.ThemeInteractorImpl
 import com.practicum.playlistmaker.domain.sharing.IntentRepository
 import com.practicum.playlistmaker.domain.sharing.IntentUseCase
 import com.practicum.playlistmaker.domain.sharing.impl.IntentUseCaseImpl
+import com.practicum.playlistmaker.ui.settings.view_model.SettingsViewModel
 
 object Creator {
     private lateinit var appContext: Context
@@ -70,20 +71,18 @@ object Creator {
         return ThemeInteractorImpl(getThemeRepository())
     }
 
-    private fun getIntentRepository(intentType: IntentUseCase.IntentType): IntentRepository {
+    private fun getIntentRepository(intentType: SettingsViewModel.IntentType): IntentRepository {
         return when (intentType) {
-            IntentUseCase.IntentType.SHARE -> ShareRepositoryImpl(appContext)
-            IntentUseCase.IntentType.SUPPORT ->
+            SettingsViewModel.IntentType.SHARE -> ShareRepositoryImpl(appContext)
+            SettingsViewModel.IntentType.SUPPORT ->
                 SupportRepositoryImpl(appContext)
 
-            IntentUseCase.IntentType.AGREEMENT -> AgreementRepositoryImpl(appContext)
+            SettingsViewModel.IntentType.AGREEMENT -> AgreementRepositoryImpl(appContext)
         }
     }
 
-    fun provideIntentUseCase(intentType: IntentUseCase.IntentType): IntentUseCase {
-        return IntentUseCaseImpl(getIntentRepository(intentType))
+    fun provideIntentUseCase(intentType: SettingsViewModel.IntentType): IntentUseCase {
+        return IntentUseCaseImpl(getIntentRepository(intentType), context = appContext)
     }
-
-
 
 }

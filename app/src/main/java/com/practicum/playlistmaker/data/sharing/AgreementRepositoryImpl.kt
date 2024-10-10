@@ -10,7 +10,10 @@ class AgreementRepositoryImpl(private val context: Context) : IntentRepository {
     override fun getIntent(): Intent {
         return Intent(
             Intent.ACTION_VIEW,
+
             Uri.parse(context.getString(R.string.settings_agreement_url))
-        )
+        ).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
     }
 }
