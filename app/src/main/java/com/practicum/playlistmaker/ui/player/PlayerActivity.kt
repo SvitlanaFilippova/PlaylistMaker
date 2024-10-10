@@ -1,7 +1,7 @@
 package com.practicum.playlistmaker.ui.player
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -13,7 +13,7 @@ import com.practicum.playlistmaker.domain.Track
 import com.practicum.playlistmaker.ui.player.view_model.PlayerState
 import com.practicum.playlistmaker.ui.player.view_model.PlayerViewModel
 
-class PlayerActivity() : ComponentActivity() {
+class PlayerActivity() : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
 
@@ -39,6 +39,7 @@ class PlayerActivity() : ComponentActivity() {
         binding.ibArrowBack.setOnClickListener {
             finish()
         }
+
         updateTrackData()
         binding.buttonPlay.setOnClickListener {
             togglePlaying()
