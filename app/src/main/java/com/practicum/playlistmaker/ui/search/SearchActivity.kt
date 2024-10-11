@@ -7,94 +7,69 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.domain.Track
-import com.practicum.playlistmaker.domain.search.HistoryInteractor
-import com.practicum.playlistmaker.domain.search.TrackInteractor
+import com.practicum.playlistmaker.ui.search.view_model.SearchScreenState
+import com.practicum.playlistmaker.ui.search.view_model.SearchViewModel
 import com.practicum.playlistmaker.util.hideKeyBoard
 
 
 class SearchActivity : AppCompatActivity() {
+    private val vm: SearchViewModel by lazy {
+        ViewModelProvider(this)[SearchViewModel::class.java]
+    }
+
     private lateinit var binding: ActivitySearchBinding
-    private lateinit var historyInteractor: HistoryInteractor
-    private val tracksAdapter: TrackListAdapter by lazy {
-        TrackListAdapter(historyInteractor)
+
+    private val tracksAdapter: SearchAdapter by lazy {
+        SearchAdapter(vm::onTrackClick)
     }
     private val mainThreadHandler: Handler by lazy { Handler(Looper.getMainLooper()) }
     private val searchRunnable: Runnable by lazy {
-        Runnable { startSearch(binding.etInputSearch.text.toString()) }
+        Runnable { vm.startSearch(binding.etInputSearch.text.toString()) }
     }
     private var foundTracks = ArrayList<Track>()
-    private var searchResultsIsVisible = false
-    private var placeholderIsVisible = false
     private var searchInput: String = INPUT_DEF
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        historyInteractor = Creator.provideHistoryInteractor()
+        vm.getSearchState().observe(this@SearchActivity)
+        {
+            renderSearchScreen(it)
+            hideProgressBar(it)
+        }
 
-        val searchClearButton = binding.searchIvClearIcon
+        vm.getTrackListLiveData().observe(this) { tracks ->
+            with(tracksAdapter) {
+                submitList(tracks)
+                notifyDataSetChanged()
+            }
+        }
+
         val inputEditText = binding.etInputSearch
-
 
         if (searchInput.isNotEmpty()) {
             inputEditText.setText(searchInput)
         }
+        setOnClickListeners()
+        setEditTextListeners(inputEditText)
 
-        searchClearButton.setOnClickListener {
-            cleanInput()
+
+        binding.searchRvResults.apply {
+            layoutManager = LinearLayoutManager(this@SearchActivity)
+            adapter = tracksAdapter
         }
 
-        binding.searchToolbar.setNavigationOnClickListener {
-            finish()
-        }
-
-        val placeholderUpdateButton = binding.searchBvPlaceholderButton
-        placeholderUpdateButton.setOnClickListener {
-            startSearch(inputEditText.text.toString())
-        }
-
-
-        inputEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (inputEditText.text.isNotEmpty()) {
-                    mainThreadHandler.removeCallbacks(searchRunnable)
-                    startSearch(inputEditText.text.toString())
-                }
-            }
-            false
-        }
-
-
-        inputEditText.setOnFocusChangeListener { _, hasFocus ->
-            if (!searchResultsIsVisible) {
-                if (hasFocus && inputEditText.text.isEmpty()) {
-                    showHistory(historyInteractor.read() as ArrayList<Track>)
-                } else hideHistory()
-            }
-
-        }
-
-
-        val searchTextWatcher = getTextWatcher()
-
-        inputEditText.addTextChangedListener(searchTextWatcher)
-
-        val tracksRecyclerView = binding.searchRvResults
-        tracksRecyclerView.layoutManager = LinearLayoutManager(this)
-        tracksRecyclerView.adapter = tracksAdapter
-
-        binding.searchBvClearHistory.setOnClickListener {
-            historyInteractor.clear()
-            hideHistory()
-        }
     }
 
     private fun getTextWatcher(): TextWatcher {
@@ -109,22 +84,15 @@ class SearchActivity : AppCompatActivity() {
                     mainThreadHandler.removeCallbacks(searchRunnable)
                 } else searchDebounce()
 
-                if (placeholderIsVisible && s?.isEmpty() == true)
-                    placeholderIsVisible =
-                        placeholderManager(PlaceholderStatus.HIDDEN)
-
-                if (!searchResultsIsVisible) {
-                    if (inputEditText.hasFocus() && s?.isEmpty() == true) {
-                        showHistory(historyInteractor.read() as ArrayList<Track>)
-                    } else hideHistory()
-                }
+                if (inputEditText.hasFocus() && s?.isEmpty() == true) {
+                    vm.setStateHistory()
+                } else hideHistory()
             }
-
 
             override fun afterTextChanged(s: Editable?) {
                 searchInput = s.toString()
                 if (inputEditText.hasFocus() && s?.isEmpty() == true) {
-                    showHistory(historyInteractor.read() as ArrayList<Track>)
+                    vm.setStateHistory()
                 } else hideHistory()
             }
         }
@@ -141,38 +109,10 @@ class SearchActivity : AppCompatActivity() {
         binding.etInputSearch.hideKeyBoard()
         mainThreadHandler.removeCallbacks(searchRunnable)
         foundTracks.clear()
-        searchResultsIsVisible = hideSearchResults()
-        placeholderIsVisible =
-            placeholderManager(PlaceholderStatus.HIDDEN)
-        showHistory(historyInteractor.read() as ArrayList<Track>)
+        vm.setStateHistory()
     }
 
-    private fun startSearch(expression: String) {
-        placeholderIsVisible =
-            placeholderManager(PlaceholderStatus.HIDDEN)
-        binding.searchProgressBar.isVisible = true
-        val tracksSearchUseCase = Creator.provideTracksSearchUseCase()
-        tracksSearchUseCase.search(expression, object : TrackInteractor.TracksConsumer {
-            //Выполнение происходит в другом потоке
-            override fun consume(foundTracks: ArrayList<Track>?, errorMessage: String?) {
-                runOnUiThread {
-                    binding.searchProgressBar.isVisible = false
-                    if (!foundTracks.isNullOrEmpty()) {
-                        searchResultsIsVisible =
-                            showSearchResults(foundTracks)
-                    } else if (foundTracks != null && foundTracks.isEmpty()) {
-                        placeholderManager(PlaceholderStatus.NOTHING_FOUND)
-                    }
-
-                    if (errorMessage != null) {
-                        placeholderManager(PlaceholderStatus.NO_NETWORK)
-                    }
-                }
-            }
-        })
-    }
-
-    private fun placeholderManager(status: PlaceholderStatus): Boolean {
+    private fun placeholderManager(status: PlaceholderStatus) {
         binding.apply {
             when (status) {
 
@@ -189,7 +129,6 @@ class SearchActivity : AppCompatActivity() {
                         isVisible = true
                         text = getString(R.string.search_error_nothing_found)
                     }
-                    placeholderIsVisible = true
                 }
 
 
@@ -210,7 +149,6 @@ class SearchActivity : AppCompatActivity() {
                         text =
                             context.getString(R.string.search_error_network_extra)
                     }
-                    placeholderIsVisible = true
                 }
 
                 PlaceholderStatus.HIDDEN -> {
@@ -219,24 +157,20 @@ class SearchActivity : AppCompatActivity() {
                     searchTvPlaceholderMessage.isVisible = false
                     searchTvPlaceholderExtraMessage.isVisible = false
                     searchBvPlaceholderButton.isVisible = false
-                    placeholderIsVisible = false
                 }
             }
         }
-        return placeholderIsVisible
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun showHistory(searchHistory: ArrayList<Track>) {
+    private fun showHistory() {
         binding.apply {
-            if (searchHistory.isNotEmpty()) {
-                searchRvResults.isVisible = true
-                searchBvClearHistory.isVisible = true
-                searchTvSearchHistory.isVisible = true
-                tracksAdapter.setHistoryVisibilityFlag(true)
-                tracksAdapter.trackList = searchHistory
-                tracksAdapter.notifyDataSetChanged()
-            }
+            searchRvResults.isVisible = true
+            searchBvClearHistory.isVisible = true
+            searchTvSearchHistory.isVisible = true
+            tracksAdapter.notifyDataSetChanged()
+
+
         }
     }
 
@@ -245,21 +179,100 @@ class SearchActivity : AppCompatActivity() {
             searchRvResults.isVisible = false
             searchBvClearHistory.isVisible = false
             searchTvSearchHistory.isVisible = false
-            tracksAdapter.setHistoryVisibilityFlag(false)
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun showSearchResults(foundTracks: ArrayList<Track>): Boolean {
+    private fun showSearchResults(foundTracks: ArrayList<Track>) {
         binding.searchRvResults.isVisible = true
-        tracksAdapter.trackList = foundTracks
-        tracksAdapter.notifyDataSetChanged()
-        return true
+        tracksAdapter.submitList(foundTracks)
     }
-
 
     private fun hideSearchResults(): Boolean {
         return false
+    }
+
+    private fun showProgressBar() {
+        binding.searchProgressBar.isVisible = true
+        hideHistory()
+        hideSearchResults()
+        placeholderManager(PlaceholderStatus.HIDDEN)
+    }
+
+
+    private fun hideProgressBar(state: SearchScreenState) {
+        if (state != SearchScreenState.Loading) {
+            binding.searchProgressBar.isVisible = false
+        }
+    }
+
+    private fun renderSearchScreen(state: SearchScreenState) {
+        when (state) {
+            is SearchScreenState.Empty -> {
+                hideHistory()
+                hideSearchResults()
+                placeholderManager(PlaceholderStatus.HIDDEN)
+            }
+
+            is SearchScreenState.Loading -> {
+                showProgressBar()
+            }
+
+            is SearchScreenState.NetworkError -> {
+                placeholderManager(PlaceholderStatus.NO_NETWORK)
+            }
+
+            is SearchScreenState.NothingFound -> {
+                placeholderManager(PlaceholderStatus.NOTHING_FOUND)
+            }
+
+            is SearchScreenState.History -> {
+                if (state.tracks.isNotEmpty()) {
+                    showHistory()
+                }
+            }
+
+            is SearchScreenState.SearchResults -> {
+                showSearchResults(state.tracks)
+            }
+
+        }
+    }
+
+    private fun setOnClickListeners() {
+        binding.apply {
+            searchIvClearIcon.setOnClickListener {
+                cleanInput()
+            }
+            searchToolbar.setNavigationOnClickListener {
+                finish()
+            }
+            searchBvClearHistory.setOnClickListener {
+                vm.clearHistory()
+            }
+        }
+    }
+
+    private fun setEditTextListeners(editText: EditText) {
+        binding.searchBvPlaceholderButton.setOnClickListener {
+            vm.startSearch(editText.text.toString())
+        }
+        editText.addTextChangedListener(getTextWatcher())
+        editText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (editText.text.isNotEmpty()) {
+                    mainThreadHandler.removeCallbacks(searchRunnable)
+                    vm.startSearch(editText.text.toString())
+                }
+            }
+            false
+        }
+
+        editText.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && editText.text.isEmpty()) {
+                vm.setStateHistory()
+            } else hideHistory()
+
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

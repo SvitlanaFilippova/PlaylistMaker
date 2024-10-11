@@ -21,13 +21,9 @@ class SettingsViewModel : ViewModel() {
         darkThemeLiveData.value = checked
     }
 
-    fun startIntent(intentType: IntentType) {
+    fun startIntent(intentType: Creator.IntentType) {
         Creator.provideIntentUseCase(intentType).execute()
     }
 
-    enum class IntentType {
-        SHARE,
-        SUPPORT,
-        AGREEMENT
-    }
+
 }

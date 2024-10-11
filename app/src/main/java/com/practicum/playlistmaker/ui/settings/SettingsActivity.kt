@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
 import com.practicum.playlistmaker.ui.settings.view_model.SettingsViewModel
 
@@ -34,15 +35,15 @@ class SettingsActivity : AppCompatActivity() {
             }
 
             tvShare.setOnClickListener {
-                vm.startIntent(SettingsViewModel.IntentType.SHARE)
+                vm.startIntent(Creator.IntentType.SHARE)
             }
 
             tvSupport.setOnClickListener {
-                vm.startIntent(SettingsViewModel.IntentType.SUPPORT)
+                vm.startIntent(Creator.IntentType.SUPPORT)
             }
 
             tvAgreement.setOnClickListener {
-                vm.startIntent(SettingsViewModel.IntentType.AGREEMENT)
+                vm.startIntent(Creator.IntentType.AGREEMENT)
             }
         }
     }

@@ -4,12 +4,14 @@ package com.practicum.playlistmaker.creator
 import android.content.Context
 import com.practicum.playlistmaker.data.FavoritesStorage
 import com.practicum.playlistmaker.data.search.HistoryRepositoryImpl
+import com.practicum.playlistmaker.data.search.PlayerIntentRepositoryImpl
 import com.practicum.playlistmaker.data.search.TracksRepositoryImpl
 import com.practicum.playlistmaker.data.search.network.RetrofitNetworkClient
 import com.practicum.playlistmaker.data.settings.ThemeRepositoryImpl
 import com.practicum.playlistmaker.data.sharing.AgreementRepositoryImpl
 import com.practicum.playlistmaker.data.sharing.ShareRepositoryImpl
 import com.practicum.playlistmaker.data.sharing.SupportRepositoryImpl
+import com.practicum.playlistmaker.domain.Track
 import com.practicum.playlistmaker.domain.search.HistoryInteractor
 import com.practicum.playlistmaker.domain.search.HistoryRepository
 import com.practicum.playlistmaker.domain.search.TrackInteractor
@@ -22,7 +24,6 @@ import com.practicum.playlistmaker.domain.settings.impl.ThemeInteractorImpl
 import com.practicum.playlistmaker.domain.sharing.IntentRepository
 import com.practicum.playlistmaker.domain.sharing.IntentUseCase
 import com.practicum.playlistmaker.domain.sharing.impl.IntentUseCaseImpl
-import com.practicum.playlistmaker.ui.settings.view_model.SettingsViewModel
 
 object Creator {
     private lateinit var appContext: Context
@@ -71,18 +72,31 @@ object Creator {
         return ThemeInteractorImpl(getThemeRepository())
     }
 
-    private fun getIntentRepository(intentType: SettingsViewModel.IntentType): IntentRepository {
+    private fun getIntentRepository(intentType: IntentType): IntentRepository {
         return when (intentType) {
-            SettingsViewModel.IntentType.SHARE -> ShareRepositoryImpl(appContext)
-            SettingsViewModel.IntentType.SUPPORT ->
+            IntentType.SHARE -> ShareRepositoryImpl(appContext)
+            IntentType.SUPPORT ->
                 SupportRepositoryImpl(appContext)
 
-            SettingsViewModel.IntentType.AGREEMENT -> AgreementRepositoryImpl(appContext)
+            IntentType.AGREEMENT -> AgreementRepositoryImpl(appContext)
         }
     }
 
-    fun provideIntentUseCase(intentType: SettingsViewModel.IntentType): IntentUseCase {
+    fun provideIntentUseCase(intentType: IntentType): IntentUseCase {
         return IntentUseCaseImpl(getIntentRepository(intentType), context = appContext)
     }
 
+    fun getPlayerIntentRepository(track: Track): IntentRepository {
+        return PlayerIntentRepositoryImpl(context = appContext, track)
+    }
+
+    fun providePlayerIntentUseCase(track: Track): IntentUseCase {
+        return IntentUseCaseImpl(getPlayerIntentRepository(track), context = appContext)
+    }
+
+    enum class IntentType {
+        SHARE,
+        SUPPORT,
+        AGREEMENT
+    }
 }

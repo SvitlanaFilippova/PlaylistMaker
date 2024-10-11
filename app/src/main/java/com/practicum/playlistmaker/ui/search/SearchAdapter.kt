@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.ui.search
 
-import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -9,18 +8,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.google.gson.Gson
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySearchTrackCardBinding
 import com.practicum.playlistmaker.domain.Track
-import com.practicum.playlistmaker.domain.search.HistoryInteractor
-import com.practicum.playlistmaker.ui.player.PlayerActivity
 
 
-class TrackListAdapter(private val historyInteractor: HistoryInteractor) :
-    RecyclerView.Adapter<TrackListAdapter.SearchResultsHolder>() {
-    var trackList: ArrayList<Track> = arrayListOf()
-    private var historyIsVisibleFlag = false
+class SearchAdapter(private val onTrackClick: (track: Track) -> Unit) :
+    RecyclerView.Adapter<SearchAdapter.SearchResultsHolder>() {
+    private var trackList: ArrayList<Track> = arrayListOf()
+
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
 
@@ -60,18 +56,7 @@ class TrackListAdapter(private val historyInteractor: HistoryInteractor) :
     override fun onBindViewHolder(holder: SearchResultsHolder, position: Int) {
         val track = trackList[position]
         holder.bind(track)
-        holder.itemView.setOnClickListener {
-            if (clickDebounce()) {
-
-                val historyTrackList = historyInteractor.read() as ArrayList<Track>
-                updateHistory(historyTrackList, position)
-                historyInteractor.save(historyTrackList)
-
-                val playerIntent = Intent(holder.parentView.context, PlayerActivity::class.java)
-                playerIntent.putExtra("track", Gson().toJson(track))
-                holder.parentView.context.startActivity(playerIntent)
-            }
-        }
+        holder.itemView.setOnClickListener { onClickListener(track) }
     }
 
     override fun getItemCount(): Int {
@@ -87,42 +72,16 @@ class TrackListAdapter(private val historyInteractor: HistoryInteractor) :
         return current
     }
 
-    fun setHistoryVisibilityFlag(isVisible: Boolean) {
-        if (isVisible) {
-            historyIsVisibleFlag = true
-        } else {
-            historyIsVisibleFlag = false
+
+    private fun onClickListener(track: Track) {
+        if (clickDebounce()) {
+            onTrackClick(track)
+
         }
     }
 
-    private fun updateHistory(
-        historyTrackList: ArrayList<Track>,
-        position: Int,
-
-        ) {
-        val track = trackList[position]
-
-        if (historyTrackList.removeIf { it.trackId == track.trackId }) {
-            if (historyIsVisibleFlag) {
-                trackList.removeAt(position)
-                notifyItemRemoved(position)
-            }
-        }
-
-        if (historyTrackList.size > 9) {
-            historyTrackList.removeAt(9)
-            if (historyIsVisibleFlag) {
-                notifyItemRemoved(9)
-                notifyItemRangeChanged(0, historyTrackList.size - 1)
-            }
-        }
-
-        historyTrackList.add(0, track)
-        if (historyIsVisibleFlag) {
-            trackList.add(0, track)
-            notifyItemInserted(0)
-            notifyItemRangeChanged(0, historyTrackList.size - 1)
-        }
+    fun submitList(trackList: ArrayList<Track>) {
+        this.trackList = trackList
     }
 
     companion object {
