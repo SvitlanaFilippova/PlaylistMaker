@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.ui.player
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -27,10 +29,13 @@ class PlayerActivity() : AppCompatActivity() {
 
     val track: Track by lazy { Gson().fromJson(intent.getStringExtra("track"), Track::class.java) }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        updateTrackData()
+
 
         vm.getPlayerStateLiveData().observe(this) { playerState ->
             playbackControl(playerState)
@@ -40,7 +45,6 @@ class PlayerActivity() : AppCompatActivity() {
             finish()
         }
 
-        updateTrackData()
         binding.buttonPlay.setOnClickListener {
             togglePlaying()
         }
@@ -79,35 +83,44 @@ class PlayerActivity() : AppCompatActivity() {
 
     private fun playbackControl(playerState: PlayerState) {
         binding.apply {
-            vm.getTrackProgressLiveData()
-                .observe(this@PlayerActivity) { trackProgress ->
-                    tvTrackProgress.text = trackProgress
-                }
+
             when (playerState) {
                 PlayerState.Prepared -> {
                     buttonPlay.isEnabled = true
                     buttonPlay.setImageResource(R.drawable.ic_play)
+                    updateTrackProgress(getString(R.string.default_track_progress))
                 }
 
                 PlayerState.Default -> {
                     buttonPlay.isEnabled = false
                 }
 
-                PlayerState.Playing -> {
-                    buttonPlay.setImageResource(R.drawable.ic_pause)
+                is PlayerState.Paused -> {
+                    buttonPlay.setImageResource(R.drawable.ic_play)
+                    val trackProgress =
+                        (vm.getPlayerStateLiveData().value as PlayerState.Paused).trackProgressData
+                    updateTrackProgress(trackProgress)
                 }
 
-                PlayerState.Paused -> {
-                    buttonPlay.setImageResource(R.drawable.ic_play)
+                is PlayerState.Playing -> {
+                    buttonPlay.setImageResource(R.drawable.ic_pause)
+                    val trackProgress =
+                        (vm.getPlayerStateLiveData().value as PlayerState.Playing).trackProgressData
+                    updateTrackProgress(trackProgress)
                 }
             }
         }
     }
 
+    private fun updateTrackProgress(trackProgress: String) {
+        binding.tvTrackProgress.text = trackProgress
+
+    }
+
     private fun togglePlaying() {
         val playerState = vm.getPlayerStateLiveData().value
         when (playerState) {
-            PlayerState.Playing -> {
+            is PlayerState.Playing -> {
                 vm.pausePlayer()
             }
 
@@ -122,4 +135,15 @@ class PlayerActivity() : AppCompatActivity() {
         vm.pausePlayer()
     }
 
+    companion object {
+        private const val TRACK = "track"
+        fun show(context: Context, track: Track) {
+            val intent = Intent(
+                Intent(context, PlayerActivity::class.java)
+            ).apply {
+                putExtra(TRACK, Gson().toJson(track))
+            }
+            context.startActivity(intent)
+        }
+    }
 }

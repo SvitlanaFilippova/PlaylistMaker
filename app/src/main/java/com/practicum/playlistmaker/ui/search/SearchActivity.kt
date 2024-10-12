@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.domain.Track
+import com.practicum.playlistmaker.ui.player.PlayerActivity
 import com.practicum.playlistmaker.ui.search.view_model.SearchScreenState
 import com.practicum.playlistmaker.ui.search.view_model.SearchViewModel
 import com.practicum.playlistmaker.util.hideKeyBoard
@@ -34,7 +35,6 @@ class SearchActivity : AppCompatActivity() {
     private val searchRunnable: Runnable by lazy {
         Runnable { vm.startSearch(binding.etInputSearch.text.toString()) }
     }
-    private var foundTracks = ArrayList<Track>()
     private var searchInput: String = INPUT_DEF
 
     @SuppressLint("NotifyDataSetChanged")
@@ -44,16 +44,26 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
         vm.getSearchState().observe(this@SearchActivity)
-        {
-            renderSearchScreen(it)
-            hideProgressBar(it)
-        }
+        { state -> //TODO сократить код, вынести отдельно часть во внешние функции
+            renderSearchScreen(state)
+            hideProgressBar(state)
 
-        vm.getTrackListLiveData().observe(this) { tracks ->
-            with(tracksAdapter) {
-                submitList(tracks)
-                notifyDataSetChanged()
+            if (state is SearchScreenState.History) {
+                with(tracksAdapter) {
+                    submitList(state.tracks)
+                    notifyDataSetChanged()
+                }
             }
+            if (state is SearchScreenState.SearchResults) {
+                with(tracksAdapter) {
+                    submitList(state.tracks)
+                    notifyDataSetChanged()
+                }
+            }
+
+        }
+        vm.getPlayerTrigger().observe(this) { track: Track ->
+            showPlayer(track)
         }
 
         val inputEditText = binding.etInputSearch
@@ -108,7 +118,6 @@ class SearchActivity : AppCompatActivity() {
         binding.etInputSearch.setText(INPUT_DEF)
         binding.etInputSearch.hideKeyBoard()
         mainThreadHandler.removeCallbacks(searchRunnable)
-        foundTracks.clear()
         vm.setStateHistory()
     }
 
@@ -236,6 +245,9 @@ class SearchActivity : AppCompatActivity() {
             }
 
         }
+    }
+    private fun showPlayer(track: Track) {
+        PlayerActivity.show(this, track)
     }
 
     private fun setOnClickListeners() {

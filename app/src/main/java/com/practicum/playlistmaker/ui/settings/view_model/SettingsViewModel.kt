@@ -4,7 +4,6 @@ package com.practicum.playlistmaker.ui.settings.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-
 import com.practicum.playlistmaker.creator.Creator
 
 
@@ -21,9 +20,6 @@ class SettingsViewModel : ViewModel() {
         darkThemeLiveData.value = checked
     }
 
-    fun startIntent(intentType: Creator.IntentType) {
-        Creator.provideIntentUseCase(intentType).execute()
-    }
 
 
 }

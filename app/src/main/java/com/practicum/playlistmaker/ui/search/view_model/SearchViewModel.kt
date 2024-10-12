@@ -12,11 +12,11 @@ import com.practicum.playlistmaker.domain.search.TrackInteractor
 class SearchViewModel : ViewModel() {
     private var searchState = MutableLiveData<SearchScreenState>(SearchScreenState.Empty)
     fun getSearchState(): LiveData<SearchScreenState> = searchState
+
+    private val showPlayerTrigger = MutableLiveData<Track>()
+    fun getPlayerTrigger(): LiveData<Track> = showPlayerTrigger
+
     private var prevExpression = ""
-    private var trackListLiveData = MutableLiveData(ArrayList<Track>())
-    fun getTrackListLiveData(): LiveData<ArrayList<Track>> = trackListLiveData
-
-
     private var historyInteractor = Creator.provideHistoryInteractor()
 
     fun startSearch(expression: String) {
@@ -33,7 +33,9 @@ class SearchViewModel : ViewModel() {
 
                     if (!foundTracks.isNullOrEmpty()) {
                         searchState.postValue(SearchScreenState.SearchResults(foundTracks))
-                        trackListLiveData.postValue(foundTracks)
+//                        trackListLiveData.postValue(foundTracks)
+
+
                     } else if (foundTracks != null && foundTracks.isEmpty()) {
                         searchState.postValue(SearchScreenState.NothingFound)
                     }
@@ -50,7 +52,7 @@ class SearchViewModel : ViewModel() {
         if ((prevExpression == newExpression) && (searchState.value is
                     SearchScreenState.SearchResults)
         ) {
-            return trackListLiveData.value
+            return (searchState.value as SearchScreenState.SearchResults).tracks
         } else {
             prevExpression = newExpression
             return null
@@ -61,25 +63,24 @@ class SearchViewModel : ViewModel() {
         val sharedPrefsHistory = historyInteractor.read() as ArrayList<Track>
         if (sharedPrefsHistory.isNotEmpty()) {
             searchState.value = SearchScreenState.History(sharedPrefsHistory)
-            trackListLiveData.value = sharedPrefsHistory
+
         } else searchState.value = SearchScreenState.Empty
     }
 
 
     fun onTrackClick(track: Track) {
-        startIntent(track)
+        showProductDetails(track)
         updateHistory(track)
     }
 
-    private fun startIntent(track: Track) {
-        Creator.providePlayerIntentUseCase(track).execute()
+    private fun showProductDetails(track: Track) {
+        showPlayerTrigger.value = track
     }
 
     fun clearHistory() {
         historyInteractor.clear()
         if (searchState.value is SearchScreenState.History) {
-            trackListLiveData.value = ArrayList()
-
+            searchState.value = SearchScreenState.History(ArrayList())
         }
         searchState.value = SearchScreenState.Empty
     }
@@ -96,7 +97,7 @@ class SearchViewModel : ViewModel() {
 
         historyInteractor.save(sharedPrefsHistory)
         if (historyIsVisible) {
-            trackListLiveData.value = sharedPrefsHistory
+            searchState.value = SearchScreenState.History(sharedPrefsHistory)
         }
     }
 }

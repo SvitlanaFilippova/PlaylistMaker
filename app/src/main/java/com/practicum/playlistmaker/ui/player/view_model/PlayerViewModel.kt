@@ -18,8 +18,7 @@ class PlayerViewModel(private val trackPreviewUrl: String) : ViewModel() {
     private var mediaPlayer: MediaPlayer = MediaPlayer()
     private var playerStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default)
     fun getPlayerStateLiveData(): LiveData<PlayerState> = playerStateLiveData
-    private var trackProgressLiveData = MutableLiveData<String>(DEFAULT_TRACK_PROGRESS)
-    fun getTrackProgressLiveData(): LiveData<String> = trackProgressLiveData
+
     private val mainThreadHandler: Handler by lazy { Handler(Looper.getMainLooper()) }
 
     init {
@@ -41,8 +40,9 @@ class PlayerViewModel(private val trackPreviewUrl: String) : ViewModel() {
 
     private fun setOnCompletionListener() {
         mediaPlayer.setOnCompletionListener {
+            (playerStateLiveData.value as PlayerState.Playing).trackProgressData =
+                DEFAULT_TRACK_PROGRESS
             playerStateLiveData.value = PlayerState.Prepared
-            trackProgressLiveData.value = DEFAULT_TRACK_PROGRESS
             stopRefreshingProgress()
         }
     }
@@ -50,13 +50,13 @@ class PlayerViewModel(private val trackPreviewUrl: String) : ViewModel() {
 
     fun startPlayer() {
         mediaPlayer.start()
-        playerStateLiveData.value = PlayerState.Playing
+        playerStateLiveData.value = PlayerState.Playing(DEFAULT_TRACK_PROGRESS)
         startRefreshingProgress()
     }
 
     fun pausePlayer() {
         mediaPlayer.pause()
-        playerStateLiveData.value = PlayerState.Paused
+        playerStateLiveData.value = PlayerState.Paused(currentPositionToString())
         stopRefreshingProgress()
     }
 
@@ -67,12 +67,20 @@ class PlayerViewModel(private val trackPreviewUrl: String) : ViewModel() {
 
     private val refreshProgressRunnable = object : Runnable {
         override fun run() {
-            trackProgressLiveData.value = currentPositionToString()
+            refreshTrackProgress()
             mainThreadHandler.postDelayed(
 
                 this,
                 PROGRESS_REFRESH_DELAY_MILLIS,
             )
+        }
+    }
+
+    private fun refreshTrackProgress() {
+        val currentState = playerStateLiveData.value
+        if (currentState is PlayerState.Playing) {
+            val updatedState = currentState.copy(trackProgressData = currentPositionToString())
+            playerStateLiveData.value = updatedState
         }
     }
 
@@ -107,6 +115,6 @@ class PlayerViewModel(private val trackPreviewUrl: String) : ViewModel() {
 sealed interface PlayerState {
     data object Default : PlayerState
     data object Prepared : PlayerState
-    data object Playing : PlayerState
-    data object Paused : PlayerState
+    data class Paused(var trackProgressData: String) : PlayerState
+    data class Playing(var trackProgressData: String) : PlayerState
 }
