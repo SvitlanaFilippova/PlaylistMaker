@@ -2,7 +2,6 @@ package com.practicum.playlistmaker.ui.player.view_model
 
 
 import android.icu.text.SimpleDateFormat
-import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
@@ -11,14 +10,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.practicum.playlistmaker.creator.Creator
 import java.util.Locale
 
 class PlayerViewModel(private val trackPreviewUrl: String) : ViewModel() {
 
-    private var mediaPlayer: MediaPlayer = MediaPlayer()
     private var playerStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default)
     fun getPlayerStateLiveData(): LiveData<PlayerState> = playerStateLiveData
-
+    private val playerInteractor = Creator.providePlayerInteractor()
     private val mainThreadHandler: Handler by lazy { Handler(Looper.getMainLooper()) }
 
     init {
@@ -28,41 +27,56 @@ class PlayerViewModel(private val trackPreviewUrl: String) : ViewModel() {
     }
 
     private fun preparePlayer() {
-        mediaPlayer.setDataSource(trackPreviewUrl)
-        mediaPlayer.prepareAsync()
+        playerInteractor.prepare(trackPreviewUrl)
     }
 
     private fun setOnPreparedListener() {
-        mediaPlayer.setOnPreparedListener {
-            playerStateLiveData.value = PlayerState.Prepared
+        playerInteractor.setOnPreparedListener { isPrepared ->
+            if (isPrepared) {
+                playerStateLiveData.value = PlayerState.Prepared
+            }
         }
     }
 
     private fun setOnCompletionListener() {
-        mediaPlayer.setOnCompletionListener {
-            (playerStateLiveData.value as PlayerState.Playing).trackProgressData =
-                DEFAULT_TRACK_PROGRESS
-            playerStateLiveData.value = PlayerState.Prepared
-            stopRefreshingProgress()
+        playerInteractor.setOnCompletionListener { isCompleted ->
+            if (isCompleted) {
+                val currentState = playerStateLiveData.value
+                if (currentState is PlayerState.Playing) {
+                    (playerStateLiveData.value as PlayerState.Playing).trackProgressData =
+                        DEFAULT_TRACK_PROGRESS
+                }
+                if (currentState is PlayerState.Paused) {
+                    (playerStateLiveData.value as PlayerState.Paused).trackProgressData =
+                        DEFAULT_TRACK_PROGRESS
+                }
+
+                playerStateLiveData.value = PlayerState.Prepared
+                stopRefreshingProgress()
+            }
         }
     }
 
 
     fun startPlayer() {
-        mediaPlayer.start()
-        playerStateLiveData.value = PlayerState.Playing(DEFAULT_TRACK_PROGRESS)
+        playerInteractor.start()
+        playerStateLiveData.value = PlayerState.Playing(currentPositionToString())
         startRefreshingProgress()
     }
 
+
     fun pausePlayer() {
-        mediaPlayer.pause()
+        playerInteractor.pause()
         playerStateLiveData.value = PlayerState.Paused(currentPositionToString())
         stopRefreshingProgress()
     }
 
 
     private fun currentPositionToString(): String {
-        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
+        return SimpleDateFormat(
+            "mm:ss",
+            Locale.getDefault()
+        ).format(playerInteractor.getCurrentPosition())
     }
 
     private val refreshProgressRunnable = object : Runnable {
@@ -95,7 +109,7 @@ class PlayerViewModel(private val trackPreviewUrl: String) : ViewModel() {
     }
 
     override fun onCleared() {
-        mediaPlayer.release()
+        playerInteractor.release()
         stopRefreshingProgress()
     }
 

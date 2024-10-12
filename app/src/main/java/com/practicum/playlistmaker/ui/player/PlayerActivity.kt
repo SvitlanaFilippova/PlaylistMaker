@@ -3,6 +3,7 @@ package com.practicum.playlistmaker.ui.player
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -39,6 +40,7 @@ class PlayerActivity() : AppCompatActivity() {
 
         vm.getPlayerStateLiveData().observe(this) { playerState ->
             playbackControl(playerState)
+            Log.e("DEBUG", "Current state:${playerState}")
         }
 
         binding.ibArrowBack.setOnClickListener {
