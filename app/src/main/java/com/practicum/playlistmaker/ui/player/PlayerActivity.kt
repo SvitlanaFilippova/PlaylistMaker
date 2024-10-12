@@ -37,7 +37,6 @@ class PlayerActivity() : AppCompatActivity() {
         setContentView(binding.root)
         updateTrackData()
 
-
         vm.getPlayerStateLiveData().observe(this) { playerState ->
             playbackControl(playerState)
             Log.e("DEBUG", "Current state:${playerState}")
@@ -125,7 +124,6 @@ class PlayerActivity() : AppCompatActivity() {
             is PlayerState.Playing -> {
                 vm.pausePlayer()
             }
-
             else -> {
                 vm.startPlayer()
             }

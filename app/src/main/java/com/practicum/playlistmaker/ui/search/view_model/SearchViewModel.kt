@@ -33,8 +33,6 @@ class SearchViewModel : ViewModel() {
 
                     if (!foundTracks.isNullOrEmpty()) {
                         searchState.postValue(SearchScreenState.SearchResults(foundTracks))
-//                        trackListLiveData.postValue(foundTracks)
-
 
                     } else if (foundTracks != null && foundTracks.isEmpty()) {
                         searchState.postValue(SearchScreenState.NothingFound)
@@ -42,7 +40,6 @@ class SearchViewModel : ViewModel() {
                     if (errorMessage != null) {
                         searchState.postValue(SearchScreenState.NetworkError)
                     }
-
                 }
             })
         }
@@ -79,9 +76,6 @@ class SearchViewModel : ViewModel() {
 
     fun clearHistory() {
         historyInteractor.clear()
-        if (searchState.value is SearchScreenState.History) {
-            searchState.value = SearchScreenState.History(ArrayList())
-        }
         searchState.value = SearchScreenState.Empty
     }
 

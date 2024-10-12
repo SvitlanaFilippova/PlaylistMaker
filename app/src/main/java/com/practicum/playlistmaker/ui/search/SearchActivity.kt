@@ -37,37 +37,21 @@ class SearchActivity : AppCompatActivity() {
     }
     private var searchInput: String = INPUT_DEF
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
         vm.getSearchState().observe(this@SearchActivity)
-        { state -> //TODO сократить код, вынести отдельно часть во внешние функции
+        { state ->
             renderSearchScreen(state)
             hideProgressBar(state)
-
-            if (state is SearchScreenState.History) {
-                with(tracksAdapter) {
-                    submitList(state.tracks)
-                    notifyDataSetChanged()
-                }
-            }
-            if (state is SearchScreenState.SearchResults) {
-                with(tracksAdapter) {
-                    submitList(state.tracks)
-                    notifyDataSetChanged()
-                }
-            }
-
         }
+
         vm.getPlayerTrigger().observe(this) { track: Track ->
             showPlayer(track)
         }
 
         val inputEditText = binding.etInputSearch
-
         if (searchInput.isNotEmpty()) {
             inputEditText.setText(searchInput)
         }
@@ -79,7 +63,6 @@ class SearchActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@SearchActivity)
             adapter = tracksAdapter
         }
-
     }
 
     private fun getTextWatcher(): TextWatcher {
@@ -113,7 +96,6 @@ class SearchActivity : AppCompatActivity() {
         mainThreadHandler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
-
     private fun cleanInput() {
         binding.etInputSearch.setText(INPUT_DEF)
         binding.etInputSearch.hideKeyBoard()
@@ -124,12 +106,10 @@ class SearchActivity : AppCompatActivity() {
     private fun placeholderManager(status: PlaceholderStatus) {
         binding.apply {
             when (status) {
-
                 PlaceholderStatus.NOTHING_FOUND -> {
                     searchLlPlaceholder.isVisible = true
                     searchTvPlaceholderExtraMessage.isVisible = false
                     searchBvPlaceholderButton.isVisible = false
-
                     searchIvPlaceholderImage.apply {
                         setImageResource(R.drawable.ic_nothing_found)
                         isVisible = true
@@ -140,11 +120,9 @@ class SearchActivity : AppCompatActivity() {
                     }
                 }
 
-
                 PlaceholderStatus.NO_NETWORK -> {
                     searchLlPlaceholder.isVisible = true
                     searchBvPlaceholderButton.isVisible = true
-
                     searchIvPlaceholderImage.apply {
                         isVisible = true
                         setImageResource(R.drawable.ic_no_internet)
@@ -178,8 +156,6 @@ class SearchActivity : AppCompatActivity() {
             searchBvClearHistory.isVisible = true
             searchTvSearchHistory.isVisible = true
             tracksAdapter.notifyDataSetChanged()
-
-
         }
     }
 
@@ -214,6 +190,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun renderSearchScreen(state: SearchScreenState) {
         when (state) {
             is SearchScreenState.Empty -> {
@@ -238,14 +215,22 @@ class SearchActivity : AppCompatActivity() {
                 if (state.tracks.isNotEmpty()) {
                     showHistory()
                 }
+                with(tracksAdapter) {
+                    submitList(state.tracks)
+                    notifyDataSetChanged()
+                }
             }
 
             is SearchScreenState.SearchResults -> {
                 showSearchResults(state.tracks)
+                with(tracksAdapter) {
+                    submitList(state.tracks)
+                    notifyDataSetChanged()
+                }
             }
-
         }
     }
+
     private fun showPlayer(track: Track) {
         PlayerActivity.show(this, track)
     }
@@ -283,7 +268,6 @@ class SearchActivity : AppCompatActivity() {
             if (hasFocus && editText.text.isEmpty()) {
                 vm.setStateHistory()
             } else hideHistory()
-
         }
     }
 
