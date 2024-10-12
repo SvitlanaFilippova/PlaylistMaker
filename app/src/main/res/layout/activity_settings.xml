@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_settings_screen"
     style="@style/ParentVerticalLayoutStyle"
-    tools:context=".ui.settings.SettingsActivity"
+    tools:context="com.playlistmaker.ui.settings.SettingsActivity"
     tools:ignore="MissingConstraints">
 
     <com.google.android.material.appbar.MaterialToolbar
