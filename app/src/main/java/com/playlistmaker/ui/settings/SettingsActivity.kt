@@ -21,9 +21,8 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        setSwitcherState()
         applyOnClickListeners()
-
 
     }
 
@@ -33,7 +32,7 @@ class SettingsActivity : AppCompatActivity() {
             settingsToolbar.setNavigationOnClickListener {
                 finish()
             }
-            setSwitcherState()
+
             swDarkTheme.setOnCheckedChangeListener { _, checked ->
                 vm.saveTheme(checked)
             }
