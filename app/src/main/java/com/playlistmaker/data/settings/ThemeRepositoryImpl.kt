@@ -15,7 +15,13 @@ class ThemeRepositoryImpl(private val sharedPreferences: SharedPreferences) : Th
     }
 
     override fun read(): Boolean {
-        return sharedPreferences.getBoolean(THEME_KEY, false)
+        val savedInSharedPrefs = sharedPreferences.getBoolean(THEME_KEY, true)
+
+        Log.e(
+            "DEBUG",
+            "Прочитал запись про тему в sharedPreferences. Сохранённое значение: $savedInSharedPrefs"
+        )
+        return savedInSharedPrefs
     }
 
     override fun wasThemeSetManually(): Boolean {
