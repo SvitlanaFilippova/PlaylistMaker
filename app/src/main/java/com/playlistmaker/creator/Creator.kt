@@ -3,6 +3,7 @@ package com.playlistmaker.creator
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import com.playlistmaker.data.FavoritesStorage
 import com.playlistmaker.data.player.PlayerRepositoryImpl
@@ -76,7 +77,7 @@ object Creator {
 
     //for PlayerActivity
     private fun getPlayerRepository(): PlayerRepository {
-        return PlayerRepositoryImpl()
+        return PlayerRepositoryImpl(mediaPlayer = MediaPlayer())
     }
 
     fun providePlayerInteractor(): PlayerInteractor {
