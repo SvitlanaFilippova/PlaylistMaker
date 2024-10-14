@@ -4,10 +4,10 @@ import android.media.MediaPlayer
 import com.playlistmaker.domain.player.PlayerRepository
 
 class PlayerRepositoryImpl(
+    private val mediaPlayer: MediaPlayer
 
 ) : PlayerRepository {
 
-    private val mediaPlayer = MediaPlayer()
 
     override fun preparePlayer(trackUrl: String) {
         mediaPlayer.setDataSource(trackUrl)
