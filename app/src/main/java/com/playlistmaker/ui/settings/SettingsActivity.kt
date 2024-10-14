@@ -4,18 +4,17 @@ package com.playlistmaker.ui.settings
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.playlistmaker.ui.presentation.IntentManager
 import com.playlistmaker.ui.presentation.IntentType
 import com.playlistmaker.ui.settings.view_model.SettingsViewModel
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
-    private val vm: SettingsViewModel by lazy {
-        ViewModelProvider(this)[SettingsViewModel::class.java]
-    }
+    private val vm by viewModel<SettingsViewModel>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +22,6 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSwitcherState()
         applyOnClickListeners()
-
     }
 
 

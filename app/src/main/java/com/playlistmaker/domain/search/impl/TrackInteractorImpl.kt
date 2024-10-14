@@ -2,7 +2,7 @@ package com.playlistmaker.domain.search.impl
 
 import com.playlistmaker.domain.search.TrackInteractor
 import com.playlistmaker.domain.search.TracksRepository
-import com.practicum.playlistmaker.util.Resource
+import com.playlistmaker.util.Resource
 import java.util.concurrent.Executors
 
 class TrackInteractorImpl(private val repository: TracksRepository) : TrackInteractor {

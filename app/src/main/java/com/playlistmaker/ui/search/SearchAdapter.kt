@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.ui.search
+package com.playlistmaker.ui.search
 
 import android.os.Handler
 import android.os.Looper
@@ -21,7 +21,7 @@ class SearchAdapter(private val onTrackClick: (track: Track) -> Unit) :
     private val handler = Handler(Looper.getMainLooper())
 
 
-    class SearchResultsHolder(val parentView: View) : RecyclerView.ViewHolder(parentView) {
+    class SearchResultsHolder(private val parentView: View) : RecyclerView.ViewHolder(parentView) {
         private val binding = ActivitySearchTrackCardBinding.bind(parentView)
 
         fun bind(track: Track) = with(binding) {

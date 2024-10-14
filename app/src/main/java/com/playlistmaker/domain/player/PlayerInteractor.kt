@@ -14,8 +14,3 @@ interface PlayerInteractor {
 }
 
 
-//    fun playbackControl(
-//        playerState: Int,
-//        onStateChange: (imageRes: Int) -> Unit,
-//        onRun: (currentPosition: String) -> Unit
-//    ): Int

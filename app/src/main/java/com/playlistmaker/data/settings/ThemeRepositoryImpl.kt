@@ -1,11 +1,13 @@
 package com.playlistmaker.data.settings
 
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
+import com.playlistmaker.data.SharedPrefsStorage
 import com.playlistmaker.domain.settings.ThemeRepository
 
 
-class ThemeRepositoryImpl(private val sharedPreferences: SharedPreferences) : ThemeRepository {
+class ThemeRepositoryImpl(sharedPrefsStorage: SharedPrefsStorage) : ThemeRepository {
+    private val sharedPreferences = sharedPrefsStorage.getThemePrefs()
+
 
     override fun save(isChecked: Boolean) {
         switchTheme(isChecked)
@@ -32,7 +34,6 @@ class ThemeRepositoryImpl(private val sharedPreferences: SharedPreferences) : Th
     }
 
     companion object {
-        const val PLAYLISTMAKER_THEME_PREFS = "playlistmaker_theme_preferences"
         const val THEME_KEY = "theme_key"
     }
 }

@@ -1,9 +1,9 @@
 package com.playlistmaker.data
 
-import android.content.SharedPreferences
 
-class FavoritesStorage(private val sharedPreferences: SharedPreferences) {
+class FavoritesStorage(sharedPrefsStorage: SharedPrefsStorage) {
 
+    private val sharedPreferences = sharedPrefsStorage.getFavoritesPrefs()
 
     fun addToFavorites(trackId: Int) {
         changeFavorites(trackId = trackId.toString(), remove = false)

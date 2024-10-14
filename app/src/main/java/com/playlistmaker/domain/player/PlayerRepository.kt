@@ -7,9 +7,8 @@ interface PlayerRepository {
     fun setOnPreparedListener(onPrepare: (Boolean) -> Unit)
     fun setOnCompletionListener(onCompletion: (Boolean) -> Unit)
     fun startPlayer()
-
     fun pausePlayer()
-
     fun release()
+
     fun getCurrentPosition(): Int
 }

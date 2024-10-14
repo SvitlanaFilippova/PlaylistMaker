@@ -7,17 +7,17 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.playlistmaker.creator.Creator
+import com.playlistmaker.domain.player.PlayerInteractor
+
 import java.util.Locale
 
-class PlayerViewModel(private val trackPreviewUrl: String) : ViewModel() {
+class PlayerViewModel(
+    private val trackPreviewUrl: String,
+    private val playerInteractor: PlayerInteractor
+) : ViewModel() {
 
     private var playerStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default)
     fun getPlayerStateLiveData(): LiveData<PlayerState> = playerStateLiveData
-    private val playerInteractor = Creator.providePlayerInteractor()
     private val mainThreadHandler: Handler by lazy { Handler(Looper.getMainLooper()) }
 
     init {
@@ -31,7 +31,7 @@ class PlayerViewModel(private val trackPreviewUrl: String) : ViewModel() {
     }
 
     private fun setOnPreparedListener() {
-        playerInteractor.setOnPreparedListener { isPrepared ->
+        playerInteractor.setOnPreparedListener { isPrepared: Boolean ->
             if (isPrepared) {
                 playerStateLiveData.value = PlayerState.Prepared
             }
@@ -39,7 +39,7 @@ class PlayerViewModel(private val trackPreviewUrl: String) : ViewModel() {
     }
 
     private fun setOnCompletionListener() {
-        playerInteractor.setOnCompletionListener { isCompleted ->
+        playerInteractor.setOnCompletionListener { isCompleted: Boolean ->
             if (isCompleted) {
                 val currentState = playerStateLiveData.value
                 if (currentState is PlayerState.Playing) {
@@ -114,13 +114,6 @@ class PlayerViewModel(private val trackPreviewUrl: String) : ViewModel() {
     }
 
     companion object {
-        fun factory(trackPreviewUrl: String): ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    PlayerViewModel(trackPreviewUrl)
-                }
-            }
-
         const val DEFAULT_TRACK_PROGRESS = "00:00"
         const val PROGRESS_REFRESH_DELAY_MILLIS = 400L
     }

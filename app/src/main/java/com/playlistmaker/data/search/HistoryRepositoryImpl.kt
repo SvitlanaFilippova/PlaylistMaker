@@ -1,17 +1,19 @@
 package com.playlistmaker.data.search
 
-import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.playlistmaker.data.SharedPrefsStorage
 import com.playlistmaker.domain.Track
 import com.playlistmaker.domain.search.HistoryRepository
 
 
-class HistoryRepositoryImpl(private val sharedPreferences: SharedPreferences) : HistoryRepository {
+class HistoryRepositoryImpl(sharedPrefsStorage: SharedPrefsStorage, private val gson: Gson) :
+    HistoryRepository {
+    private val sharedPreferences = sharedPrefsStorage.getHistoryPrefs()
 
     override fun save(history: List<Track>) {
         sharedPreferences.edit()
-            .putString(SEARCH_HISTORY_LIST_KEY, Gson().toJson(history))
+            .putString(SEARCH_HISTORY_LIST_KEY, gson.toJson(history))
             .apply()
     }
 
@@ -19,7 +21,7 @@ class HistoryRepositoryImpl(private val sharedPreferences: SharedPreferences) : 
         val historyJson = sharedPreferences.getString(SEARCH_HISTORY_LIST_KEY, null)
         if (historyJson != null) {
             val itemType = object : TypeToken<List<Track>>() {}.type
-            return Gson().fromJson(historyJson, itemType)
+            return gson.fromJson(historyJson, itemType)
         } else return arrayListOf()
     }
 

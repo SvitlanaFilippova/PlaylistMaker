@@ -38,10 +38,3 @@ class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInt
     }
 }
 
-//    override fun playbackControl(
-//        playerState: Int,
-//        onStateChange: (imageRes: Int) -> Unit,
-//        onRun: (currentPosition: String) -> Unit
-//    ): Int {
-//        return repository.playbackControl(playerState, onStateChange, onRun)
-//    }
