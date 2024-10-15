@@ -3,15 +3,15 @@ package com.playlistmaker.data.player
 import android.media.MediaPlayer
 import com.playlistmaker.domain.player.PlayerRepository
 
-class PlayerRepositoryImpl(
-    private val mediaPlayer: MediaPlayer
 
-) : PlayerRepository {
+class PlayerRepositoryImpl(private var mediaPlayer: MediaPlayer) : PlayerRepository {
 
 
     override fun preparePlayer(trackUrl: String) {
+        mediaPlayer.reset()
         mediaPlayer.setDataSource(trackUrl)
         mediaPlayer.prepareAsync()
+
     }
 
     override fun startPlayer() {
@@ -25,6 +25,7 @@ class PlayerRepositoryImpl(
     override fun release() {
         mediaPlayer.release()
     }
+
 
     override fun getCurrentPosition(): Int {
         return mediaPlayer.currentPosition

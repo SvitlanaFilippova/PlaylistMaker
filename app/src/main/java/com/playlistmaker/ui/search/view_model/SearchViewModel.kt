@@ -4,12 +4,15 @@ package com.playlistmaker.ui.search.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.playlistmaker.creator.Creator
 import com.playlistmaker.domain.Track
+import com.playlistmaker.domain.search.HistoryInteractor
 import com.playlistmaker.domain.search.TrackInteractor
 
 
-class SearchViewModel : ViewModel() {
+class SearchViewModel(
+    private val historyInteractor: HistoryInteractor,
+    private val tracksInteractor: TrackInteractor
+) : ViewModel() {
     private var searchState = MutableLiveData<SearchScreenState>(SearchScreenState.Empty)
     fun getSearchState(): LiveData<SearchScreenState> = searchState
 
@@ -17,7 +20,6 @@ class SearchViewModel : ViewModel() {
     fun getPlayerTrigger(): LiveData<Track> = showPlayerTrigger
 
     private var prevExpression = ""
-    private var historyInteractor = Creator.provideHistoryInteractor()
 
     fun startSearch(expression: String) {
         val actualSearchResults = getActualSearchResults(expression)
@@ -26,8 +28,7 @@ class SearchViewModel : ViewModel() {
             return
         } else {
             searchState.postValue(SearchScreenState.Loading)
-            val tracksSearchUseCase = Creator.provideTracksSearchUseCase()
-            tracksSearchUseCase.search(expression, object : TrackInteractor.TracksConsumer {
+            tracksInteractor.search(expression, object : TrackInteractor.TracksConsumer {
                 //Выполнение происходит в другом потоке
                 override fun consume(foundTracks: ArrayList<Track>?, errorMessage: String?) {
 

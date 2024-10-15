@@ -5,8 +5,8 @@ import com.playlistmaker.data.search.network.NetworkClient
 import com.playlistmaker.data.toDomain
 import com.playlistmaker.domain.Track
 import com.playlistmaker.domain.search.TracksRepository
-import com.practicum.playlistmaker.util.Resource
-import com.practicum.playlistmaker.util.Resource.Success
+import com.playlistmaker.util.Resource
+import com.playlistmaker.util.Resource.Success
 
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient,

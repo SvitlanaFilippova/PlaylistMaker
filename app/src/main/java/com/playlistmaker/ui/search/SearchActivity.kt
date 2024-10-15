@@ -10,22 +10,20 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.playlistmaker.domain.Track
 import com.playlistmaker.ui.player.PlayerActivity
 import com.playlistmaker.ui.search.view_model.SearchScreenState
 import com.playlistmaker.ui.search.view_model.SearchViewModel
+import com.playlistmaker.util.hideKeyBoard
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
-import com.practicum.playlistmaker.ui.search.SearchAdapter
-import com.practicum.playlistmaker.util.hideKeyBoard
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SearchActivity : AppCompatActivity() {
-    private val vm: SearchViewModel by lazy {
-        ViewModelProvider(this)[SearchViewModel::class.java]
-    }
+    private val vm by viewModel<SearchViewModel>()
 
 
     private lateinit var binding: ActivitySearchBinding
@@ -60,10 +58,10 @@ class SearchActivity : AppCompatActivity() {
         }
         setOnClickListeners()
         setEditTextListeners(inputEditText)
-
+        val layoutManager: LinearLayoutManager by inject()
 
         binding.searchRvResults.apply {
-            layoutManager = LinearLayoutManager(this@SearchActivity)
+            this.layoutManager = layoutManager
             adapter = tracksAdapter
         }
     }

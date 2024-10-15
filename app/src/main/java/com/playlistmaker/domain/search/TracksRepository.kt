@@ -1,7 +1,7 @@
 package com.playlistmaker.domain.search
 
 import com.playlistmaker.domain.Track
-import com.practicum.playlistmaker.util.Resource
+import com.playlistmaker.util.Resource
 
 interface TracksRepository {
 
