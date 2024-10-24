@@ -3,6 +3,8 @@ package com.playlistmaker.ui.player
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -45,12 +47,13 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun updateTrackData() {
+        try {
         binding.apply {
             tvTrackProgress.text = getString(R.string.default_track_progress)
             tvTrackName.text = track.trackName
             tvArtistName.text = track.artistName
             tvDurationTrack.text = track.trackTime
-            tvYearTrack.text = track.releaseDate.slice(0..3)
+            tvYearTrack.text = track.releaseDate
             tvGenreTrack.text = track.primaryGenreName
             tvCountryTrack.text = track.country
 
@@ -72,6 +75,9 @@ class PlayerActivity : AppCompatActivity() {
                 tvCollectionTitle.isVisible = false
             }
         }
+        } catch (e: RuntimeException) {
+            Log.e("DEBUG", track.toString())
+        }
     }
 
     private fun playbackControl(playerState: PlayerState) {
@@ -86,6 +92,14 @@ class PlayerActivity : AppCompatActivity() {
 
                 PlayerState.Default -> {
                     buttonPlay.isEnabled = false
+                }
+
+                PlayerState.Error -> {
+                    Toast.makeText(
+                        this@PlayerActivity,
+                        R.string.no_demo_for_this_track,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
                 is PlayerState.Paused -> {

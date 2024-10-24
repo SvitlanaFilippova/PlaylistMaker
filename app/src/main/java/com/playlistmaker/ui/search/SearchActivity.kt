@@ -218,7 +218,7 @@ class SearchActivity : AppCompatActivity() {
                 }
                 with(tracksAdapter) {
                     submitList(state.tracks)
-                    notifyDataSetChanged()
+                    notifyDataSetChanged() // TODO заменить на инфо про конкретные изменения списка. Пока не знаю как.
                 }
             }
 

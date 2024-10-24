@@ -32,6 +32,7 @@
     <string name="back">Назад</string>
     <string name="album_cover">Обложка альбома</string>
     <string name="error">Произошла ошибка</string>
+    <string name="no_demo_for_this_track">Для этого трека нет демо</string>
 
 
 </resources>

@@ -27,7 +27,9 @@ class PlayerViewModel(
     }
 
     private fun preparePlayer() {
-        playerInteractor.prepare(trackPreviewUrl)
+        if (trackPreviewUrl.isNotEmpty())
+            playerInteractor.prepare(trackPreviewUrl)
+        else playerStateLiveData.value = PlayerState.Error
     }
 
     private fun setOnPreparedListener() {
@@ -59,9 +61,14 @@ class PlayerViewModel(
 
 
     fun startPlayer() {
-        playerInteractor.start()
-        playerStateLiveData.value = PlayerState.Playing(currentPositionToString())
-        startRefreshingProgress()
+
+        if (trackPreviewUrl.isEmpty())
+            playerStateLiveData.value = PlayerState.Error
+        else {
+            playerInteractor.start()
+            playerStateLiveData.value = PlayerState.Playing(currentPositionToString())
+            startRefreshingProgress()
+        }
     }
 
 
@@ -122,6 +129,7 @@ class PlayerViewModel(
 sealed interface PlayerState {
     data object Default : PlayerState
     data object Prepared : PlayerState
+    data object Error : PlayerState
     data class Paused(var trackProgressData: String) : PlayerState
     data class Playing(var trackProgressData: String) : PlayerState
 }

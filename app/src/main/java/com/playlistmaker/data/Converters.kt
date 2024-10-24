@@ -7,17 +7,24 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 fun TrackDto.toDomain(storedFavorites: Set<String>) = Track(
-    trackName,
-    artistName,
-    SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis),
-    artworkUrl100,
-    trackId,
-    collectionName,
-    releaseDate,
-    primaryGenreName,
-    country,
-    previewUrl,
-    artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"),
-    inFavorite = storedFavorites.contains(trackId.toString())
+    trackName ?: "",
+    artistName ?: "",
+    if (trackTimeMillis !== null) {
+        SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)
+    } else "00:00",
+    artworkUrl100 ?: "",
+    trackId ?: 0,
+    collectionName ?: "",
+    if (releaseDate !== null)
+        releaseDate.slice(0..3) else "",
+    primaryGenreName ?: "",
+    country ?: "",
+    previewUrl ?: "",
+    if (artworkUrl100 !== null) {
+        artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
+    } else "",
+    if (trackId !== null) {
+        storedFavorites.contains(trackId.toString())
+    } else false
 )
 
