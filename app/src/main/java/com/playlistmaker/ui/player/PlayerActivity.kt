@@ -25,7 +25,7 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlayerBinding
     private val gson: Gson by inject()
     val track: Track by lazy { gson.fromJson(intent.getStringExtra("track"), Track::class.java) }
-    private val vm by viewModel<PlayerViewModel> { parametersOf(track.previewUrl) }
+    private val vm by viewModel<PlayerViewModel> { parametersOf(track) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,12 +37,20 @@ class PlayerActivity : AppCompatActivity() {
             playbackControl(playerState)
         }
 
+        vm.getIsFavoriteLiveData().observe(this) { isFavorite ->
+            toggleFavorite(isFavorite)
+        }
+
         binding.ibArrowBack.setOnClickListener {
             finish()
         }
 
         binding.buttonPlay.setOnClickListener {
             togglePlaying()
+        }
+
+        binding.ibAddToFavorite.setOnClickListener {
+            vm.toggleFavorite()
         }
     }
 
@@ -74,6 +82,7 @@ class PlayerActivity : AppCompatActivity() {
                 tvCollectionTrack.isVisible = false
                 tvCollectionTitle.isVisible = false
             }
+            vm.checkIfFavorite(track)
         }
         } catch (e: RuntimeException) {
             Log.e("DEBUG", track.toString())
@@ -134,6 +143,13 @@ class PlayerActivity : AppCompatActivity() {
                 vm.startPlayer()
             }
         }
+    }
+
+    private fun toggleFavorite(isFavorite: Boolean) {
+        if (isFavorite)
+            binding.ibAddToFavorite.setImageResource(R.drawable.ic_favorite_active)
+        else
+            binding.ibAddToFavorite.setImageResource(R.drawable.ic_favorite_inactive)
     }
 
     override fun onPause() {

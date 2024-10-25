@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.viewpager2:viewpager2:1.1.0")
     implementation("io.insert-koin:koin-android:3.3.0")
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")

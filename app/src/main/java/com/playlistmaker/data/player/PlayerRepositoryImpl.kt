@@ -1,10 +1,15 @@
 package com.playlistmaker.data.player
 
 import android.media.MediaPlayer
+import com.playlistmaker.data.FavoritesStorage
+import com.playlistmaker.domain.Track
 import com.playlistmaker.domain.player.PlayerRepository
 
 
-class PlayerRepositoryImpl(private var mediaPlayer: MediaPlayer) : PlayerRepository {
+class PlayerRepositoryImpl(
+    private var mediaPlayer: MediaPlayer,
+    private var favoritesStorage: FavoritesStorage
+) : PlayerRepository {
 
 
     override fun preparePlayer(trackUrl: String) {
@@ -42,5 +47,17 @@ class PlayerRepositoryImpl(private var mediaPlayer: MediaPlayer) : PlayerReposit
         mediaPlayer.setOnCompletionListener {
             onCompletion(true)
         }
+    }
+
+    override fun addToFavorites(track: Track) {
+        favoritesStorage.addToFavorites(track.trackId)
+    }
+
+    override fun removeFromFavorites(track: Track) {
+        favoritesStorage.removeFromFavorites(track.trackId)
+    }
+
+    override fun checkIfTrackIsFavorite(track: Track): Boolean {
+        return favoritesStorage.checkIfTrackIsFavorite(track.trackId)
     }
 }

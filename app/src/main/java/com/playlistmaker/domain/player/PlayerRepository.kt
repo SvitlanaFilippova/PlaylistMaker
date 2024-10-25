@@ -1,5 +1,7 @@
 package com.playlistmaker.domain.player
 
+import com.playlistmaker.domain.Track
+
 
 interface PlayerRepository {
 
@@ -11,4 +13,8 @@ interface PlayerRepository {
     fun release()
 
     fun getCurrentPosition(): Int
+
+    fun addToFavorites(track: Track)
+    fun removeFromFavorites(track: Track)
+    fun checkIfTrackIsFavorite(track: Track): Boolean
 }

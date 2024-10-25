@@ -35,7 +35,7 @@ val dataModule = module {
     single<SharedPrefsStorage> {
         SharedPrefsStorage(context = get())
     }
-    single {
+    single<FavoritesStorage> {
         FavoritesStorage(sharedPrefsStorage = get())
     }
     single<TracksRepository> {
@@ -57,7 +57,7 @@ val dataModule = module {
     single<Gson> { Gson() }
 
     factory<PlayerRepository> {
-        PlayerRepositoryImpl(mediaPlayer = get())
+        PlayerRepositoryImpl(mediaPlayer = get(), favoritesStorage = get())
     }
 }
 

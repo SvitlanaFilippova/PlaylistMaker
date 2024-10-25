@@ -17,6 +17,13 @@ class FavoritesStorage(sharedPrefsStorage: SharedPrefsStorage) {
         return sharedPreferences.getStringSet(FAVORITES_KEY, emptySet()) ?: emptySet()
     }
 
+    fun checkIfTrackIsFavorite(trackId: Int): Boolean {
+        val storedFavorites =
+            sharedPreferences.getStringSet(FAVORITES_KEY, emptySet()) ?: emptySet()
+        return storedFavorites.contains(trackId.toString())
+    }
+
+
     private fun changeFavorites(trackId: String, remove: Boolean) {
         val mutableSet = getSavedFavorites().toMutableSet()
         val modified = if (remove) mutableSet.remove(trackId) else mutableSet.add(trackId)
