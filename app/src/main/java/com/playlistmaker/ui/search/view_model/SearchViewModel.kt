@@ -2,6 +2,7 @@ package com.playlistmaker.ui.search.view_model
 
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.playlistmaker.domain.Track
@@ -14,10 +15,25 @@ class SearchViewModel(
     private val tracksInteractor: TrackInteractor
 ) : ViewModel() {
     private var searchState = MutableLiveData<SearchScreenState>(SearchScreenState.Empty)
-    fun getSearchState(): LiveData<SearchScreenState> = searchState
+    fun getSearchState(): LiveData<SearchScreenState> = mediatorStateLiveData
 
     private val showPlayerTrigger = MutableLiveData<Track>()
     fun getPlayerTrigger(): LiveData<Track> = showPlayerTrigger
+
+    private val mediatorStateLiveData = MediatorLiveData<SearchScreenState>().also { liveData ->
+
+        liveData.addSource(searchState) { state ->
+            liveData.value = when (state) {
+                is SearchScreenState.SearchResults -> {
+                    val newTrackList =
+                        state.tracks.sortedByDescending { it.inFavorite }.toCollection(ArrayList())
+                    SearchScreenState.SearchResults(newTrackList)
+                }
+
+                else -> state
+            }
+        }
+    }
 
     private var prevExpression = ""
 
