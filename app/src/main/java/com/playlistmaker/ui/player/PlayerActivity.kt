@@ -85,7 +85,7 @@ class PlayerActivity : AppCompatActivity() {
             vm.checkIfFavorite(track)
         }
         } catch (e: RuntimeException) {
-            Log.e("DEBUG", track.toString())
+            Log.e("DEBUG", "Ошибка при попытке загрузить данные трека: ${track.toString()}")
         }
     }
 

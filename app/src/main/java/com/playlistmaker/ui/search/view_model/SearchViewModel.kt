@@ -1,6 +1,7 @@
 package com.playlistmaker.ui.search.view_model
 
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,28 +15,43 @@ class SearchViewModel(
     private val historyInteractor: HistoryInteractor,
     private val tracksInteractor: TrackInteractor
 ) : ViewModel() {
-    private var searchState = MutableLiveData<SearchScreenState>(SearchScreenState.Empty)
-    fun getSearchState(): LiveData<SearchScreenState> = mediatorStateLiveData
+    private var prevExpression = ""
 
     private val showPlayerTrigger = MutableLiveData<Track>()
     fun getPlayerTrigger(): LiveData<Track> = showPlayerTrigger
 
+    private var searchState = MutableLiveData<SearchScreenState>(SearchScreenState.Empty)
+    fun getSearchState(): LiveData<SearchScreenState> = mediatorStateLiveData
+
     private val mediatorStateLiveData = MediatorLiveData<SearchScreenState>().also { liveData ->
-
         liveData.addSource(searchState) { state ->
-            liveData.value = when (state) {
-                is SearchScreenState.SearchResults -> {
-                    val newTrackList =
-                        state.tracks.sortedByDescending { it.inFavorite }.toCollection(ArrayList())
-                    SearchScreenState.SearchResults(newTrackList)
-                }
-
-                else -> state
-            }
+            liveData.value = SearchScreenState.SearchResults(ArrayList())
+            liveData.value = sortTracks(state)
         }
     }
 
-    private var prevExpression = ""
+    private fun sortTracks(state: SearchScreenState): SearchScreenState {
+        when (state) {
+            is SearchScreenState.SearchResults -> {
+                val sortedTrackList =
+                    state.tracks
+                        .sortedByDescending { it.inFavorite }
+                        .toCollection(ArrayList())
+                Log.d(
+                    "DEBUG",
+                    "Пытаюсь обновить треки при изменении liveData searchState. Результат: ${sortedTrackList}"
+                )
+                return SearchScreenState.SearchResults(sortedTrackList)
+            }
+
+            else -> return state
+        }
+    }
+
+    fun sortTracksOnResume() {
+        sortTracks(searchState.value!!)
+    }
+
 
     fun startSearch(expression: String) {
         val actualSearchResults = getActualSearchResults(expression)
@@ -111,6 +127,7 @@ class SearchViewModel(
             searchState.value = SearchScreenState.History(sharedPrefsHistory)
         }
     }
+
 }
 
 

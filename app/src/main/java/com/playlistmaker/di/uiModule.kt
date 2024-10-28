@@ -4,5 +4,5 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.dsl.module
 
 val uiModule = module {
-    single<LinearLayoutManager> { LinearLayoutManager(get()) }
+    factory<LinearLayoutManager> { LinearLayoutManager(get()) }
 }

@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +26,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SearchActivity : AppCompatActivity() {
     private val vm by viewModel<SearchViewModel>()
 
-
+    val layoutManager: LinearLayoutManager by inject()
     private lateinit var binding: ActivitySearchBinding
 
     private val tracksAdapter: SearchAdapter by lazy {
@@ -58,10 +59,12 @@ class SearchActivity : AppCompatActivity() {
         }
         setOnClickListeners()
         setEditTextListeners(inputEditText)
-        val layoutManager: LinearLayoutManager by inject()
 
         binding.searchRvResults.apply {
-            this.layoutManager = layoutManager
+
+            if (layoutManager == null) {
+                layoutManager = this@SearchActivity.layoutManager
+            }
             adapter = tracksAdapter
         }
     }
@@ -272,6 +275,11 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        vm.sortTracksOnResume()
+        Log.d("DEBUG", "Вызываю сортировку в методе OnResume в SearchActivity")
+    }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SEARCH_INPUT, searchInput)
