@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_ll_screen"
+    style="@style/ParentVerticalLayoutStyle"
+    tools:context="com.playlistmaker.ui.search.SearchActivity"
+    tools:ignore="MissingConstraints">
+
+
+    <LinearLayout
+        android:id="@+id/ll_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/library_error_vert_margin_104"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/iv_placeholder_image"
+            android:layout_width="@dimen/placeholder_img_120"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/your_library_is_empty"
+            android:src="@drawable/ic_nothing_found" />
+
+        <TextView
+            android:id="@+id/tv_placeholder_message"
+            style="@style/PlaceholderMessageTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/search_error_hor_margin_24"
+            android:layout_marginTop="@dimen/standart_padding_16"
+            android:lines="2"
+            android:text="@string/your_library_is_empty" />
+
+
+    </LinearLayout>
+</LinearLayout>

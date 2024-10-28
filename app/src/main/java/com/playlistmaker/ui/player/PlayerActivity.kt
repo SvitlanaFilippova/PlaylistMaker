@@ -24,7 +24,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
     private val gson: Gson by inject()
-    val track: Track by lazy { gson.fromJson(intent.getStringExtra("track"), Track::class.java) }
+    val track: Track by lazy { gson.fromJson(intent.getStringExtra(TRACK), Track::class.java) }
     private val vm by viewModel<PlayerViewModel> { parametersOf(track) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,7 +85,7 @@ class PlayerActivity : AppCompatActivity() {
             vm.checkIfFavorite(track)
         }
         } catch (e: RuntimeException) {
-            Log.e("DEBUG", "Ошибка при попытке загрузить данные трека: ${track.toString()}")
+            Log.e("DEBUG", "Ошибка при попытке загрузить данные трека: $track")
         }
     }
 

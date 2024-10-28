@@ -10,8 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
-        app:layout_constraintStart_toEndOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/button_play">
+        app:layout_constraintStart_toEndOf="@id/leftBorder">
 
 
         <androidx.constraintlayout.widget.Guideline

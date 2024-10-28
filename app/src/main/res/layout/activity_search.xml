@@ -37,6 +37,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/small_margin_8"
                 android:src="@drawable/ic_search"
+                android:contentDescription="@string/search_field"
                 app:tint="@color/search_field_hint" />
 
             <EditText
@@ -45,6 +46,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
+                android:autofillHints=""
                 android:background="@null"
                 android:hint="@string/search"
                 android:imeOptions="actionDone"
@@ -65,6 +67,7 @@
                 android:layout_margin="@dimen/small_margin_8"
                 android:src="@drawable/ic_cross_clear_search"
                 android:visibility="gone"
+                android:contentDescription="@string/clear_input"
                 app:tint="@color/search_field_hint" />
         </LinearLayout>
 
@@ -79,7 +82,7 @@
 
         <TextView
             android:id="@+id/search_tv_search_history"
-            style="@style/SearchMessageTextStyle"
+            style="@style/PlaceholderMessageTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -100,7 +103,7 @@
 
         <Button
             android:id="@+id/search_bv_clear_history"
-            style="@style/SearchButtonStyle"
+            style="@style/PlaceholderButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/small_margin_8"
@@ -128,7 +131,7 @@
 
         <ImageView
             android:id="@+id/search_iv_placeholder_image"
-            android:layout_width="120dp"
+            android:layout_width="@dimen/placeholder_img_120"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_nothing_found"
             android:visibility="gone"
@@ -136,7 +139,7 @@
 
         <TextView
             android:id="@+id/search_tv_placeholder_message"
-            style="@style/SearchMessageTextStyle"
+            style="@style/PlaceholderMessageTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/search_error_hor_margin_24"
@@ -148,7 +151,7 @@
 
         <TextView
             android:id="@+id/search_tv_placeholder_extra_message"
-            style="@style/SearchMessageTextStyle"
+            style="@style/PlaceholderMessageTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/search_error_hor_margin_24"
@@ -157,7 +160,7 @@
 
         <Button
             android:id="@+id/search_bv_placeholder_button"
-            style="@style/SearchButtonStyle"
+            style="@style/PlaceholderButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/search_error_hor_margin_24"

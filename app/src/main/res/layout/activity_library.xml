@@ -5,15 +5,43 @@
     android:id="@+id/library_ll_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.playlistmaker.ui.library.LibraryActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/library_toolbar"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/head_toolbar_layout_height_56"
         app:navigationIcon="@drawable/ic_arrow_back_light_mode"
         app:navigationIconTint="?attr/colorOnPrimary"
         app:title="@string/library"
         app:titleTextAppearance="@style/HeadToolbarTextStyle" />
+
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/standart_padding_16"
+        android:background="@android:color/transparent"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="?attr/colorOnPrimary"
+        app:tabIndicatorFullWidth="true"
+        app:tabIndicatorHeight="@dimen/tab_indicator_2"
+        app:tabMode="fixed"
+        app:tabRippleColor="@android:color/transparent"
+        app:tabSelectedTextColor="?attr/colorOnPrimary"
+        app:tabTextColor="?attr/colorOnPrimary" />
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
