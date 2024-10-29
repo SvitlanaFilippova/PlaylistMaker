@@ -32,6 +32,14 @@
     <string name="back">Назад</string>
     <string name="album_cover">Обложка альбома</string>
     <string name="error">Произошла ошибка</string>
+    <string name="no_demo_for_this_track">Для этого трека нет демо</string>
+    <string name="favorites">Избранные треки"</string>
+    <string name="playlists">Плейлисты"</string>
+    <string name="your_library_is_empty">Ваша медиатека пуста</string>
+    <string name="create_playlist">Новый плейлист</string>
+    <string name="there_are_no_playlists">Вы не создали\nни одного плейлиста</string>
+    <string name="clear_input">Очистить введённые данные</string>
+    <string name="search_field">Поиск</string>
 
 
 </resources>

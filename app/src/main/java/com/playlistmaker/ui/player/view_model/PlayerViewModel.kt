@@ -7,17 +7,26 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.playlistmaker.domain.Track
 import com.playlistmaker.domain.player.PlayerInteractor
-
 import java.util.Locale
 
 class PlayerViewModel(
-    private val trackPreviewUrl: String,
+    private var track: Track,
     private val playerInteractor: PlayerInteractor
 ) : ViewModel() {
 
     private var playerStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default)
-    fun getPlayerStateLiveData(): LiveData<PlayerState> = playerStateLiveData
+    fun getPlayerStateLiveData(): LiveData<PlayerState> {
+        return playerStateLiveData
+    }
+
+    private var isFavoriteLiveData = MutableLiveData<Boolean>()
+    fun getIsFavoriteLiveData(): LiveData<Boolean> {
+        return isFavoriteLiveData
+    }
+
+
     private val mainThreadHandler: Handler by lazy { Handler(Looper.getMainLooper()) }
 
     init {
@@ -27,7 +36,9 @@ class PlayerViewModel(
     }
 
     private fun preparePlayer() {
-        playerInteractor.prepare(trackPreviewUrl)
+        if (track.previewUrl.isNotEmpty())
+            playerInteractor.prepare(track.previewUrl)
+        else playerStateLiveData.value = PlayerState.Error
     }
 
     private fun setOnPreparedListener() {
@@ -59,9 +70,14 @@ class PlayerViewModel(
 
 
     fun startPlayer() {
-        playerInteractor.start()
-        playerStateLiveData.value = PlayerState.Playing(currentPositionToString())
-        startRefreshingProgress()
+
+        if (track.previewUrl.isEmpty())
+            playerStateLiveData.value = PlayerState.Error
+        else {
+            playerInteractor.start()
+            playerStateLiveData.value = PlayerState.Playing(currentPositionToString())
+            startRefreshingProgress()
+        }
     }
 
 
@@ -108,6 +124,25 @@ class PlayerViewModel(
         mainThreadHandler.removeCallbacks(refreshProgressRunnable)
     }
 
+
+    fun toggleFavorite() {
+        if (track.inFavorite) {
+            playerInteractor.removeFromFavorites(track)
+
+        } else {
+            playerInteractor.addToFavorites(track)
+        }
+        isFavoriteLiveData.value = !track.inFavorite
+        val newTrack = track.copy(inFavorite = !track.inFavorite)
+        this.track = newTrack
+
+    }
+
+    fun checkIfFavorite(track: Track) {
+        isFavoriteLiveData.value = playerInteractor.checkIfTrackIsFavorite(track)
+    }
+
+
     override fun onCleared() {
         playerInteractor.release()
         stopRefreshingProgress()
@@ -122,6 +157,7 @@ class PlayerViewModel(
 sealed interface PlayerState {
     data object Default : PlayerState
     data object Prepared : PlayerState
+    data object Error : PlayerState
     data class Paused(var trackProgressData: String) : PlayerState
     data class Playing(var trackProgressData: String) : PlayerState
 }

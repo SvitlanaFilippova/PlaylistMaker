@@ -3,6 +3,8 @@ package com.playlistmaker.ui.player
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -22,8 +24,8 @@ class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
     private val gson: Gson by inject()
-    val track: Track by lazy { gson.fromJson(intent.getStringExtra("track"), Track::class.java) }
-    private val vm by viewModel<PlayerViewModel> { parametersOf(track.previewUrl) }
+    val track: Track by lazy { gson.fromJson(intent.getStringExtra(TRACK), Track::class.java) }
+    private val viewModel by viewModel<PlayerViewModel> { parametersOf(track) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,8 +33,12 @@ class PlayerActivity : AppCompatActivity() {
         setContentView(binding.root)
         updateTrackData()
 
-        vm.getPlayerStateLiveData().observe(this) { playerState ->
+        viewModel.getPlayerStateLiveData().observe(this) { playerState ->
             playbackControl(playerState)
+        }
+
+        viewModel.getIsFavoriteLiveData().observe(this) { isFavorite ->
+            toggleFavorite(isFavorite)
         }
 
         binding.ibArrowBack.setOnClickListener {
@@ -42,15 +48,20 @@ class PlayerActivity : AppCompatActivity() {
         binding.buttonPlay.setOnClickListener {
             togglePlaying()
         }
+
+        binding.ibAddToFavorite.setOnClickListener {
+            viewModel.toggleFavorite()
+        }
     }
 
     private fun updateTrackData() {
+        try {
         binding.apply {
             tvTrackProgress.text = getString(R.string.default_track_progress)
             tvTrackName.text = track.trackName
             tvArtistName.text = track.artistName
             tvDurationTrack.text = track.trackTime
-            tvYearTrack.text = track.releaseDate.slice(0..3)
+            tvYearTrack.text = track.releaseDate
             tvGenreTrack.text = track.primaryGenreName
             tvCountryTrack.text = track.country
 
@@ -71,6 +82,10 @@ class PlayerActivity : AppCompatActivity() {
                 tvCollectionTrack.isVisible = false
                 tvCollectionTitle.isVisible = false
             }
+            viewModel.checkIfFavorite(track)
+        }
+        } catch (e: RuntimeException) {
+            Log.e("DEBUG", "Ошибка при попытке загрузить данные трека: $track")
         }
     }
 
@@ -88,17 +103,25 @@ class PlayerActivity : AppCompatActivity() {
                     buttonPlay.isEnabled = false
                 }
 
+                PlayerState.Error -> {
+                    Toast.makeText(
+                        this@PlayerActivity,
+                        R.string.no_demo_for_this_track,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
                 is PlayerState.Paused -> {
                     buttonPlay.setImageResource(R.drawable.ic_play)
                     val trackProgress =
-                        (vm.getPlayerStateLiveData().value as PlayerState.Paused).trackProgressData
+                        (viewModel.getPlayerStateLiveData().value as PlayerState.Paused).trackProgressData
                     updateTrackProgress(trackProgress)
                 }
 
                 is PlayerState.Playing -> {
                     buttonPlay.setImageResource(R.drawable.ic_pause)
                     val trackProgress =
-                        (vm.getPlayerStateLiveData().value as PlayerState.Playing).trackProgressData
+                        (viewModel.getPlayerStateLiveData().value as PlayerState.Playing).trackProgressData
                     updateTrackProgress(trackProgress)
                 }
             }
@@ -110,21 +133,28 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun togglePlaying() {
-        val playerState = vm.getPlayerStateLiveData().value
+        val playerState = viewModel.getPlayerStateLiveData().value
         when (playerState) {
             is PlayerState.Playing -> {
-                vm.pausePlayer()
+                viewModel.pausePlayer()
             }
 
             else -> {
-                vm.startPlayer()
+                viewModel.startPlayer()
             }
         }
     }
 
+    private fun toggleFavorite(isFavorite: Boolean) {
+        if (isFavorite)
+            binding.ibAddToFavorite.setImageResource(R.drawable.ic_favorite_active)
+        else
+            binding.ibAddToFavorite.setImageResource(R.drawable.ic_favorite_inactive)
+    }
+
     override fun onPause() {
         super.onPause()
-        vm.pausePlayer()
+        viewModel.pausePlayer()
 
     }
 

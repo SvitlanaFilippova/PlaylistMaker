@@ -35,6 +35,11 @@
     <dimen name="player_cover_radius_8">8dp</dimen>
     <dimen name="search_progress_vert_margin_140">140dp</dimen>
     <dimen name="search_progress_size_44">44dp</dimen>
+    <dimen name="library_error_vert_margin_104">104dp</dimen>
+    <dimen name="create_playlist_button_radius_56">56dp</dimen>
+    <dimen name="tab_indicator_2">2dp</dimen>
+    <dimen name="placeholder_img_120">120dp</dimen>
+    <dimen name="placeholder_margin_48">48dp</dimen>
 
 
 </resources>

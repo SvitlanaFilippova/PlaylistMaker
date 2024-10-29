@@ -13,13 +13,14 @@ class SearchViewModel(
     private val historyInteractor: HistoryInteractor,
     private val tracksInteractor: TrackInteractor
 ) : ViewModel() {
-    private var searchState = MutableLiveData<SearchScreenState>(SearchScreenState.Empty)
-    fun getSearchState(): LiveData<SearchScreenState> = searchState
+    private var prevExpression = ""
 
     private val showPlayerTrigger = MutableLiveData<Track>()
     fun getPlayerTrigger(): LiveData<Track> = showPlayerTrigger
 
-    private var prevExpression = ""
+    private var searchState = MutableLiveData<SearchScreenState>(SearchScreenState.Empty)
+    fun getSearchState(): LiveData<SearchScreenState> = searchState
+
 
     fun startSearch(expression: String) {
         val actualSearchResults = getActualSearchResults(expression)
@@ -95,6 +96,7 @@ class SearchViewModel(
             searchState.value = SearchScreenState.History(sharedPrefsHistory)
         }
     }
+
 }
 
 

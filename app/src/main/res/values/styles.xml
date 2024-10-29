@@ -49,7 +49,7 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="SearchMessageTextStyle">
+    <style name="PlaceholderMessageTextStyle">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/search_error_text_size_19</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
@@ -58,7 +58,7 @@
 
     </style>
 
-    <style name="SearchButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+    <style name="PlaceholderButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:textAllCaps">false</item>
         <item name="android:backgroundTint">@color/black</item>
         <item name="android:textColor">@color/white</item>
@@ -93,6 +93,5 @@
     <style name="PlayerLeftSmallTextStyle" parent="PlayerSmallTextStyle">
         <item name="android:textColor">@color/grey</item>
     </style>
-
 
 </resources>
