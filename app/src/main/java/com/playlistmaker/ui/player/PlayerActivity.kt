@@ -25,7 +25,7 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlayerBinding
     private val gson: Gson by inject()
     val track: Track by lazy { gson.fromJson(intent.getStringExtra(TRACK), Track::class.java) }
-    private val vm by viewModel<PlayerViewModel> { parametersOf(track) }
+    private val viewModel by viewModel<PlayerViewModel> { parametersOf(track) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,11 +33,11 @@ class PlayerActivity : AppCompatActivity() {
         setContentView(binding.root)
         updateTrackData()
 
-        vm.getPlayerStateLiveData().observe(this) { playerState ->
+        viewModel.getPlayerStateLiveData().observe(this) { playerState ->
             playbackControl(playerState)
         }
 
-        vm.getIsFavoriteLiveData().observe(this) { isFavorite ->
+        viewModel.getIsFavoriteLiveData().observe(this) { isFavorite ->
             toggleFavorite(isFavorite)
         }
 
@@ -50,7 +50,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         binding.ibAddToFavorite.setOnClickListener {
-            vm.toggleFavorite()
+            viewModel.toggleFavorite()
         }
     }
 
@@ -82,7 +82,7 @@ class PlayerActivity : AppCompatActivity() {
                 tvCollectionTrack.isVisible = false
                 tvCollectionTitle.isVisible = false
             }
-            vm.checkIfFavorite(track)
+            viewModel.checkIfFavorite(track)
         }
         } catch (e: RuntimeException) {
             Log.e("DEBUG", "Ошибка при попытке загрузить данные трека: $track")
@@ -114,14 +114,14 @@ class PlayerActivity : AppCompatActivity() {
                 is PlayerState.Paused -> {
                     buttonPlay.setImageResource(R.drawable.ic_play)
                     val trackProgress =
-                        (vm.getPlayerStateLiveData().value as PlayerState.Paused).trackProgressData
+                        (viewModel.getPlayerStateLiveData().value as PlayerState.Paused).trackProgressData
                     updateTrackProgress(trackProgress)
                 }
 
                 is PlayerState.Playing -> {
                     buttonPlay.setImageResource(R.drawable.ic_pause)
                     val trackProgress =
-                        (vm.getPlayerStateLiveData().value as PlayerState.Playing).trackProgressData
+                        (viewModel.getPlayerStateLiveData().value as PlayerState.Playing).trackProgressData
                     updateTrackProgress(trackProgress)
                 }
             }
@@ -133,14 +133,14 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun togglePlaying() {
-        val playerState = vm.getPlayerStateLiveData().value
+        val playerState = viewModel.getPlayerStateLiveData().value
         when (playerState) {
             is PlayerState.Playing -> {
-                vm.pausePlayer()
+                viewModel.pausePlayer()
             }
 
             else -> {
-                vm.startPlayer()
+                viewModel.startPlayer()
             }
         }
     }
@@ -154,7 +154,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        vm.pausePlayer()
+        viewModel.pausePlayer()
 
     }
 

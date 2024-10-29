@@ -17,10 +17,14 @@ class PlayerViewModel(
 ) : ViewModel() {
 
     private var playerStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default)
-    fun getPlayerStateLiveData(): LiveData<PlayerState> = playerStateLiveData
+    fun getPlayerStateLiveData(): LiveData<PlayerState> {
+        return playerStateLiveData
+    }
 
     private var isFavoriteLiveData = MutableLiveData<Boolean>()
-    fun getIsFavoriteLiveData(): LiveData<Boolean> = isFavoriteLiveData
+    fun getIsFavoriteLiveData(): LiveData<Boolean> {
+        return isFavoriteLiveData
+    }
 
 
     private val mainThreadHandler: Handler by lazy { Handler(Looper.getMainLooper()) }

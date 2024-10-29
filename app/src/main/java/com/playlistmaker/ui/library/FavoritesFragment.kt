@@ -12,7 +12,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class FavoritesFragment() : Fragment() {
 
     private lateinit var binding: FragmentFavoritesBinding
-    private val vm by viewModel<FavoritesViewModel>()
+    private val viewModel by viewModel<FavoritesViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

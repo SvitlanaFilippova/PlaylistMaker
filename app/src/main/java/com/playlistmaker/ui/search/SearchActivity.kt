@@ -23,17 +23,17 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SearchActivity : AppCompatActivity() {
-    private val vm by viewModel<SearchViewModel>()
+    private val viewModel by viewModel<SearchViewModel>()
 
     val layoutManager: LinearLayoutManager by inject()
     private lateinit var binding: ActivitySearchBinding
 
     private val tracksAdapter: SearchAdapter by lazy {
-        SearchAdapter(vm::onTrackClick)
+        SearchAdapter(viewModel::onTrackClick)
     }
     private val mainThreadHandler: Handler by lazy { Handler(Looper.getMainLooper()) }
     private val searchRunnable: Runnable by lazy {
-        Runnable { vm.startSearch(binding.etInputSearch.text.toString()) }
+        Runnable { viewModel.startSearch(binding.etInputSearch.text.toString()) }
     }
     private var searchInput: String = INPUT_DEF
 
@@ -42,13 +42,13 @@ class SearchActivity : AppCompatActivity() {
 
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        vm.getSearchState().observe(this@SearchActivity)
+        viewModel.getSearchState().observe(this@SearchActivity)
         { state ->
             renderSearchScreen(state)
             hideProgressBar(state)
         }
 
-        vm.getPlayerTrigger().observe(this) { track: Track ->
+        viewModel.getPlayerTrigger().observe(this) { track: Track ->
             showPlayer(track)
         }
 
@@ -81,14 +81,14 @@ class SearchActivity : AppCompatActivity() {
                 } else searchDebounce()
 
                 if (inputEditText.hasFocus() && s?.isEmpty() == true) {
-                    vm.setStateHistory()
+                    viewModel.setStateHistory()
                 } else hideHistory()
             }
 
             override fun afterTextChanged(s: Editable?) {
                 searchInput = s.toString()
                 if (inputEditText.hasFocus() && s?.isEmpty() == true) {
-                    vm.setStateHistory()
+                    viewModel.setStateHistory()
                 } else hideHistory()
             }
         }
@@ -103,7 +103,7 @@ class SearchActivity : AppCompatActivity() {
         binding.etInputSearch.setText(INPUT_DEF)
         binding.etInputSearch.hideKeyBoard()
         mainThreadHandler.removeCallbacks(searchRunnable)
-        vm.setStateHistory()
+        viewModel.setStateHistory()
     }
 
     private fun placeholderManager(status: PlaceholderStatus) {
@@ -247,21 +247,21 @@ class SearchActivity : AppCompatActivity() {
                 finish()
             }
             searchBvClearHistory.setOnClickListener {
-                vm.clearHistory()
+                viewModel.clearHistory()
             }
         }
     }
 
     private fun setEditTextListeners(editText: EditText) {
         binding.searchBvPlaceholderButton.setOnClickListener {
-            vm.startSearch(editText.text.toString())
+            viewModel.startSearch(editText.text.toString())
         }
         editText.addTextChangedListener(getTextWatcher())
         editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (editText.text.isNotEmpty()) {
                     mainThreadHandler.removeCallbacks(searchRunnable)
-                    vm.startSearch(editText.text.toString())
+                    viewModel.startSearch(editText.text.toString())
                 }
             }
             false
@@ -269,7 +269,7 @@ class SearchActivity : AppCompatActivity() {
 
         editText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && editText.text.isEmpty()) {
-                vm.setStateHistory()
+                viewModel.setStateHistory()
             } else hideHistory()
         }
     }
