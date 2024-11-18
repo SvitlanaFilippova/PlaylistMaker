@@ -6,13 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.playlistmaker.ui.library.LibraryActivity">
+    tools:context="com.playlistmaker.ui.library.LibraryFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/head_toolbar_layout_height_56"
-        app:navigationIcon="@drawable/ic_arrow_back_light_mode"
         app:navigationIconTint="?attr/colorOnPrimary"
         app:title="@string/library"
         app:titleTextAppearance="@style/HeadToolbarTextStyle" />

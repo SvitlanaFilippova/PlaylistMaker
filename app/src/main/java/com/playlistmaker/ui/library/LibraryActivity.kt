@@ -1,25 +1,33 @@
 package com.playlistmaker.ui.library
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.ActivityLibraryBinding
+import com.practicum.playlistmaker.databinding.FragmentLibraryBinding
 
-class LibraryActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityLibraryBinding
+class LibraryFragment : Fragment() {
+    private lateinit var binding: FragmentLibraryBinding
     private lateinit var tabMediator: TabLayoutMediator
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityLibraryBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentLibraryBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        binding.toolbar.setNavigationOnClickListener() {
-            finish()
-        }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         binding.viewPager.adapter =
-            LibraryViewPagerAdapter(supportFragmentManager, lifecycle)
+            LibraryViewPagerAdapter(childFragmentManager, lifecycle)
 
         tabMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             when (position) {
@@ -28,7 +36,6 @@ class LibraryActivity : AppCompatActivity() {
             }
         }
         tabMediator.attach()
-
     }
 
     override fun onDestroy() {

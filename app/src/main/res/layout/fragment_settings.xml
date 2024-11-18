@@ -5,14 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_settings_screen"
     style="@style/ParentVerticalLayoutStyle"
-    tools:context="com.playlistmaker.ui.settings.SettingsActivity"
+    tools:context="com.playlistmaker.ui.settings.SettingsFragment"
     tools:ignore="MissingConstraints">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/settings_toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/head_toolbar_layout_height_56"
-        app:navigationIcon="@drawable/ic_arrow_back_light_mode"
         app:navigationIconTint="?attr/colorOnPrimary"
         app:title="@string/settings"
         app:titleTextAppearance="@style/HeadToolbarTextStyle" />

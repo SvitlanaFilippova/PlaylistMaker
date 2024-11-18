@@ -29,7 +29,8 @@
             android:name="com.playlistmaker.ui.player.PlayerActivity"
             android:exported="false" />
         <activity
-            android:name="com.playlistmaker.ui.main.MainActivity"
+            android:name="com.playlistmaker.ui.RootActivity"
+            android:windowSoftInputMode="adjustNothing"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
