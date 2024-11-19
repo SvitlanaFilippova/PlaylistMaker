@@ -60,4 +60,12 @@
         <item name="android:textSize">@dimen/search_error_button_text_size_14</item>
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
+
+    <style name="BottomNavigationViewStyle" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="elevation">0dp</item>
+        <item name="android:background">@color/black</item>
+        <item name="itemIconTint">@color/bottom_nav_colors</item>
+        <item name="itemTextColor">@color/bottom_nav_colors</item>
+    </style>
+
 </resources>
