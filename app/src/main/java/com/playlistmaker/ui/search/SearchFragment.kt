@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.playlistmaker.domain.Track
 import com.playlistmaker.ui.player.PlayerActivity
@@ -36,6 +38,16 @@ class SearchFragment : Fragment() {
         Runnable { viewModel.startSearch(binding.etInputSearch.text.toString()) }
     }
     private var searchInput: String = INPUT_DEF
+
+
+    override fun onPause() {
+        super.onPause()
+        val navController = findNavController()
+        if (navController.currentBackStackEntry?.savedStateHandle?.contains("navigate_to_player") == true) {
+            navController.currentBackStackEntry?.savedStateHandle?.remove<Boolean>("navigate_to_player")
+            Log.d("DEBUG", "Сбросила флаг перехода в onPause")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -239,7 +251,11 @@ class SearchFragment : Fragment() {
     }
 
     private fun showPlayer(track: Track) {
-        PlayerActivity.show(requireContext(), track)
+        findNavController().currentBackStackEntry?.savedStateHandle?.set("navigate_to_player", true)
+        findNavController().navigate(
+            R.id.action_searchFragment_to_playerActivity,
+            PlayerActivity.createArgs(track)
+        )
     }
 
     private fun setOnClickListeners() {
