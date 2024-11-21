@@ -164,11 +164,6 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.pausePlayer()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("DEBUG", "Завершаю работу PlayerActivity - метод onDestroy")
-    }
-
     companion object {
         const val TRACK = "track"
         private val gson: Gson = getKoin().get()

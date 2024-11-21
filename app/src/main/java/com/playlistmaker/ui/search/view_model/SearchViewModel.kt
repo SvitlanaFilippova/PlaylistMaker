@@ -15,8 +15,8 @@ class SearchViewModel(
 ) : ViewModel() {
     private var prevExpression = ""
 
-    private val showPlayerTrigger = MutableLiveData<Track>()
-    fun getPlayerTrigger(): LiveData<Track> = showPlayerTrigger
+    private val showPlayerTrigger = MutableLiveData<Track?>()
+    fun getPlayerTrigger(): LiveData<Track?> = showPlayerTrigger
 
     private var searchState = MutableLiveData<SearchScreenState>(SearchScreenState.Empty)
     fun getSearchState(): LiveData<SearchScreenState> = searchState
@@ -75,7 +75,9 @@ class SearchViewModel(
     private fun showProductDetails(track: Track) {
         showPlayerTrigger.value = track
     }
-
+    fun clearTrackTrigger() {
+        showPlayerTrigger.value = null
+    }
     fun clearHistory() {
         historyInteractor.clear()
         searchState.value = SearchScreenState.Empty

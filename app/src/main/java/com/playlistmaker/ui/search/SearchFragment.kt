@@ -6,7 +6,6 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,15 +39,6 @@ class SearchFragment : Fragment() {
     private var searchInput: String = INPUT_DEF
 
 
-    override fun onPause() {
-        super.onPause()
-        val navController = findNavController()
-        if (navController.currentBackStackEntry?.savedStateHandle?.contains("navigate_to_player") == true) {
-            navController.currentBackStackEntry?.savedStateHandle?.remove<Boolean>("navigate_to_player")
-            Log.d("DEBUG", "Сбросила флаг перехода в onPause")
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -71,8 +61,11 @@ class SearchFragment : Fragment() {
             renderSearchScreen(state)
             hideProgressBar(state)
         }
-        viewModel.getPlayerTrigger().observe(viewLifecycleOwner) { track: Track ->
-            showPlayer(track)
+        viewModel.getPlayerTrigger().observe(viewLifecycleOwner) { track: Track? ->
+            if (track != null) {
+                showPlayer(track)
+                viewModel.clearTrackTrigger()
+            }
         }
         val inputEditText = binding.etInputSearch
         if (searchInput.isNotEmpty()) {
@@ -251,7 +244,6 @@ class SearchFragment : Fragment() {
     }
 
     private fun showPlayer(track: Track) {
-        findNavController().currentBackStackEntry?.savedStateHandle?.set("navigate_to_player", true)
         findNavController().navigate(
             R.id.action_searchFragment_to_playerActivity,
             PlayerActivity.createArgs(track)
