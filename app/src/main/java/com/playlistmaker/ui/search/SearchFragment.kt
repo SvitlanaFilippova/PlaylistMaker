@@ -6,10 +6,14 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.playlistmaker.domain.Track
 import com.playlistmaker.ui.player.PlayerActivity
@@ -17,16 +21,13 @@ import com.playlistmaker.ui.search.view_model.SearchScreenState
 import com.playlistmaker.ui.search.view_model.SearchViewModel
 import com.playlistmaker.util.hideKeyBoard
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.ActivitySearchBinding
-import org.koin.android.ext.android.inject
+import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
     private val viewModel by viewModel<SearchViewModel>()
-
-    val layoutManager: LinearLayoutManager by inject()
-    private lateinit var binding: ActivitySearchBinding
+    private lateinit var binding: FragmentSearchBinding
 
     private val tracksAdapter: SearchAdapter by lazy {
         SearchAdapter(viewModel::onTrackClick)
@@ -37,21 +38,35 @@ class SearchActivity : AppCompatActivity() {
     }
     private var searchInput: String = INPUT_DEF
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        viewModel.getSearchState().observe(this@SearchActivity)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+
+        binding.searchRvResults.apply {
+            layoutManager =
+                LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+            adapter = tracksAdapter
+        }
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.getSearchState().observe(viewLifecycleOwner)
         { state ->
             renderSearchScreen(state)
             hideProgressBar(state)
         }
-
-        viewModel.getPlayerTrigger().observe(this) { track: Track ->
-            showPlayer(track)
+        viewModel.getPlayerTrigger().observe(viewLifecycleOwner) { track: Track? ->
+            if (track != null) {
+                showPlayer(track)
+                viewModel.clearTrackTrigger()
+            }
         }
-
         val inputEditText = binding.etInputSearch
         if (searchInput.isNotEmpty()) {
             inputEditText.setText(searchInput)
@@ -59,14 +74,8 @@ class SearchActivity : AppCompatActivity() {
         setOnClickListeners()
         setEditTextListeners(inputEditText)
 
-        binding.searchRvResults.apply {
-
-            if (layoutManager == null) {
-                layoutManager = this@SearchActivity.layoutManager
-            }
-            adapter = tracksAdapter
-        }
     }
+
 
     private fun getTextWatcher(): TextWatcher {
         return object : TextWatcher {
@@ -235,16 +244,16 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showPlayer(track: Track) {
-        PlayerActivity.show(this, track)
+        findNavController().navigate(
+            R.id.action_searchFragment_to_playerActivity,
+            PlayerActivity.createArgs(track)
+        )
     }
 
     private fun setOnClickListeners() {
         binding.apply {
             searchIvClearIcon.setOnClickListener {
                 cleanInput()
-            }
-            searchToolbar.setNavigationOnClickListener {
-                finish()
             }
             searchBvClearHistory.setOnClickListener {
                 viewModel.clearHistory()
@@ -279,10 +288,6 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(SEARCH_INPUT, searchInput)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        searchInput = savedInstanceState.getString(SEARCH_INPUT, searchInput)
-    }
 
     private companion object {
         private const val SEARCH_INPUT = "SEARCH_INPUT"

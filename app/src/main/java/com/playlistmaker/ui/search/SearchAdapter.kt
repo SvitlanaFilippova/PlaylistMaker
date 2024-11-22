@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.playlistmaker.domain.Track
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.ActivitySearchTrackCardBinding
+import com.practicum.playlistmaker.databinding.ListSearchTrackCardBinding
 
 
 class SearchAdapter(private val onTrackClick: (track: Track) -> Unit) :
@@ -22,7 +22,7 @@ class SearchAdapter(private val onTrackClick: (track: Track) -> Unit) :
 
 
     class SearchResultsHolder(private val parentView: View) : RecyclerView.ViewHolder(parentView) {
-        private val binding = ActivitySearchTrackCardBinding.bind(parentView)
+        private val binding = ListSearchTrackCardBinding.bind(parentView)
 
         fun bind(track: Track) = with(binding) {
             val cornerRadius =
@@ -49,7 +49,7 @@ class SearchAdapter(private val onTrackClick: (track: Track) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultsHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.activity_search_track_card, parent, false)
+            .inflate(R.layout.list_search_track_card, parent, false)
         return SearchResultsHolder(view)
     }
 

@@ -4,14 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/settings_ll_screen"
     style="@style/ParentVerticalLayoutStyle"
-    tools:context="com.playlistmaker.ui.search.SearchActivity"
+    tools:context="com.playlistmaker.ui.search.SearchFragment"
     tools:ignore="MissingConstraints">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/search_toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/head_toolbar_layout_height_56"
-        app:navigationIcon="@drawable/ic_arrow_back_light_mode"
         app:navigationIconTint="?attr/colorOnPrimary"
         app:title="@string/search"
         app:titleTextAppearance="@style/HeadToolbarTextStyle" />
@@ -98,7 +97,7 @@
             android:layout_marginTop="@dimen/standart_padding_16"
             android:layout_weight="1"
             tools:itemCount="5"
-            tools:listitem="@layout/activity_search_track_card"
+            tools:listitem="@layout/list_search_track_card"
             android:visibility="gone" />
 
         <Button

@@ -40,6 +40,7 @@
     <dimen name="tab_indicator_2">2dp</dimen>
     <dimen name="placeholder_img_120">120dp</dimen>
     <dimen name="placeholder_margin_48">48dp</dimen>
+    <dimen name="small_text_size_12">12sp</dimen>
 
 
 </resources>

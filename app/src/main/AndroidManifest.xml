@@ -16,20 +16,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PlaylistMaker"
         tools:targetApi="31">
-        <activity
-            android:name="com.playlistmaker.ui.search.SearchActivity"
-            android:exported="false" />
-        <activity
-            android:name="com.playlistmaker.ui.library.LibraryActivity"
-            android:exported="false" />
-        <activity
-            android:name="com.playlistmaker.ui.settings.SettingsActivity"
-            android:exported="false" />
-        <activity
+
+    <activity
             android:name="com.playlistmaker.ui.player.PlayerActivity"
             android:exported="false" />
         <activity
-            android:name="com.playlistmaker.ui.main.MainActivity"
+            android:name="com.playlistmaker.ui.RootActivity"
+            android:windowSoftInputMode="adjustNothing"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,11 +1,11 @@
 package com.playlistmaker.ui.player
 
-import android.content.Context
-import android.content.Intent
+
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.bundle.bundleOf
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -24,11 +24,17 @@ class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
     private val gson: Gson by inject()
-    val track: Track by lazy { gson.fromJson(intent.getStringExtra(TRACK), Track::class.java) }
+    private lateinit var track: Track
     private val viewModel by viewModel<PlayerViewModel> { parametersOf(track) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val jsonTrack = intent.extras?.getString(TRACK)
+        if (jsonTrack != null) {
+            track = gson.fromJson(jsonTrack, Track::class.java)
+        }
+
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         updateTrackData()
@@ -43,6 +49,7 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.ibArrowBack.setOnClickListener {
             finish()
+            Log.d("DEBUG", "Завершаю работу PlayerActivity")
         }
 
         binding.buttonPlay.setOnClickListener {
@@ -56,34 +63,34 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun updateTrackData() {
         try {
-        binding.apply {
-            tvTrackProgress.text = getString(R.string.default_track_progress)
-            tvTrackName.text = track.trackName
-            tvArtistName.text = track.artistName
-            tvDurationTrack.text = track.trackTime
-            tvYearTrack.text = track.releaseDate
-            tvGenreTrack.text = track.primaryGenreName
-            tvCountryTrack.text = track.country
+            binding.apply {
+                tvTrackProgress.text = getString(R.string.default_track_progress)
+                tvTrackName.text = track.trackName
+                tvArtistName.text = track.artistName
+                tvDurationTrack.text = track.trackTime
+                tvYearTrack.text = track.releaseDate
+                tvGenreTrack.text = track.primaryGenreName
+                tvCountryTrack.text = track.country
 
-            Glide.with(applicationContext)
-                .load(track.coverArtwork)
-                .centerCrop()
-                .transform(
-                    RoundedCorners(
-                        resources.getDimensionPixelSize(R.dimen.player_cover_radius_8)
+                Glide.with(applicationContext)
+                    .load(track.coverArtwork)
+                    .centerCrop()
+                    .transform(
+                        RoundedCorners(
+                            resources.getDimensionPixelSize(R.dimen.player_cover_radius_8)
+                        )
                     )
-                )
-                .placeholder(R.drawable.ic_big_placeholder)
-                .into(binding.ivCover)
+                    .placeholder(R.drawable.ic_big_placeholder)
+                    .into(binding.ivCover)
 
-            if (track.collectionName.isNotEmpty())
-                tvCollectionTrack.text = track.collectionName
-            else {
-                tvCollectionTrack.isVisible = false
-                tvCollectionTitle.isVisible = false
+                if (track.collectionName.isNotEmpty())
+                    tvCollectionTrack.text = track.collectionName
+                else {
+                    tvCollectionTrack.isVisible = false
+                    tvCollectionTitle.isVisible = false
+                }
+                viewModel.checkIfFavorite(track)
             }
-            viewModel.checkIfFavorite(track)
-        }
         } catch (e: RuntimeException) {
             Log.e("DEBUG", "Ошибка при попытке загрузить данные трека: $track")
         }
@@ -155,20 +162,13 @@ class PlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         viewModel.pausePlayer()
-
     }
-
 
     companion object {
-        private const val TRACK = "track"
+        const val TRACK = "track"
         private val gson: Gson = getKoin().get()
-        fun show(context: Context, track: Track) {
-            val intent = Intent(
-                Intent(context, PlayerActivity::class.java)
-            ).apply {
-                putExtra(TRACK, gson.toJson(track))
-            }
-            context.startActivity(intent)
-        }
+        fun createArgs(track: Track): Bundle =
+            bundleOf(TRACK to gson.toJson(track))
     }
+
 }
