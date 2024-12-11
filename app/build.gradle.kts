@@ -42,6 +42,7 @@ android {
 dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.8.4")
     implementation("androidx.navigation:navigation-ui-ktx:2.8.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("androidx.fragment:fragment-ktx:1.8.5")
     implementation("androidx.viewpager2:viewpager2:1.1.0")
     implementation("io.insert-koin:koin-android:4.0.0")

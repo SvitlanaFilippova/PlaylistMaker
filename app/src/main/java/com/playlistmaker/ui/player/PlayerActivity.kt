@@ -22,7 +22,8 @@ import org.koin.java.KoinJavaComponent.getKoin
 
 class PlayerActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityPlayerBinding
+    private var _binding: ActivityPlayerBinding? = null
+    private val binding: ActivityPlayerBinding get() = requireNotNull(_binding) { "Binding wasn't initialized" }
     private val gson: Gson by inject()
     private lateinit var track: Track
     private val viewModel by viewModel<PlayerViewModel> { parametersOf(track) }
@@ -35,7 +36,7 @@ class PlayerActivity : AppCompatActivity() {
             track = gson.fromJson(jsonTrack, Track::class.java)
         }
 
-        binding = ActivityPlayerBinding.inflate(layoutInflater)
+        _binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         updateTrackData()
 
@@ -63,7 +64,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun updateTrackData() {
         try {
-            binding.apply {
+            with(binding) {
                 tvTrackProgress.text = getString(R.string.default_track_progress)
                 tvTrackName.text = track.trackName
                 tvArtistName.text = track.artistName
@@ -97,41 +98,26 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun playbackControl(playerState: PlayerState) {
-        binding.apply {
+        with(binding) {
+            buttonPlay.isEnabled = playerState.isPlayButtonEnabled
 
-            when (playerState) {
-                PlayerState.Prepared -> {
-                    buttonPlay.isEnabled = true
-                    buttonPlay.setImageResource(R.drawable.ic_play)
-                    updateTrackProgress(getString(R.string.default_track_progress))
-                }
-
-                PlayerState.Default -> {
-                    buttonPlay.isEnabled = false
-                }
-
-                PlayerState.Error -> {
-                    Toast.makeText(
-                        this@PlayerActivity,
-                        R.string.no_demo_for_this_track,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                is PlayerState.Paused -> {
-                    buttonPlay.setImageResource(R.drawable.ic_play)
-                    val trackProgress =
-                        (viewModel.getPlayerStateLiveData().value as PlayerState.Paused).trackProgressData
-                    updateTrackProgress(trackProgress)
-                }
-
-                is PlayerState.Playing -> {
-                    buttonPlay.setImageResource(R.drawable.ic_pause)
-                    val trackProgress =
-                        (viewModel.getPlayerStateLiveData().value as PlayerState.Playing).trackProgressData
-                    updateTrackProgress(trackProgress)
-                }
+            if (playerState is PlayerState.Error) {
+                Toast.makeText(
+                    this@PlayerActivity,
+                    R.string.no_demo_for_this_track,
+                    Toast.LENGTH_SHORT
+                ).show()
+                return
             }
+
+            updateTrackProgress(playerState.progress)
+
+            val image = when (playerState.button) {
+                PlayerState.PlayButtonAction.PLAY -> R.drawable.ic_play
+                else -> (R.drawable.ic_pause)
+            }
+            buttonPlay.setImageResource(image)
+
         }
     }
 
@@ -162,6 +148,11 @@ class PlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         viewModel.pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     companion object {
