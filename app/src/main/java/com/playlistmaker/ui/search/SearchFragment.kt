@@ -27,7 +27,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
     private val viewModel by viewModel<SearchViewModel>()
-    private lateinit var binding: FragmentSearchBinding
+    private var _binding: FragmentSearchBinding? = null
+    private val binding: FragmentSearchBinding get() = requireNotNull(_binding) { "Binding wasn't initialized" }
 
     private val tracksAdapter: SearchAdapter by lazy {
         SearchAdapter(viewModel::onTrackClick)
@@ -44,7 +45,7 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
 
         binding.searchRvResults.apply {
             layoutManager =
@@ -116,7 +117,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun placeholderManager(status: PlaceholderStatus) {
-        binding.apply {
+        with(binding) {
             when (status) {
                 PlaceholderStatus.NOTHING_FOUND -> {
                     searchLlPlaceholder.isVisible = true
@@ -163,7 +164,7 @@ class SearchFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun showHistory() {
-        binding.apply {
+        with(binding) {
             searchRvResults.isVisible = true
             searchBvClearHistory.isVisible = true
             searchTvSearchHistory.isVisible = true
@@ -172,7 +173,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun hideHistory() {
-        binding.apply {
+        with(binding) {
             searchRvResults.isVisible = false
             searchBvClearHistory.isVisible = false
             searchTvSearchHistory.isVisible = false
@@ -251,7 +252,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun setOnClickListeners() {
-        binding.apply {
+        with(binding) {
             searchIvClearIcon.setOnClickListener {
                 cleanInput()
             }
@@ -286,6 +287,11 @@ class SearchFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SEARCH_INPUT, searchInput)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 

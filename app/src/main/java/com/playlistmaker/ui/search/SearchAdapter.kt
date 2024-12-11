@@ -27,24 +27,24 @@ class SearchAdapter(private val onTrackClick: (track: Track) -> Unit) :
         fun bind(track: Track) = with(binding) {
             val cornerRadius =
                 this@SearchResultsHolder.parentView.resources.getDimensionPixelSize(R.dimen.search_image_corner_radius_2)
+            with(track) {
+                searchTvTrackName.text = trackName
+                searchTvArtistName.text = artistName
+                searchTvTrackTime.text = trackTime
 
-            searchTvTrackName.text = track.trackName
-            searchTvArtistName.text = track.artistName
-            searchTvTrackTime.text = track.trackTime
-
-            Glide.with(parentView)
-                .load(track.artworkUrl100)
-                .centerCrop()
-                .transform(
-                    RoundedCorners(
-                        cornerRadius
+                Glide.with(parentView)
+                    .load(artworkUrl100)
+                    .centerCrop()
+                    .transform(
+                        RoundedCorners(
+                            cornerRadius
+                        )
                     )
-                )
-                .placeholder(R.drawable.ic_cover_placeholder)
-                .into(searchIvCover)
-            searchTvArtistName.requestLayout()
+                    .placeholder(R.drawable.ic_cover_placeholder)
+                    .into(searchIvCover)
+                searchTvArtistName.requestLayout()
+            }
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultsHolder {
