@@ -6,29 +6,30 @@ import com.playlistmaker.data.toDomain
 import com.playlistmaker.domain.Track
 import com.playlistmaker.domain.search.TracksRepository
 import com.playlistmaker.util.Resource
-import com.playlistmaker.util.Resource.Success
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient,
     private val favoritesStorage: FavoritesStorage
 ) : TracksRepository {
 
-    override fun searchTracks(expression: String): Resource<ArrayList<Track>> {
+    override fun searchTracks(expression: String): Flow<Resource<ArrayList<Track>>> = flow {
         val response = networkClient.doRequest(TracksSearchRequest(expression))
-        return when (response.resultCode) {
+        when (response.resultCode) {
             -1 -> {
-                Resource.Error("Проверьте подключение к интернету")
+                emit(Resource.Error("Проверьте подключение к интернету"))
             }
 
             200 -> {
                 val stored = favoritesStorage.getSavedFavorites()
-                Success(ArrayList((response as TracksSearchResponse).results.map {
+                emit(Resource.Success(ArrayList((response as TracksSearchResponse).results.map {
                     it.toDomain(stored)
-                }))
+                })))
             }
 
             else -> {
-                Resource.Error("Ошибка сервера")
+                emit(Resource.Error("Ошибка сервера"))
             }
         }
     }

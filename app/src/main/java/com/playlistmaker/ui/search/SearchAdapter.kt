@@ -1,7 +1,5 @@
 package com.playlistmaker.ui.search
 
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,16 +7,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.playlistmaker.domain.Track
+
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ListSearchTrackCardBinding
 
 
-class SearchAdapter(private val onTrackClick: (track: Track) -> Unit) :
+class SearchAdapter(private val onTrackClickDebounce: (track: Track) -> Unit) :
     RecyclerView.Adapter<SearchAdapter.SearchResultsHolder>() {
     private var trackList: ArrayList<Track> = arrayListOf()
-
-    private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
 
 
     class SearchResultsHolder(private val parentView: View) : RecyclerView.ViewHolder(parentView) {
@@ -63,29 +59,14 @@ class SearchAdapter(private val onTrackClick: (track: Track) -> Unit) :
         return trackList.size
     }
 
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
-    }
-
 
     private fun onClickListener(track: Track) {
-        if (clickDebounce()) {
-            onTrackClick(track)
-
-        }
+        onTrackClickDebounce(track)
     }
+
 
     fun submitList(trackList: ArrayList<Track>) {
         this.trackList = trackList
-    }
-
-    companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
 }

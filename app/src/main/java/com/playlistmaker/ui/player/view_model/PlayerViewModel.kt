@@ -126,7 +126,7 @@ class PlayerViewModel(
 
     companion object {
         const val DEFAULT_TRACK_PROGRESS = "00:00"
-        const val PROGRESS_REFRESH_DELAY_MILLIS = 400L
+        const val PROGRESS_REFRESH_DELAY_MILLIS = 300L
     }
 }
 

@@ -50,7 +50,6 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.ibArrowBack.setOnClickListener {
             finish()
-            Log.d("DEBUG", "Завершаю работу PlayerActivity")
         }
 
         binding.buttonPlay.setOnClickListener {

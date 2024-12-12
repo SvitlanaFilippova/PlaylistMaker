@@ -2,10 +2,9 @@ package com.playlistmaker.ui.search
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.playlistmaker.domain.Track
@@ -22,6 +22,8 @@ import com.playlistmaker.ui.search.view_model.SearchViewModel
 import com.playlistmaker.util.hideKeyBoard
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -31,14 +33,16 @@ class SearchFragment : Fragment() {
     private val binding: FragmentSearchBinding get() = requireNotNull(_binding) { "Binding wasn't initialized" }
 
     private val tracksAdapter: SearchAdapter by lazy {
-        SearchAdapter(viewModel::onTrackClick)
+        SearchAdapter { track ->
+            if (clickDebounce()) {
+                viewModel.updateHistory(track)
+                showPlayer(track)
+            }
+        }
     }
-    private val mainThreadHandler: Handler by lazy { Handler(Looper.getMainLooper()) }
-    private val searchRunnable: Runnable by lazy {
-        Runnable { viewModel.startSearch(binding.etInputSearch.text.toString()) }
-    }
-    private var searchInput: String = INPUT_DEF
+    private var isClickAllowed = true
 
+    private var searchInput: String = INPUT_DEF
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,12 +50,6 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
-
-        binding.searchRvResults.apply {
-            layoutManager =
-                LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-            adapter = tracksAdapter
-        }
         return binding.root
     }
 
@@ -62,21 +60,32 @@ class SearchFragment : Fragment() {
             renderSearchScreen(state)
             hideProgressBar(state)
         }
-        viewModel.getPlayerTrigger().observe(viewLifecycleOwner) { track: Track? ->
-            if (track != null) {
-                showPlayer(track)
-                viewModel.clearTrackTrigger()
-            }
-        }
+
         val inputEditText = binding.etInputSearch
         if (searchInput.isNotEmpty()) {
             inputEditText.setText(searchInput)
         }
+        binding.searchRvResults.apply {
+            layoutManager =
+                LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+            adapter = tracksAdapter
+        }
         setOnClickListeners()
         setEditTextListeners(inputEditText)
-
     }
 
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+        }
+        return current
+    }
 
     private fun getTextWatcher(): TextWatcher {
         return object : TextWatcher {
@@ -86,9 +95,7 @@ class SearchFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.searchIvClearIcon.isVisible = !s.isNullOrEmpty()
-                if (s.isNullOrEmpty()) {
-                    mainThreadHandler.removeCallbacks(searchRunnable)
-                } else searchDebounce()
+                if (!s.isNullOrEmpty()) viewModel.searchWithDebounce(s.toString())
 
                 if (inputEditText.hasFocus() && s?.isEmpty() == true) {
                     viewModel.setStateHistory()
@@ -104,15 +111,10 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun searchDebounce() {
-        mainThreadHandler.removeCallbacks(searchRunnable)
-        mainThreadHandler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-    }
 
     private fun cleanInput() {
         binding.etInputSearch.setText(INPUT_DEF)
         binding.etInputSearch.hideKeyBoard()
-        mainThreadHandler.removeCallbacks(searchRunnable)
         viewModel.setStateHistory()
     }
 
@@ -255,26 +257,33 @@ class SearchFragment : Fragment() {
         with(binding) {
             searchIvClearIcon.setOnClickListener {
                 cleanInput()
+                viewModel.cancelSearchDebounce()
             }
             searchBvClearHistory.setOnClickListener {
                 viewModel.clearHistory()
+
+
             }
         }
     }
 
     private fun setEditTextListeners(editText: EditText) {
-        binding.searchBvPlaceholderButton.setOnClickListener {
-            viewModel.startSearch(editText.text.toString())
-        }
-        editText.addTextChangedListener(getTextWatcher())
-        editText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (editText.text.isNotEmpty()) {
-                    mainThreadHandler.removeCallbacks(searchRunnable)
-                    viewModel.startSearch(editText.text.toString())
+        editText.apply {
+            addTextChangedListener(getTextWatcher())
+            setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    if (text.isNotEmpty()) {
+                        viewModel.cancelSearchDebounce()
+                        viewModel.startSearch(text.toString())
+                    }
                 }
+                false
             }
-            false
+            binding.searchBvPlaceholderButton.setOnClickListener {
+                viewModel.cancelSearchDebounce()
+                viewModel.startSearch(text.toString())
+                Log.d("DEBUG", "Тык на кнопку Обновить в плейсхолдере")
+            }
         }
 
         editText.setOnFocusChangeListener { _, hasFocus ->
@@ -294,11 +303,10 @@ class SearchFragment : Fragment() {
         _binding = null
     }
 
-
     private companion object {
         private const val SEARCH_INPUT = "SEARCH_INPUT"
         private const val INPUT_DEF = ""
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
 
         enum class PlaceholderStatus {
             NOTHING_FOUND,
