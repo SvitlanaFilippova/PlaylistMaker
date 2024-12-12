@@ -3,10 +3,16 @@ package com.playlistmaker.ui.player
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.bundle.bundleOf
+
+
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
@@ -14,50 +20,61 @@ import com.playlistmaker.domain.Track
 import com.playlistmaker.ui.player.view_model.PlayerState
 import com.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
+import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent.getKoin
 
-class PlayerActivity : AppCompatActivity() {
 
-    private var _binding: ActivityPlayerBinding? = null
-    private val binding: ActivityPlayerBinding get() = requireNotNull(_binding) { "Binding wasn't initialized" }
+class PlayerFragment : Fragment() {
+
+    private var _binding: FragmentPlayerBinding? = null
+    private val binding: FragmentPlayerBinding get() = requireNotNull(_binding) { "Binding wasn't initialized" }
     private val gson: Gson by inject()
+    private val args by navArgs<PlayerFragmentArgs>()
+
     private lateinit var track: Track
     private val viewModel by viewModel<PlayerViewModel> { parametersOf(track) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-        val jsonTrack = intent.extras?.getString(TRACK)
-        if (jsonTrack != null) {
-            track = gson.fromJson(jsonTrack, Track::class.java)
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        return binding.root
 
-        _binding = ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val jsonTrack = args.trackJson
+        track = gson.fromJson(jsonTrack, Track::class.java)
+
         updateTrackData()
+        with(viewModel) {
+            getPlayerStateLiveData().observe(viewLifecycleOwner) { playerState ->
+                playbackControl(playerState)
+            }
 
-        viewModel.getPlayerStateLiveData().observe(this) { playerState ->
-            playbackControl(playerState)
+            getIsFavoriteLiveData().observe(viewLifecycleOwner) { isFavorite ->
+                toggleFavorite(isFavorite)
+            }
         }
 
-        viewModel.getIsFavoriteLiveData().observe(this) { isFavorite ->
-            toggleFavorite(isFavorite)
-        }
+        with(binding) {
+            ibArrowBack.setOnClickListener {
+                findNavController().navigateUp()
+            }
 
-        binding.ibArrowBack.setOnClickListener {
-            finish()
-        }
+            buttonPlay.setOnClickListener {
+                togglePlaying()
+            }
 
-        binding.buttonPlay.setOnClickListener {
-            togglePlaying()
-        }
-
-        binding.ibAddToFavorite.setOnClickListener {
-            viewModel.toggleFavorite()
+            ibAddToFavorite.setOnClickListener {
+                viewModel.toggleFavorite()
+            }
         }
     }
 
@@ -72,7 +89,7 @@ class PlayerActivity : AppCompatActivity() {
                 tvGenreTrack.text = track.primaryGenreName
                 tvCountryTrack.text = track.country
 
-                Glide.with(applicationContext)
+                Glide.with(requireContext())
                     .load(track.coverArtwork)
                     .centerCrop()
                     .transform(
@@ -81,7 +98,7 @@ class PlayerActivity : AppCompatActivity() {
                         )
                     )
                     .placeholder(R.drawable.ic_big_placeholder)
-                    .into(binding.ivCover)
+                    .into(ivCover)
 
                 if (track.collectionName.isNotEmpty())
                     tvCollectionTrack.text = track.collectionName
@@ -102,7 +119,7 @@ class PlayerActivity : AppCompatActivity() {
 
             if (playerState is PlayerState.Error) {
                 Toast.makeText(
-                    this@PlayerActivity,
+                    requireContext(),
                     R.string.no_demo_for_this_track,
                     Toast.LENGTH_SHORT
                 ).show()
@@ -149,16 +166,8 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.pausePlayer()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
-
-    companion object {
-        const val TRACK = "track"
-        private val gson: Gson = getKoin().get()
-        fun createArgs(track: Track): Bundle =
-            bundleOf(TRACK to gson.toJson(track))
-    }
-
 }

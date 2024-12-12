@@ -2,7 +2,6 @@ package com.playlistmaker.ui.player.view_model
 
 
 import android.icu.text.SimpleDateFormat
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -95,7 +94,6 @@ class PlayerViewModel(
             while (true) {
                 delay(PROGRESS_REFRESH_DELAY_MILLIS)
                 playerState.postValue(PlayerState.Playing(getCurrentPlayerPosition()))
-                Log.d("DEBUG coroutines", "Прогресс трека: ${getCurrentPlayerPosition()}")
             }
         }
     }

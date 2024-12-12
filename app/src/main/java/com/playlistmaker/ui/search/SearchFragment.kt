@@ -15,8 +15,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.playlistmaker.domain.Track
-import com.playlistmaker.ui.player.PlayerActivity
 import com.playlistmaker.ui.search.view_model.SearchScreenState
 import com.playlistmaker.ui.search.view_model.SearchViewModel
 import com.playlistmaker.util.hideKeyBoard
@@ -24,6 +24,7 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -35,6 +36,10 @@ class SearchFragment : Fragment() {
     private val tracksAdapter: SearchAdapter by lazy {
         SearchAdapter { track ->
             if (clickDebounce()) {
+                Log.d(
+                    "DEBUG",
+                    "тык на трек, пытаюсь открыть плеер. clickDebounce = ${clickDebounce()}"
+                )
                 viewModel.updateHistory(track)
                 showPlayer(track)
             }
@@ -55,6 +60,7 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        isClickAllowed = true
         viewModel.getSearchState().observe(viewLifecycleOwner)
         { state ->
             renderSearchScreen(state)
@@ -247,9 +253,10 @@ class SearchFragment : Fragment() {
     }
 
     private fun showPlayer(track: Track) {
+        val gson: Gson by inject()
+        val trackJson = gson.toJson(track)
         findNavController().navigate(
-            R.id.action_searchFragment_to_playerActivity,
-            PlayerActivity.createArgs(track)
+            SearchFragmentDirections.actionSearchFragmentToPlayerFragment(trackJson)
         )
     }
 
