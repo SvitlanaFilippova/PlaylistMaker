@@ -106,7 +106,7 @@ class PlayerFragment : Fragment() {
                     tvCollectionTrack.isVisible = false
                     tvCollectionTitle.isVisible = false
                 }
-                viewModel.checkIfFavorite(track)
+                viewModel.checkIfFavorite(track.trackId)
             }
         } catch (e: RuntimeException) {
             Log.e("DEBUG", "Ошибка при попытке загрузить данные трека: $track")

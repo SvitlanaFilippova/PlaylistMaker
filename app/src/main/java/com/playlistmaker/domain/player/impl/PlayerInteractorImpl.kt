@@ -1,6 +1,6 @@
 package com.playlistmaker.domain.player.impl
 
-import com.playlistmaker.domain.Track
+
 import com.playlistmaker.domain.player.PlayerInteractor
 import com.playlistmaker.domain.player.PlayerRepository
 
@@ -38,16 +38,6 @@ class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInt
         return repository.getCurrentPosition()
     }
 
-    override fun addToFavorites(track: Track) {
-        repository.addToFavorites(track)
-    }
 
-    override fun removeFromFavorites(track: Track) {
-        repository.removeFromFavorites(track)
-    }
-
-    override fun checkIfTrackIsFavorite(track: Track): Boolean {
-        return repository.checkIfTrackIsFavorite(track)
-    }
 }
 

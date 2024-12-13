@@ -1,7 +1,5 @@
 package com.playlistmaker.domain.player
 
-import com.playlistmaker.domain.Track
-
 interface PlayerInteractor {
     fun prepare(trackUrl: String)
     fun setOnPreparedListener(onPrepare: (Boolean) -> Unit)
@@ -13,9 +11,7 @@ interface PlayerInteractor {
     fun pause()
     fun release()
     fun getCurrentPosition(): Int
-    fun addToFavorites(track: Track)
-    fun removeFromFavorites(track: Track)
-    fun checkIfTrackIsFavorite(track: Track): Boolean
+
 }
 
 

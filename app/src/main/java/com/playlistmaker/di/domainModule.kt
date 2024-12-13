@@ -1,6 +1,8 @@
 package com.playlistmaker.di
 
+import com.playlistmaker.domain.player.FavoritesInteractor
 import com.playlistmaker.domain.player.PlayerInteractor
+import com.playlistmaker.domain.player.impl.FavoritesInteractorImpl
 import com.playlistmaker.domain.player.impl.PlayerInteractorImpl
 import com.playlistmaker.domain.search.HistoryInteractor
 import com.playlistmaker.domain.search.TrackInteractor
@@ -27,6 +29,9 @@ val domainModule = module {
         PlayerInteractorImpl(repository = get())
     }
 
+    factory<FavoritesInteractor> {
+        FavoritesInteractorImpl(repository = get())
+    }
 
 }
 

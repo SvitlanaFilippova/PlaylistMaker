@@ -7,17 +7,6 @@ import android.content.SharedPreferences
 
 class SharedPrefsStorage(context: Context) {
 
-
-    private val favoritesPrefs =
-        context.getSharedPreferences(
-            PLAYLISTMAKER_FAVORITES_PREFS,
-            MODE_PRIVATE
-        )
-
-    fun getFavoritesPrefs(): SharedPreferences {
-        return favoritesPrefs
-    }
-
     private val historyPrefs =
         context.getSharedPreferences(
             PLAYLISTMAKER_HISTORY_PREFS,
@@ -39,7 +28,6 @@ class SharedPrefsStorage(context: Context) {
 
     companion object {
         private const val PLAYLISTMAKER_HISTORY_PREFS = "playlistmaker_history_preferences"
-        private const val PLAYLISTMAKER_FAVORITES_PREFS = "playlistmaker_favorites_preferences"
         private const val PLAYLISTMAKER_THEME_PREFS = "playlistmaker_theme_preferences"
     }
 }

@@ -36,10 +36,6 @@ class SearchFragment : Fragment() {
     private val tracksAdapter: SearchAdapter by lazy {
         SearchAdapter { track ->
             if (clickDebounce()) {
-                Log.d(
-                    "DEBUG",
-                    "тык на трек, пытаюсь открыть плеер. clickDebounce = ${clickDebounce()}"
-                )
                 viewModel.updateHistory(track)
                 showPlayer(track)
             }
