@@ -2,13 +2,16 @@ package com.playlistmaker.ui.player.view_model
 
 
 import android.icu.text.SimpleDateFormat
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.playlistmaker.domain.Track
 import com.playlistmaker.domain.player.PlayerInteractor
+import com.playlistmaker.ui.player.view_model.PlayerViewModel.Companion.DEFAULT_TRACK_PROGRESS
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 class PlayerViewModel(
@@ -16,9 +19,9 @@ class PlayerViewModel(
     private val playerInteractor: PlayerInteractor
 ) : ViewModel() {
 
-    private var playerStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default)
+    private var playerState = MutableLiveData<PlayerState>(PlayerState.Default())
     fun getPlayerStateLiveData(): LiveData<PlayerState> {
-        return playerStateLiveData
+        return playerState
     }
 
     private var isFavoriteLiveData = MutableLiveData<Boolean>()
@@ -26,8 +29,8 @@ class PlayerViewModel(
         return isFavoriteLiveData
     }
 
+    private var timerJob: Job? = null
 
-    private val mainThreadHandler: Handler by lazy { Handler(Looper.getMainLooper()) }
 
     init {
         setOnPreparedListener()
@@ -38,13 +41,13 @@ class PlayerViewModel(
     private fun preparePlayer() {
         if (track.previewUrl.isNotEmpty())
             playerInteractor.prepare(track.previewUrl)
-        else playerStateLiveData.value = PlayerState.Error
+        else playerState.value = PlayerState.Error()
     }
 
     private fun setOnPreparedListener() {
         playerInteractor.setOnPreparedListener { isPrepared: Boolean ->
             if (isPrepared) {
-                playerStateLiveData.value = PlayerState.Prepared
+                playerState.value = PlayerState.Prepared()
             }
         }
     }
@@ -52,76 +55,47 @@ class PlayerViewModel(
     private fun setOnCompletionListener() {
         playerInteractor.setOnCompletionListener { isCompleted: Boolean ->
             if (isCompleted) {
-                val currentState = playerStateLiveData.value
-                if (currentState is PlayerState.Playing) {
-                    (playerStateLiveData.value as PlayerState.Playing).trackProgressData =
-                        DEFAULT_TRACK_PROGRESS
-                }
-                if (currentState is PlayerState.Paused) {
-                    (playerStateLiveData.value as PlayerState.Paused).trackProgressData =
-                        DEFAULT_TRACK_PROGRESS
-                }
-
-                playerStateLiveData.value = PlayerState.Prepared
-                stopRefreshingProgress()
+                playerState.value = PlayerState.Prepared()
+                timerJob?.cancel()
             }
         }
     }
 
 
     fun startPlayer() {
-
         if (track.previewUrl.isEmpty())
-            playerStateLiveData.value = PlayerState.Error
+            playerState.value = PlayerState.Error()
         else {
             playerInteractor.start()
-            playerStateLiveData.value = PlayerState.Playing(currentPositionToString())
-            startRefreshingProgress()
+            playerState.value = PlayerState.Playing(getCurrentPlayerPosition())
+            startTimer()
         }
     }
 
 
     fun pausePlayer() {
         playerInteractor.pause()
-        playerStateLiveData.value = PlayerState.Paused(currentPositionToString())
-        stopRefreshingProgress()
+        timerJob?.cancel()
+        playerState.value = PlayerState.Paused(getCurrentPlayerPosition())
+
     }
 
 
-    private fun currentPositionToString(): String {
+    private fun getCurrentPlayerPosition(): String {
         return SimpleDateFormat(
             "mm:ss",
             Locale.getDefault()
-        ).format(playerInteractor.getCurrentPosition())
+        ).format(playerInteractor.getCurrentPosition()) ?: "00:00"
     }
 
-    private val refreshProgressRunnable = object : Runnable {
-        override fun run() {
-            refreshTrackProgress()
-            mainThreadHandler.postDelayed(
 
-                this,
-                PROGRESS_REFRESH_DELAY_MILLIS,
-            )
+    private fun startTimer() {
+        timerJob = viewModelScope.launch {
+            while (true) {
+                delay(PROGRESS_REFRESH_DELAY_MILLIS)
+                playerState.postValue(PlayerState.Playing(getCurrentPlayerPosition()))
+            }
         }
-    }
-
-    private fun refreshTrackProgress() {
-        val currentState = playerStateLiveData.value
-        if (currentState is PlayerState.Playing) {
-            val updatedState = currentState.copy(trackProgressData = currentPositionToString())
-            playerStateLiveData.value = updatedState
-        }
-    }
-
-    private fun startRefreshingProgress() {
-        mainThreadHandler.postDelayed(
-            refreshProgressRunnable, PROGRESS_REFRESH_DELAY_MILLIS
-        )
-    }
-
-    private fun stopRefreshingProgress() {
-        mainThreadHandler.removeCallbacks(refreshProgressRunnable)
     }
 
 
@@ -145,19 +119,32 @@ class PlayerViewModel(
 
     override fun onCleared() {
         playerInteractor.release()
-        stopRefreshingProgress()
+        timerJob?.cancel()
     }
 
     companion object {
         const val DEFAULT_TRACK_PROGRESS = "00:00"
-        const val PROGRESS_REFRESH_DELAY_MILLIS = 400L
+        const val PROGRESS_REFRESH_DELAY_MILLIS = 300L
     }
 }
 
-sealed interface PlayerState {
-    data object Default : PlayerState
-    data object Prepared : PlayerState
-    data object Error : PlayerState
-    data class Paused(var trackProgressData: String) : PlayerState
-    data class Playing(var trackProgressData: String) : PlayerState
+sealed class PlayerState(
+    val isPlayButtonEnabled: Boolean,
+    val button: PlayButtonAction,
+    var progress: String
+) {
+
+    class Default : PlayerState(false, PlayButtonAction.PLAY, DEFAULT_TRACK_PROGRESS)
+    class Prepared : PlayerState(true, PlayButtonAction.PLAY, DEFAULT_TRACK_PROGRESS)
+    class Error : PlayerState(false, PlayButtonAction.PLAY, DEFAULT_TRACK_PROGRESS)
+    data class Playing(val currentProgress: String) :
+        PlayerState(true, PlayButtonAction.PAUSE, currentProgress)
+
+    data class Paused(val currentProgress: String) :
+        PlayerState(true, PlayButtonAction.PLAY, currentProgress)
+
+    enum class PlayButtonAction {
+        PLAY,
+        PAUSE
+    }
 }

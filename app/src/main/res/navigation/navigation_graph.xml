@@ -11,17 +11,22 @@
         android:label="fragment_search"
         tools:layout="@layout/fragment_search">
         <action
-            android:id="@+id/action_searchFragment_to_playerActivity"
-            app:destination="@id/playerActivity"
+            android:id="@+id/action_searchFragment_to_playerFragment"
+            app:destination="@id/playerFragment"
             app:popUpTo="@id/searchFragment"
             app:popUpToInclusive="false" />
 
     </fragment>
-    <activity
-        android:id="@+id/playerActivity"
-        android:name="com.playlistmaker.ui.player.PlayerActivity"
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="com.playlistmaker.ui.player.PlayerFragment"
         android:label="activity_player"
-        tools:layout="@layout/activity_player" />
+        tools:layout="@layout/fragment_player">
+        <argument
+            android:name="trackJson"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
     <fragment
         android:id="@+id/libraryFragment"
         android:name="com.playlistmaker.ui.library.LibraryFragment"
