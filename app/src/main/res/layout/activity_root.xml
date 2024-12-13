@@ -18,7 +18,7 @@
         app:navGraph="@navigation/navigation_graph"
         tools:layout="@layout/fragment_library" />
 
-    <FrameLayout
+    <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
