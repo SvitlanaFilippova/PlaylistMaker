@@ -11,7 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.playlistmaker.domain.Track
 import com.playlistmaker.ui.library.LibraryFragmentDirections
-import com.playlistmaker.ui.library.view_model.FavoritesViewModel
+import com.playlistmaker.ui.presentation.TrackAdapter
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentFavoritesBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -22,7 +23,7 @@ class FavoritesFragment() : Fragment() {
 
     private var _binding: FragmentFavoritesBinding? = null
     private val binding: FragmentFavoritesBinding get() = requireNotNull(_binding) { "Binding wasn't initialized" }
-    private var adapter: FavoritesAdapter? = null
+    private var adapter: TrackAdapter? = null
     private val viewModel by viewModel<FavoritesViewModel>()
     private var isClickAllowed = true
 
@@ -38,7 +39,7 @@ class FavoritesFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         isClickAllowed = true
-        adapter = FavoritesAdapter { track ->
+        adapter = TrackAdapter { track ->
             if (clickDebounce()) {
                 showPlayer(track)
             }
@@ -76,7 +77,7 @@ class FavoritesFragment() : Fragment() {
             rvFavoritesList.visibility = View.GONE
             llPlaceholder.visibility = View.VISIBLE
             progressBar.visibility = View.GONE
-            tvPlaceholderMessage.text = "Ваша медиатека пуста"
+            tvPlaceholderMessage.text = getString(R.string.your_library_is_empty)
         }
     }
 
@@ -86,7 +87,7 @@ class FavoritesFragment() : Fragment() {
             llPlaceholder.visibility = View.GONE
             progressBar.visibility = View.GONE
             adapter?.clearList()
-            adapter?.submitList(tracks)
+            adapter?.submitList(tracks as ArrayList<Track>)
             adapter?.notifyDataSetChanged()
         }
     }

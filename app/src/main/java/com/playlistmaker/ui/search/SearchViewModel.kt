@@ -1,4 +1,4 @@
-package com.playlistmaker.ui.search.view_model
+package com.playlistmaker.ui.search
 
 
 import androidx.lifecycle.LiveData

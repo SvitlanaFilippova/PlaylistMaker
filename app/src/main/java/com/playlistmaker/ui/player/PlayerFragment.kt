@@ -17,8 +17,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
 import com.playlistmaker.domain.Track
-import com.playlistmaker.ui.player.view_model.PlayerState
-import com.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
 import org.koin.android.ext.android.inject

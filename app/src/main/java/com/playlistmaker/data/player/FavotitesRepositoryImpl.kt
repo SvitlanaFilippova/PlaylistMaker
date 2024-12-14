@@ -14,11 +14,11 @@ class FavoritesRepositoryImpl(private val appDatabase: AppDatabase) :
     FavoritesRepository {
 
     override suspend fun addToFavorites(track: Track) {
-        appDatabase.trackDao().addTrack(track.toEntity())
+        appDatabase.trackDao().addTrack(track.toEntity(System.currentTimeMillis()))
     }
 
-    override suspend fun removeFromFavorites(track: Track) {
-        appDatabase.trackDao().deleteTrack(track.toEntity())
+    override suspend fun removeFromFavorites(trackId: Int) {
+        appDatabase.trackDao().deleteTrackById(trackId)
     }
 
     override suspend fun checkIfTrackIsFavorite(trackId: Int): Boolean {
@@ -35,7 +35,7 @@ class FavoritesRepositoryImpl(private val appDatabase: AppDatabase) :
     }
 
     private fun convertFromMovieEntity(tracks: List<TrackEntity>): List<Track> {
-        return tracks.map { track -> track.toDomain() }
+        return tracks.map { track -> track.toDomain(inFavorite = true) }
     }
 
 }

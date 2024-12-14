@@ -29,7 +29,7 @@ fun TrackDto.toDomain(storedFavorites: List<Int>) = Track(
     } else false
 )
 
-fun Track.toEntity() = TrackEntity(
+fun Track.toEntity(timestamp: Long) = TrackEntity(
     trackName,
     artistName,
     trackTime,
@@ -41,10 +41,10 @@ fun Track.toEntity() = TrackEntity(
     country,
     previewUrl,
     coverArtwork,
-    timestamp = System.currentTimeMillis()
+    timestamp = timestamp
 )
 
-fun TrackEntity.toDomain() = Track(
+fun TrackEntity.toDomain(inFavorite: Boolean) = Track(
     trackName,
     artistName,
     trackTime,
@@ -56,5 +56,5 @@ fun TrackEntity.toDomain() = Track(
     country,
     previewUrl,
     coverArtwork,
-    true
+    inFavorite
 )

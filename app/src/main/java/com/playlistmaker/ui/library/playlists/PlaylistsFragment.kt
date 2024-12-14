@@ -1,11 +1,10 @@
-package com.playlistmaker.ui.library
+package com.playlistmaker.ui.library.playlists
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.playlistmaker.ui.library.view_model.PlaylistsViewModel
 import com.practicum.playlistmaker.databinding.FragmentPlaylistsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

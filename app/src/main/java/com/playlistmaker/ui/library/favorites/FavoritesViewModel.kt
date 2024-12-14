@@ -1,4 +1,4 @@
-package com.playlistmaker.ui.library.view_model
+package com.playlistmaker.ui.library.favorites
 
 
 import androidx.lifecycle.LiveData

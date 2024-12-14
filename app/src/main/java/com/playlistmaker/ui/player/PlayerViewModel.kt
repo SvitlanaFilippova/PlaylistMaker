@@ -1,4 +1,4 @@
-package com.playlistmaker.ui.player.view_model
+package com.playlistmaker.ui.player
 
 
 import android.icu.text.SimpleDateFormat
@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.playlistmaker.domain.Track
 import com.playlistmaker.domain.player.FavoritesInteractor
 import com.playlistmaker.domain.player.PlayerInteractor
-import com.playlistmaker.ui.player.view_model.PlayerViewModel.Companion.DEFAULT_TRACK_PROGRESS
+import com.playlistmaker.ui.player.PlayerViewModel.Companion.DEFAULT_TRACK_PROGRESS
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -104,7 +104,7 @@ class PlayerViewModel(
     fun toggleFavorite() {
         viewModelScope.launch {
             if (track.inFavorite) {
-                favoritesInteractor.removeFromFavorites(track)
+                favoritesInteractor.removeFromFavorites(track.trackId)
             } else {
                 favoritesInteractor.addToFavorites(track)
             }
