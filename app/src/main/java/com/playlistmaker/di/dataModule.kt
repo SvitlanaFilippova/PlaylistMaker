@@ -1,9 +1,11 @@
 package com.playlistmaker.di
 
 import android.media.MediaPlayer
+import androidx.room.Room
 import com.google.gson.Gson
-import com.playlistmaker.data.FavoritesStorage
 import com.playlistmaker.data.SharedPrefsStorage
+import com.playlistmaker.data.db.AppDatabase
+import com.playlistmaker.data.player.FavoritesRepositoryImpl
 import com.playlistmaker.data.player.PlayerRepositoryImpl
 import com.playlistmaker.data.search.HistoryRepositoryImpl
 import com.playlistmaker.data.search.TracksRepositoryImpl
@@ -12,6 +14,7 @@ import com.playlistmaker.data.search.network.NetworkClient
 import com.playlistmaker.data.search.network.RetrofitNetworkClient
 import com.playlistmaker.data.settings.ThemeRepositoryImpl
 import com.playlistmaker.domain.player.PlayerRepository
+import com.playlistmaker.domain.player.impl.FavoritesRepository
 import com.playlistmaker.domain.search.HistoryRepository
 import com.playlistmaker.domain.search.TracksRepository
 import com.playlistmaker.domain.settings.ThemeRepository
@@ -35,11 +38,23 @@ val dataModule = module {
     single<SharedPrefsStorage> {
         SharedPrefsStorage(context = get())
     }
-    single<FavoritesStorage> {
-        FavoritesStorage(sharedPrefsStorage = get())
+
+    factory<MediaPlayer> {
+        MediaPlayer()
     }
+
+    single<Gson> { Gson() }
+
+    single<AppDatabase> {
+        Room.databaseBuilder(context = get(), AppDatabase::class.java, "database.db")
+            .build()
+    }
+}
+
+
+val repositoryModule = module {
     single<TracksRepository> {
-        TracksRepositoryImpl(networkClient = get(), favoritesStorage = get())
+        TracksRepositoryImpl(networkClient = get(), favoritesRepository = get())
     }
 
     single<HistoryRepository> {
@@ -50,14 +65,11 @@ val dataModule = module {
         ThemeRepositoryImpl(sharedPrefsStorage = get())
     }
 
-    factory<MediaPlayer> {
-        MediaPlayer()
+    factory<PlayerRepository> {
+        PlayerRepositoryImpl(mediaPlayer = get())
     }
 
-    single<Gson> { Gson() }
-
-    factory<PlayerRepository> {
-        PlayerRepositoryImpl(mediaPlayer = get(), favoritesStorage = get())
+    single<FavoritesRepository> {
+        FavoritesRepositoryImpl(appDatabase = get())
     }
 }
-

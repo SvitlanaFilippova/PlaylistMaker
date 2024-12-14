@@ -1,4 +1,4 @@
-package com.playlistmaker.ui.player.view_model
+package com.playlistmaker.ui.player
 
 
 import android.icu.text.SimpleDateFormat
@@ -7,8 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.playlistmaker.domain.Track
+import com.playlistmaker.domain.player.FavoritesInteractor
 import com.playlistmaker.domain.player.PlayerInteractor
-import com.playlistmaker.ui.player.view_model.PlayerViewModel.Companion.DEFAULT_TRACK_PROGRESS
+import com.playlistmaker.ui.player.PlayerViewModel.Companion.DEFAULT_TRACK_PROGRESS
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -16,7 +17,8 @@ import java.util.Locale
 
 class PlayerViewModel(
     private var track: Track,
-    private val playerInteractor: PlayerInteractor
+    private val playerInteractor: PlayerInteractor,
+    private val favoritesInteractor: FavoritesInteractor
 ) : ViewModel() {
 
     private var playerState = MutableLiveData<PlayerState>(PlayerState.Default())
@@ -100,11 +102,12 @@ class PlayerViewModel(
 
 
     fun toggleFavorite() {
-        if (track.inFavorite) {
-            playerInteractor.removeFromFavorites(track)
-
-        } else {
-            playerInteractor.addToFavorites(track)
+        viewModelScope.launch {
+            if (track.inFavorite) {
+                favoritesInteractor.removeFromFavorites(track.trackId)
+            } else {
+                favoritesInteractor.addToFavorites(track)
+            }
         }
         isFavoriteLiveData.value = !track.inFavorite
         val newTrack = track.copy(inFavorite = !track.inFavorite)
@@ -112,8 +115,10 @@ class PlayerViewModel(
 
     }
 
-    fun checkIfFavorite(track: Track) {
-        isFavoriteLiveData.value = playerInteractor.checkIfTrackIsFavorite(track)
+    fun checkIfFavorite(trackId: Int) {
+        viewModelScope.launch {
+            isFavoriteLiveData.value = favoritesInteractor.checkIfTrackIsFavorite(trackId)
+        }
     }
 
 

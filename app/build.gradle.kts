@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("androidx.navigation.safeargs.kotlin")
+    id("kotlin-kapt")
 }
 
 android {
@@ -41,6 +42,12 @@ android {
 }
 
 dependencies {
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")  // библиотека Room
+    kapt("androidx.room:room-compiler:$roomVersion") // Kotlin-кодогенератор
+    implementation("androidx.room:room-ktx:$roomVersion") // поддержка корутин
+
+
     implementation("androidx.navigation:navigation-fragment-ktx:2.8.5")
     implementation("androidx.navigation:navigation-ui-ktx:2.8.5")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:2.0.20")

@@ -17,8 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.playlistmaker.domain.Track
-import com.playlistmaker.ui.search.view_model.SearchScreenState
-import com.playlistmaker.ui.search.view_model.SearchViewModel
+import com.playlistmaker.ui.presentation.TrackAdapter
 import com.playlistmaker.util.hideKeyBoard
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
@@ -33,13 +32,9 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding: FragmentSearchBinding get() = requireNotNull(_binding) { "Binding wasn't initialized" }
 
-    private val tracksAdapter: SearchAdapter by lazy {
-        SearchAdapter { track ->
+    private val tracksAdapter: TrackAdapter by lazy {
+        TrackAdapter { track ->
             if (clickDebounce()) {
-                Log.d(
-                    "DEBUG",
-                    "тык на трек, пытаюсь открыть плеер. clickDebounce = ${clickDebounce()}"
-                )
                 viewModel.updateHistory(track)
                 showPlayer(track)
             }

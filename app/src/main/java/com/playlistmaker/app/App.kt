@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.res.Configuration
 import com.playlistmaker.di.dataModule
 import com.playlistmaker.di.domainModule
+import com.playlistmaker.di.repositoryModule
 import com.playlistmaker.di.uiModule
 import com.playlistmaker.di.viewModelModule
 import com.playlistmaker.domain.settings.ThemeInteractor
@@ -22,7 +23,7 @@ class App : Application() {
         startKoin {
             androidLogger(Level.DEBUG)
             androidContext(this@App)
-            modules(listOf(dataModule, viewModelModule, domainModule, uiModule))
+            modules(listOf(dataModule, viewModelModule, domainModule, uiModule, repositoryModule))
         }
 
         themeInteractor.switchTheme(checkTheme())
