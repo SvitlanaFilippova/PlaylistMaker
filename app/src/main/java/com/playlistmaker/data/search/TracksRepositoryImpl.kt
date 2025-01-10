@@ -3,8 +3,8 @@ package com.playlistmaker.data.search
 
 import com.playlistmaker.data.search.network.NetworkClient
 import com.playlistmaker.data.toDomain
-import com.playlistmaker.domain.Track
-import com.playlistmaker.domain.player.impl.FavoritesRepository
+import com.playlistmaker.domain.db.favorites.FavoritesRepository
+import com.playlistmaker.domain.models.Track
 import com.playlistmaker.domain.search.TracksRepository
 import com.playlistmaker.util.Resource
 import kotlinx.coroutines.flow.Flow

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <stroke
+        android:width="@dimen/cover_stroke_width_1"
+        android:color="@color/grey"
+        android:dashWidth="@dimen/cover_stroke_dash_24"
+        android:dashGap="@dimen/cover_stroke_dash_24" />
+
+    <corners android:radius="@dimen/playlist_cover_radius_8" />
+</shape>

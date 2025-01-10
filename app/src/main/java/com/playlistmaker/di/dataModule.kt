@@ -5,7 +5,8 @@ import androidx.room.Room
 import com.google.gson.Gson
 import com.playlistmaker.data.SharedPrefsStorage
 import com.playlistmaker.data.db.AppDatabase
-import com.playlistmaker.data.player.FavoritesRepositoryImpl
+import com.playlistmaker.data.db.FavoritesRepositoryImpl
+import com.playlistmaker.data.db.PlaylistsRepositoryImpl
 import com.playlistmaker.data.player.PlayerRepositoryImpl
 import com.playlistmaker.data.search.HistoryRepositoryImpl
 import com.playlistmaker.data.search.TracksRepositoryImpl
@@ -13,8 +14,9 @@ import com.playlistmaker.data.search.network.ITunesApiService
 import com.playlistmaker.data.search.network.NetworkClient
 import com.playlistmaker.data.search.network.RetrofitNetworkClient
 import com.playlistmaker.data.settings.ThemeRepositoryImpl
+import com.playlistmaker.domain.db.favorites.FavoritesRepository
+import com.playlistmaker.domain.db.playlists.PlaylistsRepository
 import com.playlistmaker.domain.player.PlayerRepository
-import com.playlistmaker.domain.player.impl.FavoritesRepository
 import com.playlistmaker.domain.search.HistoryRepository
 import com.playlistmaker.domain.search.TracksRepository
 import com.playlistmaker.domain.settings.ThemeRepository
@@ -45,8 +47,12 @@ val dataModule = module {
 
     single<Gson> { Gson() }
 
+
+
+
     single<AppDatabase> {
         Room.databaseBuilder(context = get(), AppDatabase::class.java, "database.db")
+            .fallbackToDestructiveMigration()
             .build()
     }
 }
@@ -67,6 +73,9 @@ val repositoryModule = module {
 
     factory<PlayerRepository> {
         PlayerRepositoryImpl(mediaPlayer = get())
+    }
+    single<PlaylistsRepository> {
+        PlaylistsRepositoryImpl(appDatabase = get())
     }
 
     single<FavoritesRepository> {

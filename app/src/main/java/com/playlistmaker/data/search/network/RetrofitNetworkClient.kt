@@ -25,7 +25,6 @@ class RetrofitNetworkClient(
                 resultCode = 400
             }
         }
-
         return withContext(Dispatchers.IO) {
             try {
                 val response = iTunesService.search(dto.expression)

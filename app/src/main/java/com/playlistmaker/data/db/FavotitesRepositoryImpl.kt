@@ -1,11 +1,10 @@
-package com.playlistmaker.data.player
+package com.playlistmaker.data.db
 
-import com.playlistmaker.data.db.AppDatabase
 import com.playlistmaker.data.db.entity.TrackEntity
 import com.playlistmaker.data.toDomain
 import com.playlistmaker.data.toEntity
-import com.playlistmaker.domain.Track
-import com.playlistmaker.domain.player.impl.FavoritesRepository
+import com.playlistmaker.domain.db.favorites.FavoritesRepository
+import com.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -30,11 +29,11 @@ class FavoritesRepositoryImpl(private val appDatabase: AppDatabase) :
     }
 
     override fun getFavoriteTracks(): Flow<List<Track>> = flow {
-        val movies = appDatabase.trackDao().getTracks()
-        emit(convertFromMovieEntity(movies))
+        val tracks = appDatabase.trackDao().getTracks()
+        emit(convertFromTrackEntity(tracks))
     }
 
-    private fun convertFromMovieEntity(tracks: List<TrackEntity>): List<Track> {
+    private fun convertFromTrackEntity(tracks: List<TrackEntity>): List<Track> {
         return tracks.map { track -> track.toDomain(inFavorite = true) }
     }
 

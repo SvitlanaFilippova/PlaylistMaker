@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.playlistmaker.ui.library.playlists.NewPlaylistFragment">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        style="@style/HeadToolbarTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/head_toolbar_layout_height_56"
+        android:layout_marginStart="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_back_light_mode"
+        app:navigationIconTint="?attr/colorOnPrimary"
+        app:title="@string/new_playlist"
+        app:titleTextAppearance="@style/HeadToolbarTextStyle" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/leftBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/standart_padding_16" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rightBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/standart_padding_16" />
+
+
+    <ImageView
+        android:id="@+id/iv_add_photo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/newplaylist_margin_24"
+        android:background="@drawable/stroke_with_gaps"
+        android:contentDescription="@null"
+        android:scaleType="center"
+        android:src="@drawable/ic_add_photo_100"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/field_playlist_title"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/newplaylist_edittext_height_56"
+        android:layout_marginTop="@dimen/newplaylist_big_margin_32"
+        android:hint="@string/Title"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="@color/input_empty_stroke_colors"
+        app:boxStrokeWidth="1dp"
+        app:boxStrokeWidthFocused="1dp"
+        app:hintEnabled="true"
+        app:hintTextColor="?attr/colorOnPrimary"
+        app:layout_constraintEnd_toStartOf="@id/rightBorder"
+        app:layout_constraintStart_toEndOf="@id/leftBorder"
+        app:layout_constraintTop_toBottomOf="@id/iv_add_photo">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input_playlist_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/field_playlist_description"
+        style="NewPlaylistTextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/newplaylist_edittext_height_56"
+        android:layout_marginTop="@dimen/standart_padding_16"
+        android:hint="@string/description"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="@color/input_empty_stroke_colors"
+        app:boxStrokeWidth="1dp"
+        app:boxStrokeWidthFocused="1dp"
+        app:hintEnabled="true"
+        app:hintTextColor="?attr/colorOnPrimary"
+        app:layout_constraintEnd_toStartOf="@id/rightBorder"
+        app:layout_constraintStart_toEndOf="@id/leftBorder"
+        app:layout_constraintTop_toBottomOf="@id/field_playlist_title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input_playlist_description"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:imeOptions="actionDone"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/bt_create"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/newplaylist_button_height_48"
+        android:layout_marginBottom="28dp"
+        android:backgroundTint="@color/newplaylist_button_colors"
+        android:enabled="false"
+        android:fontFamily="@font/ys_display_medium"
+        android:text="@string/create"
+        android:textColor="@color/white"
+        android:textFontWeight="500"
+        android:textSize="@dimen/regular_text_size_16"
+        app:cornerRadius="@dimen/newplaylist_button_radius_8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/rightBorder"
+        app:layout_constraintStart_toEndOf="@id/leftBorder" />
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/newplaylist_button_height_48"
+        android:layout_marginBottom="28dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/rightBorder"
+        app:layout_constraintStart_toEndOf="@id/leftBorder" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

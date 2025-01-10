@@ -41,6 +41,15 @@
     <dimen name="placeholder_img_120">120dp</dimen>
     <dimen name="placeholder_margin_48">48dp</dimen>
     <dimen name="small_text_size_12">12sp</dimen>
+    <dimen name="newplaylist_margin_24">24dp</dimen>
+    <dimen name="playlist_cover_radius_8">8dp</dimen>
+    <dimen name="cover_stroke_width_1">1dp</dimen>
+    <dimen name="cover_stroke_dash_24">24dp</dimen>
+    <dimen name="newplaylist_edittext_height_56">56dp</dimen>
+    <dimen name="newplaylist_button_height_48">48dp</dimen>
+    <dimen name="newplaylist_big_margin_32">32dp</dimen>
+    <dimen name="newplaylist_button_radius_8">8dp</dimen>
+    <dimen name="newplaylist_et_radius_4">4dp</dimen>
 
 
 </resources>

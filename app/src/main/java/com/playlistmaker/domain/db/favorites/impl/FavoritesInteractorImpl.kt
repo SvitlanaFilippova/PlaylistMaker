@@ -1,7 +1,8 @@
-package com.playlistmaker.domain.player.impl
+package com.playlistmaker.domain.db.favorites.impl
 
-import com.playlistmaker.domain.Track
-import com.playlistmaker.domain.player.FavoritesInteractor
+import com.playlistmaker.domain.db.favorites.FavoritesInteractor
+import com.playlistmaker.domain.db.favorites.FavoritesRepository
+import com.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
 class FavoritesInteractorImpl(private val repository: FavoritesRepository) : FavoritesInteractor {

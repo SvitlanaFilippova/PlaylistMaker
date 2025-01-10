@@ -1,6 +1,6 @@
 package com.playlistmaker.domain.search
 
-import com.playlistmaker.domain.Track
+import com.playlistmaker.domain.models.Track
 
 interface HistoryInteractor {
 

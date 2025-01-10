@@ -1,6 +1,6 @@
-package com.playlistmaker.domain.player.impl
+package com.playlistmaker.domain.db.favorites
 
-import com.playlistmaker.domain.Track
+import com.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
 

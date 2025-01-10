@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <corners android:radius="@dimen/newplaylist_et_radius_4" />
+    <stroke
+        android:width="@dimen/cover_stroke_width_1"
+        android:color="@color/grey" />
+
+
+</shape>

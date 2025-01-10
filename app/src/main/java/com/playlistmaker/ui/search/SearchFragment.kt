@@ -16,7 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
-import com.playlistmaker.domain.Track
+import com.playlistmaker.domain.models.Track
 import com.playlistmaker.ui.presentation.TrackAdapter
 import com.playlistmaker.util.hideKeyBoard
 import com.practicum.playlistmaker.R

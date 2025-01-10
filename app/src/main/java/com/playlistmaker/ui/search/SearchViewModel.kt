@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.playlistmaker.domain.Track
+import com.playlistmaker.domain.models.Track
 import com.playlistmaker.domain.search.HistoryInteractor
 import com.playlistmaker.domain.search.TrackInteractor
 import com.playlistmaker.util.debounce
