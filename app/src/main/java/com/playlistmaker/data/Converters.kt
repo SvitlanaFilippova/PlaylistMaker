@@ -11,7 +11,7 @@ import com.playlistmaker.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-fun TrackDto.toDomain(storedFavorites: List<Int>) = Track(
+fun TrackDto.toDomain() = Track(
     trackName = trackName ?: "",
     artistName = artistName ?: "",
     trackTime = if (trackTimeMillis !== null) {
@@ -28,9 +28,7 @@ fun TrackDto.toDomain(storedFavorites: List<Int>) = Track(
     coverArtwork = if (artworkUrl100 !== null) {
         artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
     } else "",
-    inFavorite = if (trackId !== null) {
-        storedFavorites.contains(trackId)
-    } else false
+    inFavorite = null
 )
 
 fun Track.toEntity(timestamp: Long) = TrackEntity(
@@ -45,6 +43,7 @@ fun Track.toEntity(timestamp: Long) = TrackEntity(
     country = country,
     previewUrl = previewUrl,
     coverArtwork = coverArtwork,
+    isFavorite = inFavorite ?: false,
     timestamp = timestamp
 )
 
@@ -64,11 +63,13 @@ fun TrackEntity.toDomain(inFavorite: Boolean) = Track(
 )
 
 fun Playlist.toEntity() = PlaylistEntity(
+    id = id,
     title = title,
     description = description,
     coverPath = coverPath,
     trackIdsGson = Gson().toJson(tracks),
-    tracksQuantity = tracksQuantity
+    tracksQuantity = tracksQuantity,
+
 )
 
 fun PlaylistEntity.toDomain() = Playlist(

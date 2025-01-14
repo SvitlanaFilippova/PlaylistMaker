@@ -13,5 +13,5 @@ data class Track
     val country: String,
     val previewUrl: String,
     val coverArtwork: String,
-    var inFavorite: Boolean
+    var inFavorite: Boolean?
 )

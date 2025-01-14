@@ -8,8 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.playlistmaker.domain.StringProvider
-import com.playlistmaker.domain.db.favorites.FavoritesInteractor
 import com.playlistmaker.domain.db.playlists.PlaylistsInteractor
+import com.playlistmaker.domain.db.saved_tracks.SavedTracksInteractor
 import com.playlistmaker.domain.models.Playlist
 import com.playlistmaker.domain.models.Track
 import com.playlistmaker.domain.player.PlayerInteractor
@@ -24,7 +24,7 @@ import java.util.Locale
 class PlayerViewModel(
     private var track: Track,
     private val playerInteractor: PlayerInteractor,
-    private val favoritesInteractor: FavoritesInteractor,
+    private val savedTracksInteractor: SavedTracksInteractor,
     private val playlistsInteractor: PlaylistsInteractor,
     private val stringProvider: StringProvider
 ) : ViewModel() {
@@ -121,28 +121,25 @@ class PlayerViewModel(
 
 
     fun toggleFavorite() {
-        viewModelScope.launch {
-            if (track.inFavorite) {
-                favoritesInteractor.removeFromFavorites(track.trackId)
-            } else {
-                favoritesInteractor.addToFavorites(track)
+        val wasTrackFavorited = track.inFavorite
+        if (wasTrackFavorited != null) {
+            val newTrack = track.copy(inFavorite = !wasTrackFavorited)
+            viewModelScope.launch {
+                savedTracksInteractor.changeFavorites(newTrack)
             }
+            isFavoriteLiveData.value = !wasTrackFavorited
+            this.track = newTrack
         }
-        isFavoriteLiveData.value = !track.inFavorite
-        val newTrack = track.copy(inFavorite = !track.inFavorite)
-        this.track = newTrack
-
     }
 
     fun checkIfFavorite(trackId: Int) {
         viewModelScope.launch {
-            isFavoriteLiveData.value = favoritesInteractor.checkIfTrackIsFavorite(trackId)
+            isFavoriteLiveData.value = savedTracksInteractor.checkIfTrackIsFavorite(trackId)
         }
     }
 
 
     fun getPlaylists() {
-        playlistsLiveData.postValue(PlaylistsState.Loading)
         viewModelScope.launch {
             playlistsInteractor
                 .getPlaylists()
@@ -158,8 +155,6 @@ class PlayerViewModel(
             Log.d("DEBUG", "Список плейлистов пуст")
         } else {
             playlistsLiveData.postValue(PlaylistsState.Content(playlists))
-            Log.d("DEBUG", "Данные получены. $playlists")
-
         }
     }
 
@@ -180,7 +175,9 @@ class PlayerViewModel(
                         R.string.success_added_to_playlist_template,
                         playlist.title
                     )
+                getPlaylists()
             }
+
         }
     }
 

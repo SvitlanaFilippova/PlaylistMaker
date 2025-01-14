@@ -5,8 +5,8 @@ import androidx.room.Room
 import com.google.gson.Gson
 import com.playlistmaker.data.SharedPrefsStorage
 import com.playlistmaker.data.db.AppDatabase
-import com.playlistmaker.data.db.FavoritesRepositoryImpl
 import com.playlistmaker.data.db.PlaylistsRepositoryImpl
+import com.playlistmaker.data.db.SavedTracksRepositoryImpl
 import com.playlistmaker.data.player.PlayerRepositoryImpl
 import com.playlistmaker.data.search.HistoryRepositoryImpl
 import com.playlistmaker.data.search.TracksRepositoryImpl
@@ -14,8 +14,8 @@ import com.playlistmaker.data.search.network.ITunesApiService
 import com.playlistmaker.data.search.network.NetworkClient
 import com.playlistmaker.data.search.network.RetrofitNetworkClient
 import com.playlistmaker.data.settings.ThemeRepositoryImpl
-import com.playlistmaker.domain.db.favorites.FavoritesRepository
 import com.playlistmaker.domain.db.playlists.PlaylistsRepository
+import com.playlistmaker.domain.db.saved_tracks.SavedTracksRepository
 import com.playlistmaker.domain.player.PlayerRepository
 import com.playlistmaker.domain.search.HistoryRepository
 import com.playlistmaker.domain.search.TracksRepository
@@ -60,7 +60,7 @@ val dataModule = module {
 
 val repositoryModule = module {
     single<TracksRepository> {
-        TracksRepositoryImpl(networkClient = get(), favoritesRepository = get())
+        TracksRepositoryImpl(networkClient = get())
     }
 
     single<HistoryRepository> {
@@ -78,7 +78,7 @@ val repositoryModule = module {
         PlaylistsRepositoryImpl(appDatabase = get())
     }
 
-    single<FavoritesRepository> {
-        FavoritesRepositoryImpl(appDatabase = get())
+    single<SavedTracksRepository> {
+        SavedTracksRepositoryImpl(appDatabase = get())
     }
 }

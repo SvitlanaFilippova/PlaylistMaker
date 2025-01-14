@@ -11,16 +11,15 @@ interface TrackDao {
     @Insert(entity = TrackEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun addTrack(track: TrackEntity)
 
+    @Query("SELECT * FROM favorites_track_table WHERE isFavorite = 1 AND trackId = :id")
+    suspend fun checkIfTrackIsFavorite(id: Int): TrackEntity?
 
-    @Query("DELETE FROM favorites_track_table WHERE trackId = :id")
-    suspend fun deleteFromFavoritesById(id: Int)
 
-    @Query("SELECT * FROM favorites_track_table ORDER BY timestamp DESC")
-    suspend fun getTracks(): List<TrackEntity>
+    @Query("SELECT * FROM favorites_track_table  WHERE isFavorite = 1 ORDER BY timestamp DESC")
+    suspend fun getFavoriteTracks(): List<TrackEntity>
 
-    @Query("SELECT trackId FROM favorites_track_table")
-    suspend fun getFavoriteIds(): List<Int>
+    @Query("SELECT * FROM favorites_track_table WHERE trackId IN (:ids)")
+    suspend fun getTracksByIds(ids: List<Int>): List<TrackEntity>
 
-    @Query("SELECT * FROM favorites_track_table WHERE trackId = :id")
-    suspend fun getTrackById(id: Int): TrackEntity?
+
 }

@@ -195,19 +195,11 @@ class PlayerFragment : Fragment() {
 
     private fun managePlaylists(state: PlaylistsState) {
         when (state) {
-            PlaylistsState.Loading -> showProgressBar()
             PlaylistsState.Empty -> showPlaceholder()
             is PlaylistsState.Content -> showPlaylists(state.playlists)
         }
     }
 
-    private fun showProgressBar() {
-        binding.apply {
-            recyclerView.isVisible = false
-            progressbar.isVisible = true
-            llPlaceholder.isVisible = false
-        }
-    }
 
     private fun showPlaceholder() {
         binding.apply {
@@ -251,6 +243,7 @@ class PlayerFragment : Fragment() {
 
                     else -> {
                         overlay.visibility = View.VISIBLE
+//                        viewModel.getPlaylists() //TODO подумать, нужно ли
                     }
                 }
             }

@@ -1,5 +1,6 @@
 package com.playlistmaker.data.db
 
+import android.util.Log
 import com.playlistmaker.data.db.entity.PlaylistEntity
 import com.playlistmaker.data.toDomain
 import com.playlistmaker.data.toEntity
@@ -11,11 +12,11 @@ import kotlinx.coroutines.flow.flow
 
 class PlaylistsRepositoryImpl(private val appDatabase: AppDatabase) : PlaylistsRepository {
     override suspend fun savePlaylist(playlist: Playlist) {
-        appDatabase.playlistDao().savePlaylist(playlist.toEntity())
+        appDatabase.playlistDao().insertOrUpdatePlaylist(playlist.toEntity())
     }
 
     override fun getPlaylists(): Flow<List<Playlist>> = flow {
-        val playlists = appDatabase.playlistDao().getPlaylists()
+        val playlists = appDatabase.playlistDao().getAllPlaylists()
         emit(convertFromPlaylistEntity(playlists))
     }
 
@@ -24,16 +25,18 @@ class PlaylistsRepositoryImpl(private val appDatabase: AppDatabase) : PlaylistsR
             tracks = playlist.tracks + track.trackId.toString(),
             tracksQuantity = playlist.tracksQuantity + 1
         )
-        // Репозиторий должен обновить список идентификаторов треков плейлиста,
-        // увеличить счётчик количества треков
-        appDatabase.playlistDao().savePlaylist(newPlaylist.toEntity())
-        // и, используя соответствующий DAO-интерфейс,обновить запись изменённого плейлиста в базе данных.
 
-        // Этот же репозиторий через DAO-интерфейс, работающий с таблицей треков добавляемых в плейлисты,
-        // должен сохранить трек, переданный в репозиторий, в базу данных.
-    }
+        val playlistEntity = newPlaylist.toEntity()
 
-    private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
-        return playlists.map { playlist -> playlist.toDomain() }
+        with(appDatabase) {
+            playlistDao().insertOrUpdatePlaylist(playlistEntity)
+            newPlaylist.tracks.forEach { track -> Log.d("Debug", " $track") }
+
+            trackDao().addTrack(track.toEntity(System.currentTimeMillis()))
+        }
     }
+}
+
+private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
+    return playlists.map { playlist -> playlist.toDomain() }
 }

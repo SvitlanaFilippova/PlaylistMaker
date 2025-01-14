@@ -1,6 +1,5 @@
 package com.playlistmaker.ui.library.playlists
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,7 +16,6 @@ class PlaylistsViewModel(private val playlistsInteractor: PlaylistsInteractor) :
     fun observeState(): LiveData<PlaylistsState> = stateLiveData
 
     fun fillData() {
-        stateLiveData.postValue(PlaylistsState.Loading)
         viewModelScope.launch {
             playlistsInteractor
                 .getPlaylists()
@@ -30,10 +28,8 @@ class PlaylistsViewModel(private val playlistsInteractor: PlaylistsInteractor) :
     private fun processResult(playlists: List<Playlist>) {
         if (playlists.isEmpty()) {
             stateLiveData.postValue(PlaylistsState.Empty)
-            Log.d("DEBUG", "Список плейлистов пуст")
         } else {
             stateLiveData.postValue(PlaylistsState.Content(playlists))
-            Log.d("DEBUG", "Данные получены. $playlists")
         }
     }
 
@@ -42,7 +38,6 @@ class PlaylistsViewModel(private val playlistsInteractor: PlaylistsInteractor) :
 
 sealed interface PlaylistsState {
     data object Empty : PlaylistsState
-    data object Loading : PlaylistsState
     data class Content(
         val playlists: List<Playlist>
     ) : PlaylistsState

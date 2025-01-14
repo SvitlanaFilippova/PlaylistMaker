@@ -50,7 +50,6 @@ class PlaylistsFragment : Fragment() {
 
     private fun render(state: PlaylistsState) {
         when (state) {
-            PlaylistsState.Loading -> showProgressBar()
             PlaylistsState.Empty -> showPlaceholder()
             is PlaylistsState.Content -> showContent(state.playlists)
         }

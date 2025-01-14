@@ -60,7 +60,7 @@ class NewPlaylistFragment : Fragment() {
             btCreate.setOnClickListener {
                 viewModel.savePlaylist(
                     Playlist(
-                        id = null,
+                        id = 0,
                         title = newPlaylistTitle,
                         description = newPlaylistDescription,
                         coverPath = newPlaylistCoverPath,

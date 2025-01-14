@@ -2,10 +2,10 @@ package com.playlistmaker.di
 
 import com.playlistmaker.data.StringProviderImpl
 import com.playlistmaker.domain.StringProvider
-import com.playlistmaker.domain.db.favorites.FavoritesInteractor
-import com.playlistmaker.domain.db.favorites.impl.FavoritesInteractorImpl
 import com.playlistmaker.domain.db.playlists.PlaylistsInteractor
 import com.playlistmaker.domain.db.playlists.impl.PlaylistsInteractorImpl
+import com.playlistmaker.domain.db.saved_tracks.SavedTracksInteractor
+import com.playlistmaker.domain.db.saved_tracks.impl.SavedTracksInteractorImpl
 import com.playlistmaker.domain.player.PlayerInteractor
 import com.playlistmaker.domain.player.impl.PlayerInteractorImpl
 import com.playlistmaker.domain.search.HistoryInteractor
@@ -39,8 +39,8 @@ val domainModule = module {
         PlayerInteractorImpl(repository = get())
     }
 
-    factory<FavoritesInteractor> {
-        FavoritesInteractorImpl(repository = get())
+    factory<SavedTracksInteractor> {
+        SavedTracksInteractorImpl(repository = get())
     }
 
     factory<PlaylistsInteractor> {
