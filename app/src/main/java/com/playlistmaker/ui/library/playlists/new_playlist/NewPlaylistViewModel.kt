@@ -1,4 +1,4 @@
-package com.playlistmaker.ui.library.playlists
+package com.playlistmaker.ui.library.playlists.new_playlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

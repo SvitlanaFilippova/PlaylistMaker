@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.playlistmaker.domain.models.Track
-
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ListSearchTrackCardBinding
 
@@ -22,7 +21,7 @@ class TrackAdapter(private val onTrackClickDebounce: (track: Track) -> Unit) :
 
         fun bind(track: Track) = with(binding) {
             val cornerRadius =
-                this@TrackViewHolder.parentView.resources.getDimensionPixelSize(R.dimen.search_image_corner_radius_2)
+                parentView.resources.getDimensionPixelSize(R.dimen.search_image_corner_radius_2)
             with(track) {
                 searchTvTrackName.text = trackName
                 searchTvArtistName.text = artistName
@@ -30,7 +29,7 @@ class TrackAdapter(private val onTrackClickDebounce: (track: Track) -> Unit) :
 
                 Glide.with(parentView)
                     .load(artworkUrl100)
-                    .centerCrop()
+                    .centerInside()
                     .transform(
                         RoundedCorners(
                             cornerRadius

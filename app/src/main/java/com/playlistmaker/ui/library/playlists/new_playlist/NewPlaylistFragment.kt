@@ -1,4 +1,4 @@
-package com.playlistmaker.ui.library.playlists
+package com.playlistmaker.ui.library.playlists.new_playlist
 
 
 import android.content.res.ColorStateList
@@ -14,7 +14,6 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
@@ -23,9 +22,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.playlistmaker.domain.models.Playlist
-import com.playlistmaker.ui.library.playlists.NewPlaylistViewModel.CreatingPlaylistState
+import com.playlistmaker.ui.library.playlists.new_playlist.NewPlaylistViewModel.CreatingPlaylistState
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentNewPlaylistBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -76,6 +76,7 @@ class NewPlaylistFragment : Fragment() {
         }
 
         setPhotoPicker()
+
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
@@ -108,11 +109,15 @@ class NewPlaylistFragment : Fragment() {
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
-                    binding.ivAddPhoto.scaleType = ImageView.ScaleType.CENTER_CROP
-
-                    binding.ivAddPhoto.setImageURI(uri)
-                    saveImageToPrivateStorage(uri)
                     creatingWasStarted = true
+
+                    saveImageToPrivateStorage(uri)
+
+                    Glide.with(requireActivity())
+                        .load(uri)
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_cover_placeholder)
+                        .into(binding.ivAddPhoto)
                 } else {
                     Log.d("PhotoPicker", "No media selected")
                 }
@@ -137,7 +142,7 @@ class NewPlaylistFragment : Fragment() {
             filePath.mkdirs()
         }
 
-        val file = File(filePath, "cover.jpg")
+        val file = File(filePath, "cover_${System.currentTimeMillis()}.jpg")
 
         val inputStream = requireActivity().contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(file)
@@ -200,11 +205,8 @@ class NewPlaylistFragment : Fragment() {
     private fun getHintColorStateList(isEmpty: Boolean): ColorStateList {
         if (isEmpty) {
             val typedValue = TypedValue()
-            requireContext().theme.resolveAttribute(
-                com.google.android.material.R.attr.colorOnPrimary,
-                typedValue,
-                true
-            )
+            requireContext().theme.resolveAttribute(R.attr.colorOnPrimary, typedValue, true)
+
             return ColorStateList.valueOf(typedValue.data)
         } else {
             return ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.blue))
@@ -217,23 +219,6 @@ class NewPlaylistFragment : Fragment() {
             if (isEmpty) R.color.grey else R.color.blue
         )
     }
-
-
-//    private fun setFocusListeners() { // НЕ РАБОТАЕТ
-//        binding.inputPlaylistTitle.apply {
-//            setOnFocusChangeListener { _, hasFocus ->
-//                if (!hasFocus) {
-//                    Log.d("DEBUG STROKE", "Нет фокуса у inputPlaylistTitle!")
-//                    val isEmpty = text.isNullOrEmpty()
-//                    binding.fieldPlaylistTitle.boxStrokeColor =
-//                        if (isEmpty) ContextCompat.getColor(requireContext(), R.color.grey)
-//                        else ContextCompat.getColor(requireContext(), R.color.blue)
-//                } else {
-//                    Log.d("DEBUG STROKE", "Есть фокус у inputPlaylistTitle!")
-//                }
-//            }
-//        }
-//    }
 
     private fun showExitConfirmationDialog() {
         if (creatingWasStarted) {

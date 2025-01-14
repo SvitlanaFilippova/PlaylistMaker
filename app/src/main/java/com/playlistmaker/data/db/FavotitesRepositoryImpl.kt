@@ -17,7 +17,7 @@ class FavoritesRepositoryImpl(private val appDatabase: AppDatabase) :
     }
 
     override suspend fun removeFromFavorites(trackId: Int) {
-        appDatabase.trackDao().deleteTrackById(trackId)
+        appDatabase.trackDao().deleteFromFavoritesById(trackId)
     }
 
     override suspend fun checkIfTrackIsFavorite(trackId: Int): Boolean {

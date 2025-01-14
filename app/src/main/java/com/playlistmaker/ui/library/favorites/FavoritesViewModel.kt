@@ -42,12 +42,12 @@ class FavoritesViewModel(
 
     sealed interface FavoritesState {
 
-        object Loading : FavoritesState
+        data object Loading : FavoritesState
 
         data class Content(
             val tracks: List<Track>
         ) : FavoritesState
 
-        object Empty : FavoritesState
+        data object Empty : FavoritesState
     }
 }

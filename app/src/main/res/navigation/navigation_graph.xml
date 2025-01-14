@@ -26,6 +26,10 @@
             android:name="trackJson"
             app:argType="string"
             app:nullable="false" />
+        <action
+            android:id="@+id/action_playerFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/libraryFragment"
@@ -46,7 +50,7 @@
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/newPlaylistFragment"
-        android:name="com.playlistmaker.ui.library.playlists.NewPlaylistFragment"
+        android:name="com.playlistmaker.ui.library.playlists.new_playlist.NewPlaylistFragment"
         android:label="fragment_new_playlist"
         tools:layout="@layout/fragment_new_playlist" />
 </navigation>

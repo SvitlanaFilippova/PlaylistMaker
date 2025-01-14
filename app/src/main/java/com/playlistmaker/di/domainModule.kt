@@ -1,5 +1,7 @@
 package com.playlistmaker.di
 
+import com.playlistmaker.data.StringProviderImpl
+import com.playlistmaker.domain.StringProvider
 import com.playlistmaker.domain.db.favorites.FavoritesInteractor
 import com.playlistmaker.domain.db.favorites.impl.FavoritesInteractorImpl
 import com.playlistmaker.domain.db.playlists.PlaylistsInteractor
@@ -25,6 +27,12 @@ val domainModule = module {
 
     factory<ThemeInteractor> {
         ThemeInteractorImpl(repository = get())
+    }
+
+    single<StringProvider> {
+        StringProviderImpl(
+            context = get()
+        )
     }
 
     factory<PlayerInteractor> {
