@@ -34,7 +34,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textSize="@dimen/regular_text_size_16"
-            tools:text="Smells Like Teen Spirit" />
+            tools:text="[Smells Like Teen Spirit]" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -45,21 +45,21 @@
 
             <TextView
                 android:id="@+id/search_tv_artist_name"
-                style="@style/SearchSmallTextStyle"
+                style="@style/ListSmallTextStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                tools:text="Nirvаna" />
+                tools:text="[Nirvаna]" />
 
 
             <TextView
                 android:id="@+id/search_tv_track_time"
-                style="@style/SearchSmallTextStyle"
+                style="@style/ListSmallTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="5:01" />
+                tools:text="[5:01]" />
         </LinearLayout>
 
 

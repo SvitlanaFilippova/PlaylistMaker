@@ -10,7 +10,6 @@ data class TrackEntity(
     val artistName: String,
     val trackTime: String,
     val artworkUrl100: String,
-
     @PrimaryKey
     val trackId: Int,
     val collectionName: String,
@@ -19,5 +18,6 @@ data class TrackEntity(
     val country: String,
     val previewUrl: String,
     val coverArtwork: String,
+    val isFavorite: Boolean,
     val timestamp: Long
 )

@@ -1,4 +1,4 @@
-package com.playlistmaker.domain
+package com.playlistmaker.domain.models
 
 data class Track
     (
@@ -13,7 +13,5 @@ data class Track
     val country: String,
     val previewUrl: String,
     val coverArtwork: String,
-    var inFavorite: Boolean
-) {
-
-}
+    var inFavorite: Boolean?
+)

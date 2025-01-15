@@ -6,17 +6,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
-
-
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
-import com.playlistmaker.domain.Track
+import com.playlistmaker.domain.models.Playlist
+import com.playlistmaker.domain.models.Track
+import com.playlistmaker.ui.library.playlists.PlaylistsState
+import com.playlistmaker.ui.presentation.PlaylistAdapter
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
 import org.koin.android.ext.android.inject
@@ -28,12 +31,18 @@ class PlayerFragment : Fragment() {
 
     private var _binding: FragmentPlayerBinding? = null
     private val binding: FragmentPlayerBinding get() = requireNotNull(_binding) { "Binding wasn't initialized" }
+
+    private var _track: Track? = null
+    private val track: Track get() = requireNotNull(_track) { "Track wasn't initialized" }
+
+    private var _adapter: PlaylistAdapter? = null
+    private val adapter: PlaylistAdapter get() = requireNotNull(_adapter) { "Adapter wasn't initialized" }
+
     private val gson: Gson by inject()
     private val args by navArgs<PlayerFragmentArgs>()
-
-    private lateinit var track: Track
     private val viewModel by viewModel<PlayerViewModel> { parametersOf(track) }
 
+    private var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,18 +57,36 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val jsonTrack = args.trackJson
-        track = gson.fromJson(jsonTrack, Track::class.java)
-
+        _track = gson.fromJson(jsonTrack, Track::class.java)
         updateTrackData()
+
+        _adapter = PlaylistAdapter(
+            viewType = PlaylistAdapter.SMALL_PLAYLISTS_LIST,
+            onItemClick = { playlist ->
+                viewModel.addTrackToPlaylist(playlist)
+            })
+        binding.recyclerView.adapter = adapter
+
+        setBottomSheetBehavior()
+
         with(viewModel) {
+            getPlaylists()
+
             getPlayerStateLiveData().observe(viewLifecycleOwner) { playerState ->
                 playbackControl(playerState)
             }
-
             getIsFavoriteLiveData().observe(viewLifecycleOwner) { isFavorite ->
                 toggleFavorite(isFavorite)
             }
+            getPlaylistsLiveData().observe(viewLifecycleOwner) { state ->
+                managePlaylists(state)
+            }
+            getTrackAddedLiveData().observe(viewLifecycleOwner) { message ->
+                showMessage(message)
+                bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
+            }
         }
+
 
         with(binding) {
             ibArrowBack.setOnClickListener {
@@ -73,38 +100,48 @@ class PlayerFragment : Fragment() {
             ibAddToFavorite.setOnClickListener {
                 viewModel.toggleFavorite()
             }
+            ibAddToPlaylist.setOnClickListener {
+                bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+            }
+            btCreatePlaylist.setOnClickListener {
+                findNavController().navigate(
+                    PlayerFragmentDirections.actionPlayerFragmentToNewPlaylistFragment()
+                )
+            }
         }
     }
 
     private fun updateTrackData() {
         try {
-            with(binding) {
-                tvTrackProgress.text = getString(R.string.default_track_progress)
-                tvTrackName.text = track.trackName
-                tvArtistName.text = track.artistName
-                tvDurationTrack.text = track.trackTime
-                tvYearTrack.text = track.releaseDate
-                tvGenreTrack.text = track.primaryGenreName
-                tvCountryTrack.text = track.country
+            binding.apply {
+                with(track) {
+                    tvTrackProgress.text = getString(R.string.default_track_progress)
+                    tvTrackName.text = trackName
+                    tvArtistName.text = artistName
+                    tvDurationTrack.text = trackTime
+                    tvYearTrack.text = releaseDate
+                    tvGenreTrack.text = primaryGenreName
+                    tvCountryTrack.text = country
 
-                Glide.with(requireContext())
-                    .load(track.coverArtwork)
-                    .centerCrop()
-                    .transform(
-                        RoundedCorners(
-                            resources.getDimensionPixelSize(R.dimen.player_cover_radius_8)
+                    Glide.with(requireContext())
+                        .load(coverArtwork)
+                        .centerCrop()
+                        .transform(
+                            RoundedCorners(
+                                resources.getDimensionPixelSize(R.dimen.player_cover_radius_8)
+                            )
                         )
-                    )
-                    .placeholder(R.drawable.ic_big_placeholder)
-                    .into(ivCover)
+                        .placeholder(R.drawable.ic_big_placeholder)
+                        .into(ivCover)
 
-                if (track.collectionName.isNotEmpty())
-                    tvCollectionTrack.text = track.collectionName
-                else {
-                    tvCollectionTrack.isVisible = false
-                    tvCollectionTitle.isVisible = false
+                    if (track.collectionName.isNotEmpty())
+                        tvCollectionTrack.text = collectionName
+                    else {
+                        tvCollectionTrack.isVisible = false
+                        tvCollectionTitle.isVisible = false
+                    }
+                    viewModel.checkIfFavorite(trackId)
                 }
-                viewModel.checkIfFavorite(track.trackId)
             }
         } catch (e: RuntimeException) {
             Log.e("DEBUG", "Ошибка при попытке загрузить данные трека: $track")
@@ -153,10 +190,71 @@ class PlayerFragment : Fragment() {
     }
 
     private fun toggleFavorite(isFavorite: Boolean) {
-        if (isFavorite)
-            binding.ibAddToFavorite.setImageResource(R.drawable.ic_favorite_active)
-        else
-            binding.ibAddToFavorite.setImageResource(R.drawable.ic_favorite_inactive)
+        binding.ibAddToFavorite.apply {
+            if (isFavorite)
+                setImageResource(R.drawable.ic_favorite_active)
+            else
+                setImageResource(R.drawable.ic_favorite_inactive)
+        }
+    }
+
+    private fun managePlaylists(state: PlaylistsState) {
+        when (state) {
+            PlaylistsState.Empty -> showPlaceholder()
+            is PlaylistsState.Content -> showPlaylists(state.playlists)
+        }
+    }
+
+
+    private fun showPlaceholder() {
+        binding.apply {
+            recyclerView.isVisible = false
+            progressbar.isVisible = false
+            llPlaceholder.isVisible = true
+        }
+    }
+
+    private fun showPlaylists(playlists: List<Playlist>) {
+        binding.apply {
+            recyclerView.isVisible = true
+            progressbar.isVisible = false
+            llPlaceholder.isVisible = false
+        }
+        adapter?.clearList()
+        adapter?.submitList(playlists as ArrayList)
+        adapter?.notifyDataSetChanged()
+    }
+
+    private fun showMessage(message: String) {
+        Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun setBottomSheetBehavior() {
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.llBsAddToPlaylist).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        val overlay = binding.overlay
+
+        bottomSheetBehavior?.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        overlay.visibility = View.GONE
+                    }
+
+                    else -> {
+                        overlay.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
+
     }
 
     override fun onPause() {
@@ -167,5 +265,7 @@ class PlayerFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        _adapter = null
+        _track = null
     }
 }

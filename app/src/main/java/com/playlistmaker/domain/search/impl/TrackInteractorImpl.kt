@@ -1,6 +1,6 @@
 package com.playlistmaker.domain.search.impl
 
-import com.playlistmaker.domain.Track
+import com.playlistmaker.domain.models.Track
 import com.playlistmaker.domain.search.TrackInteractor
 import com.playlistmaker.domain.search.TracksRepository
 import com.playlistmaker.util.Resource

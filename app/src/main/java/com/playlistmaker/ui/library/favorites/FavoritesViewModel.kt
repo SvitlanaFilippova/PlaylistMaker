@@ -5,13 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.playlistmaker.domain.Track
-import com.playlistmaker.domain.player.FavoritesInteractor
+import com.playlistmaker.domain.db.saved_tracks.SavedTracksInteractor
+import com.playlistmaker.domain.models.Track
 import kotlinx.coroutines.launch
 
 
 class FavoritesViewModel(
-    private val favoritesInteractor: FavoritesInteractor
+    private val savedTracksInteractor: SavedTracksInteractor
 ) : ViewModel() {
     private val stateLiveData = MutableLiveData<FavoritesState>()
 
@@ -20,7 +20,7 @@ class FavoritesViewModel(
     fun fillData() {
         renderState(FavoritesState.Loading)
         viewModelScope.launch {
-            favoritesInteractor
+            savedTracksInteractor
                 .getFavoriteTracks()
                 .collect { movies ->
                     processResult(movies)
@@ -42,12 +42,12 @@ class FavoritesViewModel(
 
     sealed interface FavoritesState {
 
-        object Loading : FavoritesState
+        data object Loading : FavoritesState
 
         data class Content(
             val tracks: List<Track>
         ) : FavoritesState
 
-        object Empty : FavoritesState
+        data object Empty : FavoritesState
     }
 }

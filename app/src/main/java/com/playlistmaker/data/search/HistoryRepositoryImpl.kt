@@ -3,7 +3,7 @@ package com.playlistmaker.data.search
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.playlistmaker.data.SharedPrefsStorage
-import com.playlistmaker.domain.Track
+import com.playlistmaker.domain.models.Track
 import com.playlistmaker.domain.search.HistoryRepository
 
 
