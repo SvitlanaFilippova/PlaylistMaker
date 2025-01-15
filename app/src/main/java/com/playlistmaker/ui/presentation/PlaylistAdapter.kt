@@ -44,10 +44,10 @@ class PlaylistAdapter(private val viewType: Int, private val onItemClick: (Playl
             val remainder100 = quantity % 100
             val trackEnding =
                 when {
-                    remainder100 in 11..19 -> "ов"// Числа от 11 до 19 всегда "треков"
+                    remainder100 in 11..19 -> TREK_ENDING_OV// Числа от 11 до 19 всегда "треков"
                     remainder10 == 1 -> ""// Числа, оканчивающиеся на 1 (кроме 11), "трек"
-                    remainder10 in 2..4 -> "а" // Числа, оканчивающиеся на 2, 3, 4 (кроме 12–14), "трека"
-                    else -> "ов"  // Всё остальное — "треков"
+                    remainder10 in 2..4 -> TREK_ENDING_A // Числа, оканчивающиеся на 2, 3, 4 (кроме 12–14), "трека"
+                    else -> TREK_ENDING_OV  // Всё остальное — "треков"
                 }
             return parentView.context.getString(R.string.track_template, trackEnding)
         }
@@ -90,6 +90,8 @@ class PlaylistAdapter(private val viewType: Int, private val onItemClick: (Playl
     companion object {
         const val MEDIUM_PLAYLISTS_GRID = 1
         const val SMALL_PLAYLISTS_LIST = 2
+        const val TREK_ENDING_OV = "ов"
+        const val TREK_ENDING_A = "а"
 
     }
 }

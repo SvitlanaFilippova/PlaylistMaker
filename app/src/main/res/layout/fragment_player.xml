@@ -63,7 +63,7 @@
                 app:layout_constraintEnd_toStartOf="@id/rightBorder"
                 app:layout_constraintStart_toEndOf="@id/leftBorder"
                 app:layout_constraintTop_toBottomOf="@id/iv_cover"
-                tools:text="Smells Like Teen Spirit" />
+                tools:text="[Smells Like Teen Spirit]" />
 
             <TextView
                 android:id="@+id/tv_artist_name"
@@ -75,7 +75,7 @@
                 app:layout_constraintEnd_toStartOf="@id/rightBorder"
                 app:layout_constraintStart_toEndOf="@id/leftBorder"
                 app:layout_constraintTop_toBottomOf="@id/tv_track_name"
-                tools:text="Nirvаna" />
+                tools:text="[Nirvаna]" />
 
             <ImageButton
                 android:id="@+id/ib_add_to_playlist"
@@ -190,7 +190,7 @@
                 android:layout_marginTop="@dimen/player_big_margin_40"
                 app:layout_constraintEnd_toStartOf="@id/rightBorder"
                 app:layout_constraintTop_toBottomOf="@id/button_play"
-                tools:text="05:35" />
+                tools:text="[05:35]" />
 
             <TextView
                 android:id="@+id/tv_collection_track"
@@ -202,7 +202,7 @@
                 app:layout_constraintEnd_toStartOf="@id/rightBorder"
                 app:layout_constraintStart_toEndOf="@id/tv_duration_title"
                 app:layout_constraintTop_toBottomOf="@id/tv_duration_track"
-                tools:text="Yesterday (Remastered 2009)" />
+                tools:text="[Yesterday (Remastered 2009)]" />
 
             <TextView
                 android:id="@+id/tv_year_track"
@@ -211,7 +211,7 @@
                 android:layout_marginTop="@dimen/standart_padding_16"
                 app:layout_constraintEnd_toStartOf="@id/rightBorder"
                 app:layout_constraintTop_toBottomOf="@id/tv_collection_track"
-                tools:text="2009" />
+                tools:text="[2009]" />
 
             <TextView
                 android:id="@+id/tv_genre_track"
@@ -220,7 +220,7 @@
                 android:layout_marginTop="@dimen/standart_padding_16"
                 app:layout_constraintEnd_toStartOf="@id/rightBorder"
                 app:layout_constraintTop_toBottomOf="@id/tv_year_track"
-                tools:text="Rock" />
+                tools:text="[Rock]" />
 
             <TextView
                 android:id="@+id/tv_country_track"
@@ -229,7 +229,7 @@
                 android:layout_marginTop="@dimen/standart_padding_16"
                 app:layout_constraintEnd_toStartOf="@id/rightBorder"
                 app:layout_constraintTop_toBottomOf="@id/tv_genre_track"
-                tools:text="USA" />
+                tools:text="[USA]" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

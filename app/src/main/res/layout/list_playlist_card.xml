@@ -29,7 +29,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_cover"
-        tools:text="Best songs 2021" />
+        tools:text="[Best songs 2021]" />
 
     <TextView
         android:id="@+id/tv_quantity"
@@ -39,7 +39,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
-        tools:text="10500 треков" />
+        tools:text="[10500 треков]" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,12 +31,17 @@ class PlayerFragment : Fragment() {
 
     private var _binding: FragmentPlayerBinding? = null
     private val binding: FragmentPlayerBinding get() = requireNotNull(_binding) { "Binding wasn't initialized" }
+
+    private var _track: Track? = null
+    private val track: Track get() = requireNotNull(_track) { "Track wasn't initialized" }
+
+    private var _adapter: PlaylistAdapter? = null
+    private val adapter: PlaylistAdapter get() = requireNotNull(_adapter) { "Adapter wasn't initialized" }
+
     private val gson: Gson by inject()
     private val args by navArgs<PlayerFragmentArgs>()
-
-    private lateinit var track: Track
     private val viewModel by viewModel<PlayerViewModel> { parametersOf(track) }
-    private var adapter: PlaylistAdapter? = null
+
     private var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>? = null
 
     override fun onCreateView(
@@ -52,10 +57,10 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val jsonTrack = args.trackJson
-        track = gson.fromJson(jsonTrack, Track::class.java)
+        _track = gson.fromJson(jsonTrack, Track::class.java)
         updateTrackData()
 
-        adapter = PlaylistAdapter(
+        _adapter = PlaylistAdapter(
             viewType = PlaylistAdapter.SMALL_PLAYLISTS_LIST,
             onItemClick = { playlist ->
                 viewModel.addTrackToPlaylist(playlist)
@@ -243,7 +248,6 @@ class PlayerFragment : Fragment() {
 
                     else -> {
                         overlay.visibility = View.VISIBLE
-//                        viewModel.getPlaylists() //TODO подумать, нужно ли
                     }
                 }
             }
@@ -261,6 +265,7 @@ class PlayerFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        adapter = null
+        _adapter = null
+        _track = null
     }
 }
