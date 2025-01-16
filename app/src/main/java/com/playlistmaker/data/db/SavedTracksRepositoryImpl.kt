@@ -20,14 +20,18 @@ class SavedTracksRepositoryImpl(private val appDatabase: AppDatabase) :
         return appDatabase.trackDao().checkIfTrackIsFavorite(trackId) != null
     }
 
-
     override fun getFavoriteTracks(): Flow<List<Track>> = flow {
         val tracks = appDatabase.trackDao().getFavoriteTracks()
         emit(convertFromTrackEntity(tracks))
     }
 
     private fun convertFromTrackEntity(tracks: List<TrackEntity>): List<Track> {
-        return tracks.map { track -> track.toDomain(inFavorite = true) }
+        return tracks.map { track -> track.toDomain() }
+    }
+
+    override fun getTracksByIds(ids: List<Int>): Flow<List<Track>> = flow {
+        val tracks = appDatabase.trackDao().getTracksByIds(ids)
+        emit(convertFromTrackEntity(tracks))
     }
 
 }

@@ -33,13 +33,19 @@ class SearchFragment : Fragment() {
     private val binding: FragmentSearchBinding get() = requireNotNull(_binding) { "Binding wasn't initialized" }
 
     private val tracksAdapter: TrackAdapter by lazy {
-        TrackAdapter { track ->
-            if (clickDebounce()) {
-                viewModel.updateHistory(track)
-                showPlayer(track)
+        TrackAdapter(
+            onTrackClickDebounce = { track ->
+                if (clickDebounce()) {
+                    showPlayer(track)
+                }
+            },
+            onLongClickListener = { _ ->
+                false // Дефолтное поведение для длинного клика (не обрабатываем)
             }
-        }
+        )
     }
+
+
     private var isClickAllowed = true
 
     private var searchInput: String = INPUT_DEF

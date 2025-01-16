@@ -42,6 +42,9 @@
         <action
             android:id="@+id/action_libraryFragment_to_newPlaylistFragment"
             app:destination="@id/newPlaylistFragment" />
+        <action
+            android:id="@+id/action_libraryFragment_to_playlist"
+            app:destination="@id/playlist" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -53,4 +56,18 @@
         android:name="com.playlistmaker.ui.library.playlists.new_playlist.NewPlaylistFragment"
         android:label="fragment_new_playlist"
         tools:layout="@layout/fragment_new_playlist" />
+
+    <fragment
+        android:id="@+id/playlist"
+        android:name="com.playlistmaker.ui.library.playlists.playlist.PlaylistFragment"
+        android:label="fragment_playlist"
+        tools:layout="@layout/fragment_playlist">
+        <argument
+            android:name="playlistJson"
+            app:argType="string"
+            app:nullable="false" />
+        <action
+            android:id="@+id/action_playlist_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
 </navigation>

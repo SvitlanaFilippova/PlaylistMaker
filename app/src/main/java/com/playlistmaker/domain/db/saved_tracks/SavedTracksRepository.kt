@@ -9,6 +9,7 @@ interface SavedTracksRepository {
     suspend fun changeFavorites(track: Track)
     suspend fun checkIfTrackIsFavorite(trackId: Int): Boolean
 
+    fun getTracksByIds(ids: List<Int>): Flow<List<Track>>
     fun getFavoriteTracks(): Flow<List<Track>>
 
 }

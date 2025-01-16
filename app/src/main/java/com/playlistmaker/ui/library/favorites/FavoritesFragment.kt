@@ -39,11 +39,16 @@ class FavoritesFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         isClickAllowed = true
-        adapter = TrackAdapter { track ->
-            if (clickDebounce()) {
-                showPlayer(track)
+        adapter = TrackAdapter(
+            onTrackClickDebounce = { track ->
+                if (clickDebounce()) {
+                    showPlayer(track)
+                }
+            },
+            onLongClickListener = { _ ->
+                false
             }
-        }
+        )
         with(binding) {
             rvFavoritesList.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)

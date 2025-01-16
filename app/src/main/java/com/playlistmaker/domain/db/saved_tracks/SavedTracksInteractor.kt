@@ -7,5 +7,6 @@ interface SavedTracksInteractor {
     suspend fun changeFavorites(track: Track)
     suspend fun checkIfTrackIsFavorite(trackId: Int): Boolean
     fun getFavoriteTracks(): Flow<List<Track>>
+    fun getTracksByIds(ids: List<Int>): Flow<List<Track>>
 
 }

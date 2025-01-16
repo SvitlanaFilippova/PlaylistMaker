@@ -54,6 +54,8 @@
     <dimen name="bottomSheet_margin_top_42">42dp</dimen>
     <dimen name="bottom_sheet_corner_radius_16">16dp</dimen>
     <dimen name="playlist_list_cover_size_48">48dp</dimen>
+    <dimen name="playlist_bottomshet_min_height_266">266dp</dimen>
+    <dimen name="playlist_bottom_margin_282">282dp</dimen>
 
 
 </resources>

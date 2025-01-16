@@ -122,19 +122,24 @@ class PlayerViewModel(
 
     fun toggleFavorite() {
         val wasTrackFavorited = track.inFavorite
+
         if (wasTrackFavorited != null) {
             val newTrack = track.copy(inFavorite = !wasTrackFavorited)
             viewModelScope.launch {
                 savedTracksInteractor.changeFavorites(newTrack)
             }
             isFavoriteLiveData.value = !wasTrackFavorited
+
             this.track = newTrack
         }
     }
 
+
     fun checkIfFavorite(trackId: Int) {
         viewModelScope.launch {
-            isFavoriteLiveData.value = savedTracksInteractor.checkIfTrackIsFavorite(trackId)
+            val isFavorite = savedTracksInteractor.checkIfTrackIsFavorite(trackId)
+            isFavoriteLiveData.value = isFavorite
+            track = track.copy(inFavorite = isFavorite)
         }
     }
 
@@ -161,7 +166,7 @@ class PlayerViewModel(
 
     fun addTrackToPlaylist(playlist: Playlist) {
 
-        if (playlist.tracks.contains(track.trackId.toString())) {
+        if (playlist.tracks.contains(track.trackId)) {
             trackAddedLiveData.value =
                 stringProvider.getString(
                     R.string.track_is_already_added_to_playlist_template,

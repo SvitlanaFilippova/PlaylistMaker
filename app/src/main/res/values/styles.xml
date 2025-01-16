@@ -88,6 +88,22 @@
     <style name="PlayerMainTextStyle">
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">400</item>
+
+    </style>
+
+    <style name="PlaylistTitleTextStyle">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/playlist_title_text_24</item>
+    </style>
+
+
+    <style name="PlaylistRegularTextStyle">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/playlist_regular_text_18</item>
     </style>
 
 
@@ -152,4 +168,6 @@
     </style>
 
     <dimen name="add_to_playlist_text_size_19">19sp</dimen>
+    <dimen name="playlist_title_text_24">24sp</dimen>
+    <dimen name="playlist_regular_text_18">18sp</dimen>
 </resources>

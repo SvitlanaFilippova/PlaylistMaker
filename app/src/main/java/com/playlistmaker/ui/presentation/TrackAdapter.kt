@@ -11,7 +11,10 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ListSearchTrackCardBinding
 
 
-class TrackAdapter(private val onTrackClickDebounce: (track: Track) -> Unit) :
+class TrackAdapter(
+    private val onTrackClickDebounce: (track: Track) -> Unit,
+    private val onLongClickListener: (track: Track) -> Boolean
+) :
     RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
     private var trackList: ArrayList<Track> = arrayListOf()
 
@@ -50,8 +53,11 @@ class TrackAdapter(private val onTrackClickDebounce: (track: Track) -> Unit) :
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         val track = trackList[position]
-        holder.bind(track)
-        holder.itemView.setOnClickListener { onClickListener(track) }
+        holder.apply {
+            bind(track)
+            itemView.setOnClickListener { onTrackClickDebounce(track) }
+            itemView.setOnLongClickListener { onLongClickListener(track) }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -59,14 +65,10 @@ class TrackAdapter(private val onTrackClickDebounce: (track: Track) -> Unit) :
     }
 
 
-    private fun onClickListener(track: Track) {
-        onTrackClickDebounce(track)
-    }
-
-
     fun submitList(trackList: ArrayList<Track>) {
         this.trackList = trackList
     }
+
     fun clearList() {
         trackList.clear()
     }

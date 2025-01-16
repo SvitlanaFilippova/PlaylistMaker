@@ -1,6 +1,5 @@
 package com.playlistmaker.data.db
 
-import android.util.Log
 import com.playlistmaker.data.db.entity.PlaylistEntity
 import com.playlistmaker.data.toDomain
 import com.playlistmaker.data.toEntity
@@ -22,18 +21,41 @@ class PlaylistsRepositoryImpl(private val appDatabase: AppDatabase) : PlaylistsR
 
     override suspend fun addToPlaylist(track: Track, playlist: Playlist) {
         val newPlaylist = playlist.copy(
-            tracks = playlist.tracks + track.trackId.toString(),
+            tracks = playlist.tracks + track.trackId,
             tracksQuantity = playlist.tracksQuantity + 1
         )
 
-        val playlistEntity = newPlaylist.toEntity()
-
         with(appDatabase) {
-            playlistDao().insertOrUpdatePlaylist(playlistEntity)
-            newPlaylist.tracks.forEach { track -> Log.d("Debug", " $track") }
-
+            playlistDao().insertOrUpdatePlaylist(newPlaylist.toEntity())
             trackDao().addTrack(track.toEntity(System.currentTimeMillis()))
         }
+    }
+
+    override suspend fun removeTrackFromPlaylist(trackId: Int, playlist: Playlist): List<Int> {
+        val newTrackList = playlist.tracks.filter { it != trackId }
+        val newPlaylist = playlist.copy(
+            tracks = newTrackList,
+            tracksQuantity = playlist.tracksQuantity - 1
+        )
+        // В репозитории редактируется список идентификаторов треков плейлиста и обновляются данные текущего плейлиста
+        // в базе данных посредством соответствующего DAO-интерфейса (аналогично добавлению трека в плейлист).
+        with(appDatabase) {
+            playlistDao().insertOrUpdatePlaylist(newPlaylist.toEntity())
+
+            val wasTrackFavorite = appDatabase.trackDao().checkIfTrackIsFavorite(trackId) == null
+            if (wasTrackFavorite) {
+
+                getPlaylists().collect { playlists ->
+                    val isTrackInAnyPlaylist =
+                        playlists.any { playlist -> trackId in playlist.tracks }
+                    if (!isTrackInAnyPlaylist) {
+                        trackDao().deleteTracksById(trackId)
+                    }
+                }
+
+            }
+        }
+        return newTrackList
     }
 }
 
