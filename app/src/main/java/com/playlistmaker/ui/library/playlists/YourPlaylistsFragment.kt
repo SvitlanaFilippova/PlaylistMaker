@@ -83,7 +83,7 @@ class YourPlaylistsFragment : Fragment() {
         playlists.forEach { playlist ->
             Log.d(
                 "DEBUG Your Playlists Fragment",
-                "Плейлист = ${playlist.title}, tracksQuantity = ${playlist.tracksQuantity}, Треков в списке = ${playlist.tracks.size}"
+                "Плейлист = ${playlist.title}, tracksQuantity = ${playlist.tracksQuantity}, Треков в списке = ${playlist.tracks.size}, Треки: [${playlist.tracks}]"
             )
         }
         adapter?.clearList()

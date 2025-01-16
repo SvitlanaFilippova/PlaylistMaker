@@ -37,8 +37,7 @@ class PlaylistsRepositoryImpl(private val appDatabase: AppDatabase) : PlaylistsR
             tracks = newTrackList,
             tracksQuantity = playlist.tracksQuantity - 1
         )
-        // В репозитории редактируется список идентификаторов треков плейлиста и обновляются данные текущего плейлиста
-        // в базе данных посредством соответствующего DAO-интерфейса (аналогично добавлению трека в плейлист).
+
         with(appDatabase) {
             playlistDao().insertOrUpdatePlaylist(newPlaylist.toEntity())
 

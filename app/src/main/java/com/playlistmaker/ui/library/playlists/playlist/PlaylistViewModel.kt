@@ -47,6 +47,17 @@ class PlaylistViewModel(
         stateLiveData.value = state
     }
 
+
+    fun removeTrackFromPlaylist(trackId: Int, playlist: Playlist) {
+        viewModelScope.launch {
+            val newTrackList = playlistsInteractor.removeTrackFromPlaylist(trackId, playlist)
+            getTracks(newTrackList)
+
+            // Если удалять несколько подряд, это получается криво. Часть остаётся "жить" в плейлисте.
+        }
+    }
+
+
     fun getTotalDuration(tracks: List<Track>): String {
         var totalDuration = 0
         tracks.forEach { track ->
@@ -68,13 +79,6 @@ class PlaylistViewModel(
         )
     }
 
-    fun removeTrackFromPlaylist(trackId: Int, playlist: Playlist) {
-        viewModelScope.launch {
-            val newTrackList = playlistsInteractor.removeTrackFromPlaylist(trackId, playlist)
-            getTracks(newTrackList)
-        }
-    }
-
     fun getQuantityText(quantity: Int): String {
         return stringProvider.getString(
             R.string.quantity_of_tracks_template,
@@ -83,8 +87,7 @@ class PlaylistViewModel(
         )
     }
 
-
-    fun getTracksEnding(quantity: Int): String {
+    private fun getTracksEnding(quantity: Int): String {
         val remainder10 = quantity % 10
         val remainder100 = quantity % 100
         val trackEnding =

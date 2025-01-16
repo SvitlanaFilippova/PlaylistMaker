@@ -116,12 +116,22 @@ class PlaylistFragment : Fragment() {
             .setMessage(getString(R.string.q_sure_u_want_to_delete_track))
             .setPositiveButton(getString(R.string.delete)) { _, _ ->
                 viewModel.removeTrackFromPlaylist(trackId, playlist)
+                removeTrackFromPlaylist(trackId)
                 adapter.notifyDataSetChanged()
             }
             .setNegativeButton(getString(R.string.cancel), null)
             .show()
 
     }
+
+    private fun removeTrackFromPlaylist(trackId: Int) {
+        val newPlaylist = playlist.copy(
+            tracks = playlist.tracks.filter { it != trackId },
+            tracksQuantity = playlist.tracksQuantity - 1
+        )
+        this._playlist = newPlaylist
+    }
+
 
     private fun render(state: PlaylistViewModel.TracksState) {
         when (state) {
@@ -141,7 +151,6 @@ class PlaylistFragment : Fragment() {
 
     private fun showContent(tracks: List<Track>) {
         with(binding) {
-
             recyclerView.visibility = View.VISIBLE
             tvPlaceholderMessage.visibility = View.GONE
             tvDuration.text = viewModel.getTotalDuration(tracks)

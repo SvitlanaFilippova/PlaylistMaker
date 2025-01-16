@@ -36,6 +36,7 @@ class SearchFragment : Fragment() {
         TrackAdapter(
             onTrackClickDebounce = { track ->
                 if (clickDebounce()) {
+                    viewModel.updateHistory(track)
                     showPlayer(track)
                 }
             },
@@ -178,6 +179,7 @@ class SearchFragment : Fragment() {
             searchBvClearHistory.isVisible = true
             searchTvSearchHistory.isVisible = true
             tracksAdapter.notifyDataSetChanged()
+            Log.d("DEBUG Search Fragment", "вызвала метод showHistory")
         }
     }
 
@@ -236,6 +238,10 @@ class SearchFragment : Fragment() {
             is SearchScreenState.History -> {
                 if (state.tracks.isNotEmpty()) {
                     showHistory()
+                    Log.d(
+                        "DEBUG Search Fragment",
+                        "SearchScreenState.History, Треки: ${state.tracks}"
+                    )
                 }
                 with(tracksAdapter) {
                     submitList(state.tracks)

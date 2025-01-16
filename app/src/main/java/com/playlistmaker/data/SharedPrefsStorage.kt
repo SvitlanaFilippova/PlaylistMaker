@@ -27,7 +27,7 @@ class SharedPrefsStorage(context: Context) {
 
 
     companion object {
-        private const val PLAYLISTMAKER_HISTORY_PREFS = "playlistmaker_history_preferences"
+        private const val PLAYLISTMAKER_HISTORY_PREFS = "playlistmaker_new_history_preferences"
         private const val PLAYLISTMAKER_THEME_PREFS = "playlistmaker_theme_preferences"
     }
 }
