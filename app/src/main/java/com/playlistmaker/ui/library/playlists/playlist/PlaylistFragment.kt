@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -158,9 +159,7 @@ class PlaylistFragment : Fragment() {
             tvDuration.text = viewModel.getTotalDurationText(tracks)
             tvQuantity.text = quantityText
             smallPlaylistCard.tvQuantity.text = quantityText
-            adapter.clearList()
             adapter.submitList(tracks as ArrayList<Track>)
-            adapter.notifyDataSetChanged()
         }
     }
 
@@ -216,7 +215,8 @@ class PlaylistFragment : Fragment() {
     private fun setCLickListeners() {
         binding.apply {
             tvShare.setOnClickListener {
-                sharePlaylist()
+                checkShareAction()
+                moreMenuBSBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             }
             tvEdit.setOnClickListener {
                 goToEditor()
@@ -269,15 +269,7 @@ class PlaylistFragment : Fragment() {
                 BottomSheetBehavior.BottomSheetCallback() {
 
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
-                    when (newState) {
-                        BottomSheetBehavior.STATE_HIDDEN -> {
-                            overlay.visibility = View.GONE
-                        }
-
-                        else -> {
-                            overlay.visibility = View.VISIBLE
-                        }
-                    }
+                    overlay.isGone = newState == BottomSheetBehavior.STATE_HIDDEN
                 }
 
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {}

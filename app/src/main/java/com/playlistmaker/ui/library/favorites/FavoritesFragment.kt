@@ -93,7 +93,7 @@ class FavoritesFragment() : Fragment() {
             progressBar.visibility = View.GONE
             adapter?.clearList()
             adapter?.submitList(tracks as ArrayList<Track>)
-            adapter?.notifyDataSetChanged()
+
         }
     }
 

@@ -1,5 +1,6 @@
 package com.playlistmaker.ui.presentation
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,9 +65,10 @@ class TrackAdapter(
         return trackList.size
     }
 
-
+    @SuppressLint("NotifyDataSetChanged")
     fun submitList(trackList: ArrayList<Track>) {
         this.trackList = trackList
+        notifyDataSetChanged()
     }
 
     fun clearList() {

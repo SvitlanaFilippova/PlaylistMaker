@@ -214,7 +214,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+
     private fun renderSearchScreen(state: SearchScreenState) {
         when (state) {
             is SearchScreenState.Empty -> {
@@ -245,7 +245,6 @@ class SearchFragment : Fragment() {
                 }
                 with(tracksAdapter) {
                     submitList(state.tracks)
-                    notifyDataSetChanged()
                 }
             }
 
@@ -253,7 +252,6 @@ class SearchFragment : Fragment() {
                 showSearchResults(state.tracks)
                 with(tracksAdapter) {
                     submitList(state.tracks)
-                    notifyDataSetChanged()
                 }
             }
         }
