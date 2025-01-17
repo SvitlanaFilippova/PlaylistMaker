@@ -180,6 +180,13 @@
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/ll_bs_more_menu"
         android:layout_width="match_parent"
@@ -202,7 +209,6 @@
             style="@style/PlaylistMoreMenuTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/playlist_more_menu_element_height_64"
-            android:layout_marginTop="@dimen/standart_padding_16"
             android:text="@string/share" />
 
         <TextView
@@ -210,7 +216,6 @@
             style="@style/PlaylistMoreMenuTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/playlist_more_menu_element_height_64"
-            android:layout_marginTop="@dimen/standart_padding_16"
             android:text="@string/edit_info" />
 
         <TextView
@@ -218,7 +223,6 @@
             style="@style/PlaylistMoreMenuTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/playlist_more_menu_element_height_64"
-            android:layout_marginTop="@dimen/standart_padding_16"
             android:text="@string/delete_playlist" />
 
     </LinearLayout>

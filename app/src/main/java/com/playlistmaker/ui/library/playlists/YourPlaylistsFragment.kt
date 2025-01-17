@@ -8,12 +8,10 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.gson.Gson
 import com.playlistmaker.domain.models.Playlist
 import com.playlistmaker.ui.library.LibraryFragmentDirections
 import com.playlistmaker.ui.presentation.PlaylistAdapter
 import com.practicum.playlistmaker.databinding.FragmentYourPlaylistsBinding
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class YourPlaylistsFragment : Fragment() {
@@ -34,13 +32,15 @@ class YourPlaylistsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.btCreatePlaylist.setOnClickListener {
             findNavController().navigate(
-                LibraryFragmentDirections.actionLibraryFragmentToNewPlaylistFragment()
+                LibraryFragmentDirections.actionLibraryFragmentToNewPlaylistFragment(
+                    playlistJson = null
+                )
             )
         }
         adapter = PlaylistAdapter(
             viewType = PlaylistAdapter.MEDIUM_PLAYLISTS_GRID,
             onItemClick = { playlist ->
-                goToPlaylist(playlist)
+                goToPlaylist(playlist.id)
             })
         binding.recyclerView.adapter = adapter
         viewModel.fillData()
@@ -58,11 +58,9 @@ class YourPlaylistsFragment : Fragment() {
     }
 
 
-    private fun goToPlaylist(playlist: Playlist) {
-        val gson: Gson by inject()
-        val playlistJson = gson.toJson(playlist)
+    private fun goToPlaylist(playlistId: Int) {
         findNavController().navigate(
-            LibraryFragmentDirections.actionLibraryFragmentToPlaylist(playlistJson)
+            LibraryFragmentDirections.actionLibraryFragmentToPlaylist(playlistId)
         )
     }
 

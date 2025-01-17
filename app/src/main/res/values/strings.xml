@@ -62,4 +62,10 @@
     <string name="delete_playlist">Удалить плейлист</string>
     <string name="share_playlist">Поделиться плейлистом</string>
     <string name="playlist">Плейлист: %1$s</string>
+    <string name="q_want_to_delete_playlist">Хотите удалить плейлист?</string>
+    <string name="no">Нет</string>
+    <string name="yes">Да</string>
+    <string name="edit">Редактировать</string>
+    <string name="save">Сохранить</string>
+    <string name="playlist_created_success">Плейлист %1$s успешно создан</string>
 </resources>

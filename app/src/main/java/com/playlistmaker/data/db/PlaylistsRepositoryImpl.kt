@@ -40,10 +40,26 @@ class PlaylistsRepositoryImpl(private val appDatabase: AppDatabase) : PlaylistsR
 
         with(appDatabase) {
             playlistDao().insertOrUpdatePlaylist(newPlaylist.toEntity())
+            removeTrackFromDB(trackId)
+        }
+        return newTrackList
+    }
 
+    override suspend fun deletePlaylist(playlist: Playlist) {
+        val trackList = playlist.tracks
+        appDatabase.playlistDao().deletePlaylistById(playlist.id)
+        trackList.forEach { trackId -> removeTrackFromDB(trackId) }
+    }
+
+    override suspend fun getPlaylistById(id: Int): Playlist {
+        return appDatabase.playlistDao().getPlaylistById(id).toDomain()
+    }
+
+
+    private suspend fun removeTrackFromDB(trackId: Int) {
+        with(appDatabase) {
             val wasTrackFavorite = appDatabase.trackDao().checkIfTrackIsFavorite(trackId) == null
             if (wasTrackFavorite) {
-
                 getPlaylists().collect { playlists ->
                     val isTrackInAnyPlaylist =
                         playlists.any { playlist -> trackId in playlist.tracks }
@@ -51,13 +67,11 @@ class PlaylistsRepositoryImpl(private val appDatabase: AppDatabase) : PlaylistsR
                         trackDao().deleteTracksById(trackId)
                     }
                 }
-
             }
         }
-        return newTrackList
     }
-}
 
-private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
-    return playlists.map { playlist -> playlist.toDomain() }
+    private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
+        return playlists.map { playlist -> playlist.toDomain() }
+    }
 }

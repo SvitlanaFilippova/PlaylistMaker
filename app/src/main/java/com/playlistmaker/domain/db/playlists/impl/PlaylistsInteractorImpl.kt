@@ -15,11 +15,19 @@ class PlaylistsInteractorImpl(private val repository: PlaylistsRepository) : Pla
         return repository.getPlaylists()
     }
 
+    override suspend fun deletePlaylist(playlist: Playlist) {
+        repository.deletePlaylist(playlist)
+    }
+
     override suspend fun addToPlaylist(track: Track, playlist: Playlist) {
         repository.addToPlaylist(track, playlist)
     }
 
     override suspend fun removeTrackFromPlaylist(trackId: Int, playlist: Playlist): List<Int> {
         return repository.removeTrackFromPlaylist(trackId, playlist)
+    }
+
+    override suspend fun getPlaylistById(id: Int): Playlist {
+        return repository.getPlaylistById(id)
     }
 }

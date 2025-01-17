@@ -22,11 +22,20 @@ class PlaylistViewModel(
     private val stringProvider: StringProvider
 ) : ViewModel() {
 
-    private val stateLiveData = MutableLiveData<TracksState>()
-    fun getStateLiveData(): LiveData<TracksState> = stateLiveData
+    private var _playlist: Playlist? = null
+    private val playlist: Playlist get() = requireNotNull(_playlist) { "Playlist wasn't initialized" }
+
+    private val tracksLiveData = MutableLiveData<TracksState>()
+    fun getTracksLiveData(): LiveData<TracksState> = tracksLiveData
+
+    private val playlistLiveData = MutableLiveData<Playlist>()
+    fun getPlaylistLiveData(): LiveData<Playlist> = playlistLiveData
+
+    private val navigateUpEvent = MutableLiveData<Unit>()
+    val getNavigateUpEvent: LiveData<Unit> get() = navigateUpEvent
 
 
-    fun getTracks(tracks: List<Int>) {
+    private fun getTracks(tracks: List<Int>) {
         viewModelScope.launch {
             savedTracksInteractor.getTracksByIds(tracks).collect { tracks ->
                 processTracksRequestResult(tracks)
@@ -36,25 +45,37 @@ class PlaylistViewModel(
 
     private fun processTracksRequestResult(tracks: List<Track>) {
         if (tracks.isEmpty()) {
-            renderState(TracksState.Empty)
+            tracksLiveData.value = TracksState.Empty
             Log.d("DEBUG", "Список треков пуст!")
         } else {
-            renderState(TracksState.Content(tracks))
+            tracksLiveData.value = TracksState.Content(tracks)
         }
     }
 
-    private fun renderState(state: TracksState) {
-        stateLiveData.value = state
-    }
 
-
-    fun removeTrackFromPlaylist(trackId: Int, playlist: Playlist) {
+    fun removeTrackFromPlaylist(trackId: Int) {
         viewModelScope.launch {
-            val newTrackList = playlistsInteractor.removeTrackFromPlaylist(trackId, playlist)
-            getTracks(newTrackList)
+            playlistsInteractor.removeTrackFromPlaylist(trackId, playlist)
+            updatePlaylist(playlist.id)
         }
     }
 
+    fun updatePlaylist(playlistId: Int) {
+        viewModelScope.launch {
+            val playlist = playlistsInteractor.getPlaylistById(playlistId)
+            _playlist = playlist
+            playlistLiveData.value = playlist
+            getTracks(playlist.tracks)
+        }
+    }
+
+
+    fun deletePlaylist() {
+        viewModelScope.launch {
+            playlistsInteractor.deletePlaylist(playlist)
+            navigateUpEvent.postValue(Unit)
+        }
+    }
 
     fun getTotalDurationText(tracks: List<Track>): String {
         var totalDuration = 0

@@ -41,7 +41,10 @@ val viewModelModule = module {
         FavoritesViewModel(savedTracksInteractor = get())
     }
     viewModel<NewPlaylistViewModel> {
-        NewPlaylistViewModel(playlistsInteractor = get())
+        NewPlaylistViewModel(
+            stringProvider = get(),
+            playlistsInteractor = get()
+        )
     }
     viewModel<PlaylistViewModel> {
         PlaylistViewModel(
