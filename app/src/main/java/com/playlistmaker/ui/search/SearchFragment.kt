@@ -41,7 +41,7 @@ class SearchFragment : Fragment() {
                 }
             },
             onLongClickListener = { _ ->
-                false // Дефолтное поведение для длинного клика (не обрабатываем)
+                false
             }
         )
     }

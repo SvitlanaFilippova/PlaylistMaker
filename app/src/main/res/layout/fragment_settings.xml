@@ -36,7 +36,7 @@
         style="@style/SettingsTextStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_row_size_64"
-        android:text="@string/share"
+        android:text="@string/share_app"
         app:drawableEndCompat="@drawable/ic_share_light_mode" />
 
 

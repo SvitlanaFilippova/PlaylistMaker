@@ -1,6 +1,8 @@
 package com.playlistmaker.ui.library.playlists.playlist
 
+import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,12 +34,14 @@ class PlaylistFragment : Fragment() {
     private var _adapter: TrackAdapter? = null
     private val adapter: TrackAdapter get() = requireNotNull(_adapter) { "TrackAdapter wasn't initialized" }
 
-
     private val gson: Gson by inject()
     private val args by navArgs<PlaylistFragmentArgs>()
     private val viewModel by viewModel<PlaylistViewModel>()
 
-    private var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>? = null
+    private var trackListBSBehavior: BottomSheetBehavior<LinearLayout>? = null
+    private var moreMenuBSBehavior: BottomSheetBehavior<LinearLayout>? = null
+    private var descriprionIsExpanded = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,7 +57,6 @@ class PlaylistFragment : Fragment() {
         _playlist = gson.fromJson(jsonPlaylist, Playlist::class.java)
         updatePlaylistData()
 
-
         val onTrackClickDebounce: (Track) -> Unit = { track ->
             showPlayer(track)
         }
@@ -67,29 +70,24 @@ class PlaylistFragment : Fragment() {
 
         binding.apply {
             recyclerView.adapter = adapter
-            bottomSheetBehavior = BottomSheetBehavior.from(llBsTracksInPlaylist).apply {
+            trackListBSBehavior = BottomSheetBehavior.from(llBsTracksInPlaylist).apply {
                 state = BottomSheetBehavior.STATE_COLLAPSED
             }
 
-            ibArrowBack.setOnClickListener {
-                findNavController().navigateUp()
+            moreMenuBSBehavior = BottomSheetBehavior.from(llBsMoreMenu).apply {
+                state = BottomSheetBehavior.STATE_HIDDEN
             }
 
-            ivShare.setOnClickListener {
-                //TODO
-            }
-
-            ivMore.setOnClickListener {
-                //TODO
-            }
 
         }
+        setCLickListeners()
 
         viewModel.getTracks(playlist.tracks)
-        viewModel.observeState().observe(viewLifecycleOwner) {
+        viewModel.getStateLiveData().observe(viewLifecycleOwner) {
             render(it)
         }
     }
+
 
     private fun updatePlaylistData() {
         binding.apply {
@@ -100,12 +98,22 @@ class PlaylistFragment : Fragment() {
                 } else tvDescription.isVisible = false
 
 
-
                 Glide.with(requireContext())
                     .load(coverPath)
                     .centerCrop()
                     .placeholder(R.drawable.ic_big_placeholder)
                     .into(ivCover)
+
+                with(smallPlaylistCard) {
+                    Glide.with(requireContext())
+                        .load(coverPath)
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_big_placeholder)
+                        .into(ivCover)
+
+                    tvTitle.text = title
+                }
+
             }
         }
     }
@@ -150,11 +158,13 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun showContent(tracks: List<Track>) {
+        val quantityText = viewModel.getQuantityText(tracks.size)
         with(binding) {
             recyclerView.visibility = View.VISIBLE
             tvPlaceholderMessage.visibility = View.GONE
-            tvDuration.text = viewModel.getTotalDuration(tracks)
-            tvQuantity.text = viewModel.getQuantityText(tracks.size)
+            tvDuration.text = viewModel.getTotalDurationText(tracks)
+            tvQuantity.text = quantityText
+            smallPlaylistCard.tvQuantity.text = quantityText
             adapter.clearList()
             adapter.submitList(tracks as ArrayList<Track>)
             adapter.notifyDataSetChanged()
@@ -167,6 +177,96 @@ class PlaylistFragment : Fragment() {
         findNavController().navigate(
             PlaylistFragmentDirections.actionPlaylistToPlayerFragment(trackJson)
         )
+    }
+
+    private fun checkShareAction() {
+        if (viewModel.getStateLiveData().value is PlaylistViewModel.TracksState.Empty)
+            showMessageListIsEmpty()
+        else sharePlaylist()
+    }
+
+    private fun sharePlaylist() {
+        val state = viewModel.getStateLiveData().value
+        val context = requireContext()
+        if (state is PlaylistViewModel.TracksState.Content) {
+
+            val message = buildString {
+                appendLine(context.getString(R.string.playlist, playlist.title))
+                playlist.description?.let { appendLine(it) }
+                appendLine(viewModel.getQuantityText(playlist.tracksQuantity))
+                appendLine() // Пустая строка перед списком треков
+
+                state.tracks.forEachIndexed { index, track ->
+                    appendLine("${index + 1}. ${track.artistName} - ${track.trackName} (${track.trackTime})")
+                }
+            }
+
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, message)
+            }
+
+            context.startActivity(
+                Intent.createChooser(
+                    intent,
+                    context.getString(R.string.share_playlist)
+                )
+            )
+        }
+    }
+
+
+    private fun showMoreMenu() {
+        moreMenuBSBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+    }
+
+    private fun setCLickListeners() {
+        binding.apply {
+            tvShare.setOnClickListener {
+                sharePlaylist()
+            }
+            tvEdit.setOnClickListener {
+                //TODO()
+            }
+            tvDeletePlaylist.setOnClickListener {
+                //TODO()
+            }
+
+            ibArrowBack.setOnClickListener {
+                findNavController().navigateUp()
+            }
+
+            ivShare.setOnClickListener {
+                checkShareAction()
+            }
+
+            ivMore.setOnClickListener {
+                showMoreMenu()
+            }
+            tvDescription.setOnClickListener {
+                toggleExpandingDescription()
+            }
+        }
+    }
+
+    private fun showMessageListIsEmpty() {
+        MaterialAlertDialogBuilder(requireActivity())
+            .setMessage("В этом плейлисте нет списка треков, которым можно поделиться")
+            .setNeutralButton("Ок, пойду добавлю", null)
+            .show()
+    }
+
+    private fun toggleExpandingDescription() {
+        binding.tvDescription.apply {
+            if (descriprionIsExpanded) {
+                maxLines = 1
+                ellipsize = TextUtils.TruncateAt.END
+            } else {
+                maxLines = Int.MAX_VALUE
+                ellipsize = null
+            }
+        }
+        descriprionIsExpanded = !descriprionIsExpanded
     }
 
     override fun onDestroyView() {

@@ -4,7 +4,7 @@
     <string name="library" translatable="true">Медиатека</string>
     <string name="settings" translatable="true">Настройки</string>
     <string name="dark_theme" translatable="true">Темная тема</string>
-    <string name="share" translatable="true">Поделиться приложением</string>
+    <string name="share_app" translatable="true">Поделиться приложением</string>
     <string name="support" translatable="true">Написать в поддержку</string>
     <string name="agreement" translatable="true">Пользовательское соглашение</string>
     <string name="settings_share_title" translatable="false">Выберите мессенджер</string>
@@ -57,4 +57,9 @@
     <string name="delete_track">Удалить трек</string>
     <string name="q_sure_u_want_to_delete_track">Вы уверены, что хотите удалить трек из плейлиста?</string>
     <string name="delete">Удалить</string>
+    <string name="share">Поделиться</string>
+    <string name="edit_info">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
+    <string name="share_playlist">Поделиться плейлистом</string>
+    <string name="playlist">Плейлист: %1$s</string>
 </resources>

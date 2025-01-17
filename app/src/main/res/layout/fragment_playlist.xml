@@ -82,6 +82,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/small_margin_8"
+                android:ellipsize="end"
+                android:maxLines="1"
                 app:layout_constraintEnd_toStartOf="@id/rightBorder"
                 app:layout_constraintStart_toEndOf="@id/leftBorder"
                 app:layout_constraintTop_toBottomOf="@id/tv_playlist_name"
@@ -177,6 +179,51 @@
 
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_bs_more_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_rect_with_round_top_corners"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/standart_padding_16"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <include
+            android:id="@+id/small_playlist_card"
+            layout="@layout/list_small_playlist_card"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/playlist_more_menu_element_height_64"
+            android:layout_marginTop="@dimen/big_margin_24" />
+
+        <TextView
+            android:id="@+id/tv_share"
+            style="@style/PlaylistMoreMenuTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/playlist_more_menu_element_height_64"
+            android:layout_marginTop="@dimen/standart_padding_16"
+            android:text="@string/share" />
+
+        <TextView
+            android:id="@+id/tv_edit"
+            style="@style/PlaylistMoreMenuTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/playlist_more_menu_element_height_64"
+            android:layout_marginTop="@dimen/standart_padding_16"
+            android:text="@string/edit_info" />
+
+        <TextView
+            android:id="@+id/tv_delete_playlist"
+            style="@style/PlaylistMoreMenuTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/playlist_more_menu_element_height_64"
+            android:layout_marginTop="@dimen/standart_padding_16"
+            android:text="@string/delete_playlist" />
+
+    </LinearLayout>
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

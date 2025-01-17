@@ -23,7 +23,7 @@ class PlaylistViewModel(
 ) : ViewModel() {
 
     private val stateLiveData = MutableLiveData<TracksState>()
-    fun observeState(): LiveData<TracksState> = stateLiveData
+    fun getStateLiveData(): LiveData<TracksState> = stateLiveData
 
 
     fun getTracks(tracks: List<Int>) {
@@ -52,13 +52,11 @@ class PlaylistViewModel(
         viewModelScope.launch {
             val newTrackList = playlistsInteractor.removeTrackFromPlaylist(trackId, playlist)
             getTracks(newTrackList)
-
-            // Если удалять несколько подряд, это получается криво. Часть остаётся "жить" в плейлисте.
         }
     }
 
 
-    fun getTotalDuration(tracks: List<Track>): String {
+    fun getTotalDurationText(tracks: List<Track>): String {
         var totalDuration = 0
         tracks.forEach { track ->
             totalDuration += track.trackTimeMillis
