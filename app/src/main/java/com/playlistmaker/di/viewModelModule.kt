@@ -8,8 +8,9 @@ import com.playlistmaker.ui.library.playlists.playlist.PlaylistViewModel
 import com.playlistmaker.ui.player.PlayerViewModel
 import com.playlistmaker.ui.search.SearchViewModel
 import com.playlistmaker.ui.settings.view_model.SettingsViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+
 
 val viewModelModule = module {
 
@@ -48,6 +49,7 @@ val viewModelModule = module {
     }
     viewModel<PlaylistViewModel> {
         PlaylistViewModel(
+            historyInteractor = get(),
             savedTracksInteractor = get(),
             stringProvider = get(),
             playlistsInteractor = get()

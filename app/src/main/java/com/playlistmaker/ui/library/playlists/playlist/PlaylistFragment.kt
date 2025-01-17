@@ -56,6 +56,7 @@ class PlaylistFragment : Fragment() {
 
         val onTrackClickDebounce: (Track) -> Unit = { track ->
             showPlayer(track)
+            viewModel.updateHistory(track)
         }
 
         val onLongClickListener: (Track) -> Boolean = { track ->

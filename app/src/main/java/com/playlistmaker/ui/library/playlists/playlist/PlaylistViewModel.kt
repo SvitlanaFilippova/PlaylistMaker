@@ -11,6 +11,7 @@ import com.playlistmaker.domain.db.saved_tracks.SavedTracksInteractor
 import com.playlistmaker.domain.models.Playlist
 import com.playlistmaker.domain.models.Track
 import com.playlistmaker.domain.models.TrackWithOrder
+import com.playlistmaker.domain.search.HistoryInteractor
 import com.playlistmaker.ui.presentation.PlaylistAdapter.Companion.TREK_ENDING_A
 import com.playlistmaker.ui.presentation.PlaylistAdapter.Companion.TREK_ENDING_OV
 import com.practicum.playlistmaker.R
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 class PlaylistViewModel(
     private val savedTracksInteractor: SavedTracksInteractor,
     private val playlistsInteractor: PlaylistsInteractor,
+    private val historyInteractor: HistoryInteractor,
     private val stringProvider: StringProvider
 ) : ViewModel() {
 
@@ -119,6 +121,20 @@ class PlaylistViewModel(
             }
         return trackEnding
     }
+
+
+    fun updateHistory(track: Track) {
+
+        val sharedPrefsHistory = historyInteractor.read() as ArrayList<Track>
+        sharedPrefsHistory.removeIf { it.trackId == track.trackId }
+        if (sharedPrefsHistory.size > 9) {
+            sharedPrefsHistory.removeAt(9)
+        }
+        sharedPrefsHistory.add(0, track)
+        historyInteractor.save(sharedPrefsHistory)
+
+    }
+
 
     sealed interface TracksState {
         data class Content(

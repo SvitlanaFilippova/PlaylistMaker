@@ -99,13 +99,15 @@ class NewPlaylistFragment : Fragment() {
         binding.apply {
             with(playlist) {
                 toolbar.title = getString(R.string.edit)
-                Glide.with(requireActivity())
-                    .load(coverPath)
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_cover_placeholder)
-                    .into(ivAddPhoto)
                 btCreate.text = getString(R.string.save)
-                if (playlist.coverPath != null) newPlaylistCoverPath = coverPath
+
+                if (playlist.coverPath != null) {
+                    newPlaylistCoverPath = coverPath
+                    Glide.with(requireActivity())
+                        .load(coverPath)
+                        .centerCrop()
+                        .into(ivAddPhoto)
+                }
 
                 newPlaylistTitle = title
                 inputPlaylistTitle.setText(title)
