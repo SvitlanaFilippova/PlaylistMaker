@@ -245,7 +245,7 @@ class SearchFragment : Fragment() {
                 }
                 with(tracksAdapter) {
                     submitList(state.tracks)
-                    notifyDataSetChanged() // TODO заменить на инфо про конкретные изменения списка. Пока не знаю как.
+                    notifyDataSetChanged()
                 }
             }
 
