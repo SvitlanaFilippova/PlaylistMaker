@@ -4,6 +4,7 @@ import com.playlistmaker.domain.db.playlists.PlaylistsInteractor
 import com.playlistmaker.domain.db.playlists.PlaylistsRepository
 import com.playlistmaker.domain.models.Playlist
 import com.playlistmaker.domain.models.Track
+import com.playlistmaker.domain.models.TrackWithOrder
 import kotlinx.coroutines.flow.Flow
 
 class PlaylistsInteractorImpl(private val repository: PlaylistsRepository) : PlaylistsInteractor {
@@ -23,7 +24,10 @@ class PlaylistsInteractorImpl(private val repository: PlaylistsRepository) : Pla
         repository.addToPlaylist(track, playlist)
     }
 
-    override suspend fun removeTrackFromPlaylist(trackId: Int, playlist: Playlist): List<Int> {
+    override suspend fun removeTrackFromPlaylist(
+        trackId: Int,
+        playlist: Playlist
+    ): List<TrackWithOrder> {
         return repository.removeTrackFromPlaylist(trackId, playlist)
     }
 

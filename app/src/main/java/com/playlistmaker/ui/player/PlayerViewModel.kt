@@ -165,8 +165,8 @@ class PlayerViewModel(
 
 
     fun addTrackToPlaylist(playlist: Playlist) {
-
-        if (playlist.tracks.contains(track.trackId)) {
+        val trackIds = playlist.tracks.map { it.trackId }
+        if (trackIds.contains(track.trackId)) {
             trackAddedLiveData.value =
                 stringProvider.getString(
                     R.string.track_is_already_added_to_playlist_template,

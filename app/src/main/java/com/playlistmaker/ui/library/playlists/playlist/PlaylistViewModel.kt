@@ -10,6 +10,7 @@ import com.playlistmaker.domain.db.playlists.PlaylistsInteractor
 import com.playlistmaker.domain.db.saved_tracks.SavedTracksInteractor
 import com.playlistmaker.domain.models.Playlist
 import com.playlistmaker.domain.models.Track
+import com.playlistmaker.domain.models.TrackWithOrder
 import com.playlistmaker.ui.presentation.PlaylistAdapter.Companion.TREK_ENDING_A
 import com.playlistmaker.ui.presentation.PlaylistAdapter.Companion.TREK_ENDING_OV
 import com.practicum.playlistmaker.R
@@ -35,7 +36,7 @@ class PlaylistViewModel(
     val getNavigateUpEvent: LiveData<Unit> get() = navigateUpEvent
 
 
-    private fun getTracks(tracks: List<Int>) {
+    private fun getTracks(tracks: List<TrackWithOrder>) {
         viewModelScope.launch {
             savedTracksInteractor.getTracksByIds(tracks).collect { tracks ->
                 processTracksRequestResult(tracks)

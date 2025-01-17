@@ -7,6 +7,7 @@ import com.playlistmaker.data.db.entity.TrackEntity
 import com.playlistmaker.data.search.TrackDto
 import com.playlistmaker.domain.models.Playlist
 import com.playlistmaker.domain.models.Track
+import com.playlistmaker.domain.models.TrackWithOrder
 
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -79,8 +80,9 @@ fun PlaylistEntity.toDomain() = Playlist(
     title = title,
     description = description,
     coverPath = coverPath,
-    tracks = Gson().fromJson(trackIdsGson, object : TypeToken<List<Int>>() {}.type),
+    tracks = Gson().fromJson(trackIdsGson, object : TypeToken<List<TrackWithOrder>>() {}.type),
     tracksQuantity = tracksQuantity
 )
+
 
 
