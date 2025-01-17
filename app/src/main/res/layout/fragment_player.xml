@@ -251,11 +251,20 @@
         app:behavior_hideable="true"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+        <View
+            style="@style/BottomSheetDividerStyle"
+            android:layout_width="@dimen/bs_element_height_48"
+            android:layout_height="@dimen/bs_dividert_height_4"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/small_margin_8"
+            android:layout_marginBottom="@dimen/supersmall_margin_size_4"
+            android:background="@drawable/shape_rect_with_round_corners" />
+
         <TextView
             style="@style/AddToPlaylistTitle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/bottomSheet_margin_top_42"
+            android:layout_height="@dimen/bs_element_height_48"
+            android:layout_marginTop="@dimen/small_margin_8"
             android:gravity="center"
             android:text="@string/add_to_playlist" />
 

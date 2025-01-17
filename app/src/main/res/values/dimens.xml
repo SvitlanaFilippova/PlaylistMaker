@@ -58,6 +58,9 @@
     <dimen name="playlist_bottom_margin_282">282dp</dimen>
     <dimen name="small_padding_negative_8">-8dp</dimen>
     <dimen name="playlist_more_menu_element_height_64">64dp</dimen>
+    <dimen name="bs_divider_shape_radius_44">44dp</dimen>
+    <dimen name="bs_element_height_48">48dp</dimen>
+    <dimen name="bs_dividert_height_4">4dp</dimen>
 
 
 </resources>

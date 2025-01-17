@@ -150,10 +150,19 @@
         android:layout_height="match_parent"
         android:background="@drawable/shape_rect_with_round_top_corners"
         android:orientation="vertical"
+
         app:behavior_hideable="false"
         app:behavior_peekHeight="@dimen/playlist_bottomshet_min_height_266"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+        <View
+            style="@style/BottomSheetDividerStyle"
+            android:layout_width="@dimen/bs_element_height_48"
+            android:layout_height="@dimen/bs_dividert_height_4"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/small_margin_8"
+            android:layout_marginBottom="@dimen/supersmall_margin_size_4"
+            android:background="@drawable/shape_rect_with_round_corners" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
@@ -197,12 +206,22 @@
         app:behavior_hideable="true"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+        <View
+            style="@style/BottomSheetDividerStyle"
+            android:layout_width="@dimen/bs_element_height_48"
+            android:layout_height="@dimen/bs_dividert_height_4"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/small_margin_8"
+            android:layout_marginBottom="@dimen/supersmall_margin_size_4"
+            android:background="@drawable/shape_rect_with_round_corners" />
+
+
         <include
             android:id="@+id/small_playlist_card"
             layout="@layout/list_small_playlist_card"
             android:layout_width="match_parent"
             android:layout_height="@dimen/playlist_more_menu_element_height_64"
-            android:layout_marginTop="@dimen/big_margin_24" />
+            android:layout_marginTop="@dimen/small_margin_8" />
 
         <TextView
             android:id="@+id/tv_share"

@@ -45,6 +45,11 @@
         <item name="android:textFontWeight">400</item>
     </style>
 
+
+    <style name="BottomSheetDividerStyle">
+        <item name="android:background">@color/light_grey</item>
+    </style>
+
     <style name="ListRegularTextStyle">
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:textSize">@dimen/regular_text_size_16</item>
