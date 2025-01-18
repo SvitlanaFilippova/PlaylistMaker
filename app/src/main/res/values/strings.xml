@@ -4,7 +4,7 @@
     <string name="library" translatable="true">Медиатека</string>
     <string name="settings" translatable="true">Настройки</string>
     <string name="dark_theme" translatable="true">Темная тема</string>
-    <string name="share" translatable="true">Поделиться приложением</string>
+    <string name="share_app" translatable="true">Поделиться приложением</string>
     <string name="support" translatable="true">Написать в поддержку</string>
     <string name="agreement" translatable="true">Пользовательское соглашение</string>
     <string name="settings_share_title" translatable="false">Выберите мессенджер</string>
@@ -48,8 +48,24 @@
     <string name="all_unsaved_data_will_be_lost">Все несохраненные данные будут потеряны</string>
     <string name="close">Завершить</string>
     <string name="cancel">Отмена</string>
-    <string name="track_template">трек%1$s</string>
-    <string name="quantity_of_tracks_template">%1$d %2$s</string>
+    <string name="quantity_of_tracks_template">%1$d трек%2$s</string>
+    <string name="total_duration_template">%1$d минут%2$s</string>
     <string name="success_added_to_playlist_template">Добавлено в плейлист %1$s</string>
     <string name="track_is_already_added_to_playlist_template">Трек уже добавлен в плейлист %1$s</string>
+    <string name="there_are_no_tracks">В этом плейлисте пока нет треков</string>
+    <string name="zero_minutes">0 минут</string>
+    <string name="delete_track">Удалить трек</string>
+    <string name="q_sure_u_want_to_delete_track">Вы уверены, что хотите удалить трек из плейлиста?</string>
+    <string name="delete">Удалить</string>
+    <string name="share">Поделиться</string>
+    <string name="edit_info">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
+    <string name="share_playlist">Поделиться плейлистом</string>
+    <string name="playlist">Плейлист: %1$s</string>
+    <string name="q_want_to_delete_playlist">Хотите удалить плейлист?</string>
+    <string name="no">Нет</string>
+    <string name="yes">Да</string>
+    <string name="edit">Редактировать</string>
+    <string name="save">Сохранить</string>
+    <string name="playlist_created_success">Плейлист %1$s успешно создан</string>
 </resources>

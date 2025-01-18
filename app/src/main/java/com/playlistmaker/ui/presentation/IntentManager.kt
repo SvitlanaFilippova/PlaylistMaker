@@ -8,15 +8,18 @@ import com.practicum.playlistmaker.R
 
 
 object IntentManager {
-    fun startIntentByType(intentType: IntentType, context: Context) {
+    fun startIntentByType(
+        intentType: IntentType,
+        context: Context,
+    ) {
         when (intentType) {
-            IntentType.SHARE -> startShareIntent(context)
+            IntentType.SHARE_APP -> startShareAppIntent(context)
             IntentType.SUPPORT -> startSupportIntent(context)
             IntentType.AGREEMENT -> startAgreementIntent(context)
         }
     }
 
-    private fun startShareIntent(context: Context) {
+    private fun startShareAppIntent(context: Context) {
         val intent = Intent(Intent.ACTION_SEND).apply {
             setType("text/plain")
             putExtra(Intent.EXTRA_TEXT, context.getString(R.string.settings_share_message))
@@ -51,7 +54,7 @@ object IntentManager {
 }
 
 enum class IntentType {
-    SHARE,
+    SHARE_APP,
     SUPPORT,
     AGREEMENT
 }

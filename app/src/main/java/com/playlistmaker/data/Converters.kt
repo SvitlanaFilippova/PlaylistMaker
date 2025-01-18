@@ -7,6 +7,7 @@ import com.playlistmaker.data.db.entity.TrackEntity
 import com.playlistmaker.data.search.TrackDto
 import com.playlistmaker.domain.models.Playlist
 import com.playlistmaker.domain.models.Track
+import com.playlistmaker.domain.models.TrackWithOrder
 
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -14,14 +15,14 @@ import java.util.Locale
 fun TrackDto.toDomain() = Track(
     trackName = trackName ?: "",
     artistName = artistName ?: "",
-    trackTime = if (trackTimeMillis !== null) {
-        SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)
-    } else "00:00",
+    trackTimeMillis = trackTimeMillis ?: 0,
+    trackTime = trackTimeMillis?.let {
+        SimpleDateFormat("mm:ss", Locale.getDefault()).format(it)
+    } ?: "00:00",
     artworkUrl100 = artworkUrl100 ?: "",
     trackId = trackId ?: 0,
     collectionName = collectionName ?: "",
-    releaseDate = if (releaseDate !== null)
-        releaseDate.slice(0..3) else "",
+    releaseDate = releaseDate?.take(4).orEmpty(),
     primaryGenreName = primaryGenreName ?: "",
     country = country ?: "",
     previewUrl = previewUrl ?: "",
@@ -34,6 +35,7 @@ fun TrackDto.toDomain() = Track(
 fun Track.toEntity(timestamp: Long) = TrackEntity(
     trackName = trackName,
     artistName = artistName,
+    trackTimeMillis = trackTimeMillis,
     trackTime = trackTime,
     artworkUrl100 = artworkUrl100,
     trackId = trackId,
@@ -47,9 +49,10 @@ fun Track.toEntity(timestamp: Long) = TrackEntity(
     timestamp = timestamp
 )
 
-fun TrackEntity.toDomain(inFavorite: Boolean) = Track(
+fun TrackEntity.toDomain() = Track(
     trackName = trackName,
     artistName = artistName,
+    trackTimeMillis = trackTimeMillis,
     trackTime = trackTime,
     artworkUrl100 = artworkUrl100,
     trackId = trackId,
@@ -59,7 +62,7 @@ fun TrackEntity.toDomain(inFavorite: Boolean) = Track(
     country = country,
     previewUrl = previewUrl,
     coverArtwork = coverArtwork,
-    inFavorite = inFavorite
+    inFavorite = isFavorite
 )
 
 fun Playlist.toEntity() = PlaylistEntity(
@@ -68,15 +71,18 @@ fun Playlist.toEntity() = PlaylistEntity(
     description = description,
     coverPath = coverPath,
     trackIdsGson = Gson().toJson(tracks),
-    tracksQuantity = tracksQuantity,
+    tracksQuantity = tracks.size,
 
-)
+    )
 
 fun PlaylistEntity.toDomain() = Playlist(
     id = id,
     title = title,
     description = description,
     coverPath = coverPath,
-    tracks = Gson().fromJson(trackIdsGson, object : TypeToken<List<String>>() {}.type),
+    tracks = Gson().fromJson(trackIdsGson, object : TypeToken<List<TrackWithOrder>>() {}.type),
     tracksQuantity = tracksQuantity
 )
+
+
+

@@ -33,13 +33,20 @@ class SearchFragment : Fragment() {
     private val binding: FragmentSearchBinding get() = requireNotNull(_binding) { "Binding wasn't initialized" }
 
     private val tracksAdapter: TrackAdapter by lazy {
-        TrackAdapter { track ->
-            if (clickDebounce()) {
-                viewModel.updateHistory(track)
-                showPlayer(track)
+        TrackAdapter(
+            onTrackClickDebounce = { track ->
+                if (clickDebounce()) {
+                    viewModel.updateHistory(track)
+                    showPlayer(track)
+                }
+            },
+            onLongClickListener = { _ ->
+                false
             }
-        }
+        )
     }
+
+
     private var isClickAllowed = true
 
     private var searchInput: String = INPUT_DEF
@@ -172,6 +179,7 @@ class SearchFragment : Fragment() {
             searchBvClearHistory.isVisible = true
             searchTvSearchHistory.isVisible = true
             tracksAdapter.notifyDataSetChanged()
+            Log.d("DEBUG Search Fragment", "вызвала метод showHistory")
         }
     }
 
@@ -206,7 +214,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+
     private fun renderSearchScreen(state: SearchScreenState) {
         when (state) {
             is SearchScreenState.Empty -> {
@@ -230,10 +238,13 @@ class SearchFragment : Fragment() {
             is SearchScreenState.History -> {
                 if (state.tracks.isNotEmpty()) {
                     showHistory()
+                    Log.d(
+                        "DEBUG Search Fragment",
+                        "SearchScreenState.History, Треки: ${state.tracks}"
+                    )
                 }
                 with(tracksAdapter) {
                     submitList(state.tracks)
-                    notifyDataSetChanged() // TODO заменить на инфо про конкретные изменения списка. Пока не знаю как.
                 }
             }
 
@@ -241,7 +252,6 @@ class SearchFragment : Fragment() {
                 showSearchResults(state.tracks)
                 with(tracksAdapter) {
                     submitList(state.tracks)
-                    notifyDataSetChanged()
                 }
             }
         }

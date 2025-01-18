@@ -1,6 +1,7 @@
 package com.playlistmaker.ui.library.favorites
 
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,19 +23,23 @@ class FavoritesViewModel(
         viewModelScope.launch {
             savedTracksInteractor
                 .getFavoriteTracks()
-                .collect { movies ->
-                    processResult(movies)
+                .collect { tracks ->
+                    processResult(tracks)
                 }
         }
+
+
     }
 
     private fun processResult(tracks: List<Track>) {
         if (tracks.isEmpty()) {
             renderState(FavoritesState.Empty)
+            Log.d("DEBUG", "В избранных пусто")
         } else {
             renderState(FavoritesState.Content(tracks))
         }
     }
+
 
     private fun renderState(state: FavoritesState) {
         stateLiveData.postValue(state)

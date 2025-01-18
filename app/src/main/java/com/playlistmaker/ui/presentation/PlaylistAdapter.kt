@@ -28,7 +28,7 @@ class PlaylistAdapter(private val viewType: Int, private val onItemClick: (Playl
                     parentView.context.getString(
                         R.string.quantity_of_tracks_template,
                         tracksQuantity,
-                        getTracksText(tracksQuantity)
+                        getTracksEndingText(tracksQuantity)
                     )
                 val cover = if (coverPath.isNullOrEmpty()) R.drawable.ic_placeholder_with_foreground
                 else coverPath
@@ -39,7 +39,7 @@ class PlaylistAdapter(private val viewType: Int, private val onItemClick: (Playl
             }
         }
 
-        private fun getTracksText(quantity: Int): String {
+        private fun getTracksEndingText(quantity: Int): String {
             val remainder10 = quantity % 10
             val remainder100 = quantity % 100
             val trackEnding =
@@ -49,7 +49,7 @@ class PlaylistAdapter(private val viewType: Int, private val onItemClick: (Playl
                     remainder10 in 2..4 -> TREK_ENDING_A // Числа, оканчивающиеся на 2, 3, 4 (кроме 12–14), "трека"
                     else -> TREK_ENDING_OV  // Всё остальное — "треков"
                 }
-            return parentView.context.getString(R.string.track_template, trackEnding)
+            return trackEnding
         }
     }
 
@@ -85,7 +85,6 @@ class PlaylistAdapter(private val viewType: Int, private val onItemClick: (Playl
     fun clearList() {
         playlists.clear()
     }
-
 
     companion object {
         const val MEDIUM_PLAYLISTS_GRID = 1

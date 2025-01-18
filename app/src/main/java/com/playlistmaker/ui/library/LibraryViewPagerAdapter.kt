@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.playlistmaker.ui.library.favorites.FavoritesFragment
-import com.playlistmaker.ui.library.playlists.PlaylistsFragment
+import com.playlistmaker.ui.library.playlists.YourPlaylistsFragment
 
 
 class LibraryViewPagerAdapter(
@@ -23,7 +23,7 @@ class LibraryViewPagerAdapter(
                 FavoritesFragment.newInstance()
             }
 
-            1 -> PlaylistsFragment.newInstance()
+            1 -> YourPlaylistsFragment.newInstance()
 
             else -> {
                 FavoritesFragment.newInstance()

@@ -105,7 +105,7 @@ class PlayerFragment : Fragment() {
             }
             btCreatePlaylist.setOnClickListener {
                 findNavController().navigate(
-                    PlayerFragmentDirections.actionPlayerFragmentToNewPlaylistFragment()
+                    PlayerFragmentDirections.actionPlayerFragmentToNewPlaylistFragment(playlistJson = null)
                 )
             }
         }

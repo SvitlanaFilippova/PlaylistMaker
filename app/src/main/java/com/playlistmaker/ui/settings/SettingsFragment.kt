@@ -46,7 +46,7 @@ class SettingsFragment : Fragment() {
             }
 
             tvShare.setOnClickListener {
-                IntentManager.startIntentByType(IntentType.SHARE, requireContext())
+                IntentManager.startIntentByType(IntentType.SHARE_APP, requireContext())
             }
 
             tvSupport.setOnClickListener {
