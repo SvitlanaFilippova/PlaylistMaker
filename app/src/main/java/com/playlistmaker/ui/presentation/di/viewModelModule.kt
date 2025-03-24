@@ -1,4 +1,4 @@
-package com.playlistmaker.di
+package com.playlistmaker.ui.presentation.di
 
 import com.playlistmaker.domain.models.Track
 import com.playlistmaker.ui.library.favorites.FavoritesViewModel

@@ -1,4 +1,4 @@
-package com.playlistmaker.di
+package com.playlistmaker.ui.presentation.di
 
 import com.playlistmaker.data.StringProviderImpl
 import com.playlistmaker.domain.StringProvider

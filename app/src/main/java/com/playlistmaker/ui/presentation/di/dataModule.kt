@@ -1,4 +1,4 @@
-package com.playlistmaker.di
+package com.playlistmaker.ui.presentation.di
 
 import android.media.MediaPlayer
 import androidx.room.Room

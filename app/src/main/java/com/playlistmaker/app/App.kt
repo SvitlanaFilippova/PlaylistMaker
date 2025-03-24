@@ -2,18 +2,17 @@ package com.playlistmaker.app
 
 import android.app.Application
 import android.content.res.Configuration
-import com.playlistmaker.di.dataModule
-import com.playlistmaker.di.domainModule
-import com.playlistmaker.di.repositoryModule
-import com.playlistmaker.di.uiModule
-import com.playlistmaker.di.viewModelModule
 import com.playlistmaker.domain.settings.ThemeInteractor
+import com.playlistmaker.ui.presentation.di.dataModule
+import com.playlistmaker.ui.presentation.di.domainModule
+import com.playlistmaker.ui.presentation.di.repositoryModule
+import com.playlistmaker.ui.presentation.di.uiModule
+import com.playlistmaker.ui.presentation.di.viewModelModule
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
-
 
 class App : Application() {
     private val themeInteractor: ThemeInteractor by inject()
