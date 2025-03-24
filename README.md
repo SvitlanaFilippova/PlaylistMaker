@@ -36,7 +36,7 @@
 ## Скриншоты приложения 📱
 
 <img src="https://github.com/SvitlanaFilippova/PlaylistMaker/blob/093d4aa545fa10a81be2dcf242c5e889ff8ba5fb/app/docs/screenshots/1.jpg?raw=true" width="30%" height="30%"> <img src="https://github.com/SvitlanaFilippova/PlaylistMaker/blob/093d4aa545fa10a81be2dcf242c5e889ff8ba5fb/app/docs/screenshots/2.jpg?raw=true" width="30%" height="30%">
-<img src="https://github.com/SvitlanaFilippova/PlaylistMaker/blob/093d4aa545fa10a81be2dcf242c5e889ff8ba5fb/app/docs/screenshots/3.jpg?raw=true" width="30%" height="30%"> <img src="https://github.com/SvitlanaFilippova/PlaylistMaker/blob/093d4aa545fa10a81be2dcf242c5e889ff8ba5fb/app/docs/screenshots/4.jpg?raw=true" width="30%" height="30%">
+<img src="https://github.com/SvitlanaFilippova/PlaylistMaker/blob/093d4aa545fa10a81be2dcf242c5e889ff8ba5fb/app/docs/screenshots/3.jpg?raw=true" width="30%" height="30%"> 
 
 ## Общие требования 🗒️
 
