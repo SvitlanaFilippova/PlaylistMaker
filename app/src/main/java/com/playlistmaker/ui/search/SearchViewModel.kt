@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.playlistmaker.domain.models.Track
 import com.playlistmaker.domain.search.HistoryInteractor
 import com.playlistmaker.domain.search.TrackInteractor
-import com.playlistmaker.util.debounce
+import com.playlistmaker.ui.util.debounce
 import kotlinx.coroutines.launch
 
 

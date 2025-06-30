@@ -1,4 +1,4 @@
-package com.playlistmaker.app
+package com.playlistmaker.ui
 
 import android.app.Application
 import android.content.res.Configuration
@@ -39,6 +39,3 @@ class App : Application() {
         }
     }
 }
-
-
-

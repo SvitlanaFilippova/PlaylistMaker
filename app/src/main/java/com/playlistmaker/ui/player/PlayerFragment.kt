@@ -220,8 +220,8 @@ class PlayerFragment : Fragment() {
             progressbar.isVisible = false
             llPlaceholder.isVisible = false
         }
-        adapter?.clearList()
-        adapter?.submitList(playlists as ArrayList)
+        adapter.clearList()
+        adapter.submitList(playlists as ArrayList)
         adapter?.notifyDataSetChanged()
     }
 

@@ -1,7 +1,7 @@
 package com.playlistmaker.domain.search
 
+import com.playlistmaker.data.util.Resource
 import com.playlistmaker.domain.models.Track
-import com.playlistmaker.util.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface TracksRepository {

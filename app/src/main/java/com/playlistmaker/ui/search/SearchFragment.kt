@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.playlistmaker.domain.models.Track
 import com.playlistmaker.ui.presentation.TrackAdapter
-import com.playlistmaker.util.hideKeyBoard
+import com.playlistmaker.ui.util.hideKeyBoard
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import kotlinx.coroutines.delay

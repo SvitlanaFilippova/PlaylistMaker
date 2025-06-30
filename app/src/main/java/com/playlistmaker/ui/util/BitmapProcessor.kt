@@ -1,4 +1,4 @@
-package com.playlistmaker.util
+package com.playlistmaker.ui.util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
